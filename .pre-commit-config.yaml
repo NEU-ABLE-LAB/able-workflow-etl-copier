@@ -1,0 +1,52 @@
+repos:
+  # --- pre-build ------------------------------------------------------------
+  - repo: local
+    hooks:
+      - id: pyproject2conda
+        name: Regenerate Conda env when pyproject.toml changes
+        language: python
+        entry: hooks/pyproject2conda.py
+        additional_dependencies:
+          - loguru>=0.7.2
+          - pyproject2conda>=0.19.1
+        # Only run if the staged diff includes `pyproject.toml`
+        files: ^pyproject\.toml$
+        # Allow the hook to add/update the YAML file and stage it
+        pass_filenames: true
+
+  # --- hygiene --------------------------------------------------------------
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-added-large-files
+      - id: check-toml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+
+  # --- formatting -----------------------------------------------------------
+  - repo: https://github.com/psf/black
+    rev: 25.1.0
+    hooks:
+      - id: black
+        args: ["--safe"]
+
+  # --- linting  -------------------------------------------------------------
+  - repo: https://github.com/astral-sh/ruff-pre-commit      # official hook :contentReference[oaicite:1]{index=1}
+    rev: v0.4.0
+    hooks:
+      - id: ruff
+        args: ["check", "--fix", "--exit-zero"]
+
+  # --- static typing --------------------------------------------------------
+  - repo: https://github.com/pre-commit/mirrors-mypy        # maintained mirror :contentReference[oaicite:2]{index=2}
+    rev: "v1.15.0"
+    hooks:
+      - id: mypy
+        exclude: "^(tests/)|(docs/)|(template/)"
+        additional_dependencies:
+          - types-Jinja2==2.11.9
+          - typing-extensions==4.13.2
+          - types-jsonschema==4.24.0.20250528
+          - loguru==0.7.2
+          - pydantic[mypy]==2.11.4
+          - typer==0.15.3

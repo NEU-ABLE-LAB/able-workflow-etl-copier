@@ -1,0 +1,13 @@
+documentation_url: https://github.com/NEU-ABLE-LAB/whole_energy_homes_interviews
+homepage_url: https://github.com/NEU-ABLE-LAB/whole_energy_homes_interviews
+organization_name: Northeastern University ABLE Lab
+organization_slug: NEU-ABLE-LAB
+package_name: weh_interviews
+project_authors:
+-   email: mi.kane@northeastern.edu
+    name: Michael Kane
+project_description: A snakemake workflow with an associated python package containing
+    modules for datasets, features, and models for analyzing codes extractd from a
+    qualitative analysis of the participant interview transcripts.
+project_name: whole_energy_homes_interviews
+repository_url: https://github.com/NEU-ABLE-LAB/whole_energy_homes_interviews

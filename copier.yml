@@ -1,0 +1,60 @@
+# --- Configuration ----------------------------------------------------------
+
+_subdirectory: "template"
+
+# --- Questions --------------------------------------------------------------
+
+parent_project_tpl_answers_file:
+  type: str
+  help: "The path to the parent package template file."
+  default: ".copier-answers/project.yml"
+  when: False
+
+parent_module_type:
+  type: str
+  help: "The type of the existing module for this ETL process."
+  default: "datasets"
+  choices:
+    - datasets
+    - features
+    - models
+
+parent_module_name:
+  type: str
+  help: "The name of the existing module for this ETL process."
+  validator: >-
+    {% if not (module_name | regex_search('^[a-zA-Z_][a-zA-Z0-9_]*$')) %}
+      The module name must start with a letter or underscore and can only contain letters, numbers, and underscores.
+    {% endif %}
+
+parent_module_tpl_answers_file:
+  type: str
+  help: "The path to the parent module template file."
+  default: ".copier-answers/module-{{ module_type }}-{{ module_name }}.yml"
+  when: False
+
+etl_name:
+  type: str
+  help: "The name of the ETL process."
+  validator: >-
+    {% if not (module_name | regex_search('^[a-zA-Z_][a-zA-Z0-9_]*$')) %}
+      The ETL name must start with a letter or underscore and can only contain letters, numbers, and underscores.
+    {% endif %}
+
+  # --- Post-configuration -----------------------------------------------------
+
+_answers_file: >-
+  ./copier-answers/etl-{{ module_type }}-{{ module_name }}-{{ etl_name }}.yml
+
+_external_data:
+  parent_projec_tpl: "{{ parent_project_tpl_answers_file }}"
+  parent_module_tpl: "{{ parent_module_tpl_answers_file }}"
+
+package_name:
+  type: str
+  help: "The name of the project."
+  default: "{{ _external_data.parent_projec_tpl.package_name }}"
+  when: False
+
+  _skip_if_exists:
+  - "{{ package_name }}{{ _copier_conf.sep }}{{ module_type }}{{ _copier_conf.sep }}__init__.py.jinja"

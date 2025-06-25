@@ -1,0 +1,16 @@
+{
+    "recommendations": [
+        "tamasfe.even-better-toml",
+        "github.vscode-github-actions",
+        "github.vscode-pull-request-github",
+        "davidwang.ini-for-vscode",
+        "yzhang.markdown-all-in-one",
+        "davidanson.vscode-markdownlint",
+        "ms-python.mypy-type-checker",
+        "ms-python.vscode-python-envs",
+        "charliermarsh.ruff",
+        "gruntfuggly.todo-tree",
+        "redhat.vscode-yaml",
+        "the-compiler.python-tox"
+    ]
+}
