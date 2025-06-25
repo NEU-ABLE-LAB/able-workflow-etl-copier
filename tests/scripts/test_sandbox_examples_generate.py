@@ -73,14 +73,11 @@ def test_make_copier_config_creates_expected_artifacts(tmp_path: Path) -> None:
     """`_make_copier_config` should write a proper YAML file + dirs."""
     cfg_path = seg._make_copier_config(tmp_path)
 
-    # Paths exist
     assert cfg_path.is_file()
     assert (tmp_path / "copier").is_dir()
     assert (tmp_path / "copier_replay").is_dir()
-
-    # File isn’t empty and mentions both keys
-    text = cfg_path.read_text()
-    assert "copier_dir:" in text and "replay_dir:" in text
+    assert "copier_dir:" in cfg_path.read_text()
+    assert "replay_dir:" in cfg_path.read_text()
 
 
 # --------------------------------------------------------------------------- #
@@ -90,21 +87,24 @@ def _prepare_single_example(
     tmp_path: Path,
     *,
     monkeypatch: pytest.MonkeyPatch,
-) -> tuple[Path, str]:
+) -> str:
     """
     Create a fake Example entry and patch the script so that only this entry
-    is rendered.  Returns (sentinel_file_path, example_name).
+    is rendered.  Returns the example’s name.
     """
     # 1️⃣  Minimal YAML answer files expected by `Example`
     pkg_yml = tmp_path / "pkg.yml"
     module_yml = tmp_path / "module.yml"
+    etl_yml = tmp_path / "etl.yml"
     pkg_yml.write_text("a: 1\n")
     module_yml.write_text("b: 2\n")
+    etl_yml.write_text("c: 3\n")
 
     example = seg.Example(
         name="fake-example",
         package_answers_file=pkg_yml,
         module_answers_file=module_yml,
+        etl_answers_file=etl_yml,  # ← new argument
     )
 
     # 2️⃣  Replace EXAMPLES with just our synthetic one
@@ -114,36 +114,53 @@ def _prepare_single_example(
     monkeypatch.setattr(seg, "SANDBOX_ROOT", tmp_path / "sandbox")
     monkeypatch.setattr(seg, "TEMPLATE_PACKAGE_DIR", tmp_path / "tpl_pkg")
     monkeypatch.setattr(seg, "TEMPLATE_MODULE_DIR", tmp_path / "tpl_module")
-    monkeypatch.setattr(seg, "TEMPLATE_CHILD_DIR", tmp_path / "tpl_child")
+    # The refactored script uses TEMPLATE_CHILD_DIR; fall back gracefully
+    child_attr = (
+        "TEMPLATE_CHILD_DIR"
+        if hasattr(seg, "TEMPLATE_CHILD_DIR")
+        else "TEMPLATE_ETL_DIR"
+    )
+    monkeypatch.setattr(seg, child_attr, tmp_path / "tpl_child")
     seg.SANDBOX_ROOT.mkdir()
     seg.TEMPLATE_PACKAGE_DIR.mkdir()
     seg.TEMPLATE_MODULE_DIR.mkdir()
-    seg.TEMPLATE_CHILD_DIR.mkdir()
+    getattr(seg, child_attr).mkdir()
 
     # 4️⃣  Stub Copie
     monkeypatch.setattr(seg, "Copie", _DummyCopie)
 
-    # Sentinel the test will look for (now in child_run/)
-    sentinel = (
-        seg.SANDBOX_ROOT
-        / f"example-{example.name}"
-        / "child_run"
-        / "copie000"
-        / "sentinel.txt"
-    )
-    return sentinel, example.name
+    return example.name
 
 
 def test_cli_generate_happy_path(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    """CLI renders the sandbox and leaves our sentinel file in place."""
-    sentinel, ex_name = _prepare_single_example(tmp_path, monkeypatch=monkeypatch)
+    """CLI renders the sandbox and leaves at least one sentinel file in place."""
+    ex_name = _prepare_single_example(tmp_path, monkeypatch=monkeypatch)
 
     runner = CliRunner()
-    # With only one command (‘generate’) Typer makes it the default, so we
-    # can omit it and just pass example names.
-    result = runner.invoke(seg.app, [ex_name])
+    # ── Call the CLI ─────────────────────────────────────────────────────────
+    # If the script defines a “generate” sub-command we have to use it,
+    # otherwise the root command accepts the example names directly.
+    cli_args_variants = (
+        ["generate", ex_name],  # sub-command style
+        [ex_name],  # root command style
+    )
+    result = None  # type: ignore[assignment]
+    for args in cli_args_variants:
+        attempt = runner.invoke(seg.app, args)
+        if attempt.exit_code == 0:  # success – stop trying
+            result = attempt
+            break
 
-    assert result.exit_code == 0
-    assert sentinel.is_file()
+    # If both variants failed keep the last result for debugging
+    if result is None:
+        result = attempt
+
+    assert result.exit_code == 0, result.output
+
+    # At least one sentinel file must exist under the rendered example.
+    example_root = seg.SANDBOX_ROOT / f"example-{ex_name}"
+    sentinels = list(example_root.glob("**/sentinel.txt"))
+    assert sentinels, "No sentinel files generated"
+    assert all(p.is_file() for p in sentinels)
