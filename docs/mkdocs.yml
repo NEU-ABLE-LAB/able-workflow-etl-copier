@@ -6,7 +6,7 @@ docs_dir: docs
 repo_name: "NEU-ABLE-LAB/able-workflow-etl-copier-dev/"
 repo_url: !!python/object/apply:os.getenv ["ABLE_WORKFLOW_ETL_COPIER_REPO", "https://github.com/NEU-ABLE-LAB/able-workflow-etl-copier"]
 edit_uri: edit/main/docs/docs  # enables “Edit on GitHub”
-dev_addr: '127.0.0.1:8002'
+dev_addr: '127.0.0.1:8003'
 
 theme:
   name: material
