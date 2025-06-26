@@ -58,3 +58,12 @@ package_name:
 
   _skip_if_exists:
   - "{{ package_name }}{{ _copier_conf.sep }}{{ module_type }}{{ _copier_conf.sep }}__init__.py.jinja"
+
+_message_after_copy: |
+  The {{ module_type }}/{{ module_name }}/{{ etl_name }} ETL process
+  has been created successfully.
+
+  See `logs/post-copier-todos/etl-{{ module_type }}-{{ module_name }}-{{ etl_name }}.md`
+  for next steps on implementing your rule into the project.
+  You can copy-paste the contents of that file into a GitHub issue
+  or a project management tool to track the implementation of the rule.
