@@ -5,3 +5,8 @@ This issue is for tracking the development of the ETL process that was copied fr
 ## Next steps
 
 ### Required
+
+- [ ] `pyproject.toml`
+    - [ ] Add any extra dependencies that this module requires to `runner` in the `[project.optional-dependencies]` section of `pyproject.toml`. If those dependencies are not available on [conda-forge](https://anaconda.org/conda-forge/repo), then configure the `[tool.pyproject2conda.dependencies]` section of `pyproject.toml` to specify that they should be installed via `pip` instead of `conda`.
+- [ ] `template/workflow/rules/{{ module_type }}/{{ module_name }}.smk`
+  - [ ] Add this ETL process's output to the input of the `{{ module_type }}_{{ module_name }}_all` rule and describe in the rule's docstring.
