@@ -1,5 +1,6 @@
 # --- Configuration ----------------------------------------------------------
 _jinja_extensions:
+  - "copier_templates_extensions.TemplateExtensionLoader"
   - "extensions/strict_undefined.py:SetStrictUndefined"
 
 _subdirectory: "template"
