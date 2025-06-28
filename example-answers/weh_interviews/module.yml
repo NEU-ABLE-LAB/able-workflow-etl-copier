@@ -1,2 +1,3 @@
 module_type: "datasets"
 module_name: "coding_matrix"
+module_name_long: " Coding Matrix"

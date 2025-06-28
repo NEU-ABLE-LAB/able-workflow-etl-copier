@@ -14,9 +14,12 @@ classifiers = [
 requires-python = ">=3.11,<3.13"
 
 dependencies = [
+  "black>=24.3,<25.0",
   "copier>=9.7.1",
   "loguru>=0.7.2",
   "ruamel.yaml>=0.18.12",
+  "ruff>=0.11.8",
+  "snakefmt>=0.11.0",
   "typer>=0.16.0",
 
   # jinja2 extensions
@@ -153,6 +156,7 @@ mkdocs-section-index = { pip = true }
 mkdocs-typer2 = { pip = true }
 mkdocstrings = { skip = true, packages = ["mkdocstrings-python>=1.16.10"] }
 pytest-copie = { pip = true }
+snakefmt = { channel = "bioconda"}
 
 [tool.pyproject2conda.envs."dev"]
 style = ["yaml"]
