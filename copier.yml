@@ -1,4 +1,6 @@
 # --- Configuration ----------------------------------------------------------
+_jinja_extensions:
+  - "extensions/strict_undefined.py:SetStrictUndefined"
 
 _subdirectory: "template"
 
