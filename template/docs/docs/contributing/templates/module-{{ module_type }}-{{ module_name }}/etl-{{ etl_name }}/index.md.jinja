@@ -1,0 +1,12 @@
+# ABLE Workflow ETL Copier ETL process `{{ etl_name_long }}`
+
+{{ etl_description }}
+
+## Updating rule
+
+To update this rule, run the following command in the root of your project:
+
+```bash
+conda activate {{ package_name }}-py312-dev
+copier update --trust --answers-file ".copier-answers/etl-{{ module_type }}-{{ module_name }}-{{ etl_name }}.yml"
+```
