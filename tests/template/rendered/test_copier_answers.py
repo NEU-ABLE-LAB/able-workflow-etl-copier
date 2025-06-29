@@ -9,7 +9,10 @@ import re
 expected_file = Path("pyproject.toml")
 
 expected_strings = {
-    "weh_interviews": [
+    "example-answers-able": [
+        re.escape('name = "able-workflow"'),
+    ],
+    "example-answers-weh_interviews": [
         'name = "whole_energy_homes_interviews"',
     ],
 }
