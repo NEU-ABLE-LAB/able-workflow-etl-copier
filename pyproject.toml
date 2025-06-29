@@ -145,7 +145,7 @@ init_forbid_extra   = true
 channels = [
   "conda-forge",
 ]
-template_python = "environment-py{py}-{env}"
+template-python = "environment-py{py}-{env}"
 
 [tool.pyproject2conda.dependencies]
 copier-templates-extensions = { pip = true }
@@ -162,7 +162,7 @@ snakefmt = { channel = "bioconda"}
 style = ["yaml"]
 header = true
 python = "highest"
-extras_or_groups = ["dev"]
+extras-or-groups = ["dev"]
 
 [tool.pytest.ini_options]
 # These tests should be able to run in the dev environment
