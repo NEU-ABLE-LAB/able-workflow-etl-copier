@@ -60,9 +60,9 @@ extra:
   able_workflow_copier_docs: !!python/object/apply:os.getenv ["ABLE_WORKFLOW_COPIER_DOCS", "https://NEU-ABLE-LAB.github.io/able-workflow-copier"]
   able_workflow_module_copier_repo: !!python/object/apply:os.getenv ["ABLE_WORKFLOW_MODULE_COPIER_REPO", "https://github.com/NEU-ABLE-LAB/able-workflow-module-copier"]
   able_workflow_module_copier_docs: !!python/object/apply:os.getenv ["ABLE_WORKFLOW_MODULE_COPIER_DOCS", "https://NEU-ABLE-LAB.github.io/able-workflow-module-copier"]
-  able_workflow_etl_copier_repo: !!python/object/apply:os.getenv ["ABLE_WORKFLOW_ETL_COPIER_DOCS", "https://github.com/NEU-ABLE-LAB/able-workflow-etl-copier"]
+  able_workflow_etl_copier_repo: !!python/object/apply:os.getenv ["ABLE_WORKFLOW_ETL_COPIER_REPO", "https://github.com/NEU-ABLE-LAB/able-workflow-etl-copier"]
   able_workflow_etl_copier_docs: !!python/object/apply:os.getenv ["ABLE_WORKFLOW_ETL_COPIER_DOCS", "https://NEU-ABLE-LAB.github.io/able-workflow-etl-copier"]
-  able_workflow_rule_copier_repo: !!python/object/apply:os.getenv ["ABLE_WORKFLOW_RULE_COPIER_DOCS", "https://github.com/NEU-ABLE-LAB/able-workflow-rule-copier"]
+  able_workflow_rule_copier_repo: !!python/object/apply:os.getenv ["ABLE_WORKFLOW_RULE_COPIER_REPO", "https://github.com/NEU-ABLE-LAB/able-workflow-rule-copier"]
   able_workflow_rule_copier_docs: !!python/object/apply:os.getenv ["ABLE_WORKFLOW_RULE_COPIER_DOCS", "https://NEU-ABLE-LAB.github.io/able-workflow-rule-copier"]
   version:
     provider: mike
