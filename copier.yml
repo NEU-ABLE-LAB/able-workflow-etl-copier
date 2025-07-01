@@ -86,15 +86,20 @@ smk_file_name:
 _answers_file: >-
   ./copier-answers/etl-{{ module_type }}-{{ module_name }}-{{ etl_name }}.yml
 
+# --- External Data ----------------------------------------------------------
+
 _external_data:
   parent_projec_tpl: "{{ parent_project_tpl_answers_file }}"
   parent_module_tpl: "{{ parent_module_tpl_answers_file }}"
 
 package_name:
   type: str
-  help: "The name of the project."
+  help: >-
+    The name of the project.
+
+    DO NOT CHANGE THIS VALUE FROM THE DEFAULT
+    IT SHOULD STAY IN SYNC WITH THE PARENT PROJECT TEMPLATE.
   default: "{{ _external_data.parent_projec_tpl.package_name }}"
-  when: False
 
   # --- Post-configuration -----------------------------------------------------
 
