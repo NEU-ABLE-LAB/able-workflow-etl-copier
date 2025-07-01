@@ -1,0 +1,59 @@
+"""
+This file extracts input into the {{ etl_name_long }} from an external
+source, such as an API or proprietary file format.
+
+It may required additional dependencies specified in the
+`pyproject.toml` file under the `project.optional-dependencies.runner`
+section. These dependencies are not imported by default, allowing other
+ETL processes to use the `extract` and `schema` modules without requiring
+the full functionality of the `runner` module.
+"""
+
+import json
+from typing import Final, List
+
+import pandas as pd
+import pandera.pandas as pa
+import requests
+from pandera.typing import DataFrame
+
+from {{ package_name }}.{{ module_type }}.{{ module_name }}.{{ etl_name }}.runner.schema_external import (
+    SchemaExternal,
+)
+
+# --- DUMMY TEMPLATE CODE --- REPLACE WITH ACTUAL CODE -----------------------
+
+API_URL: Final[str] = "https://query1.finance.yahoo.com/v7/finance/quote"
+
+
+def extract_external(tickers: List[str]) -> DataFrame[SchemaExternal]:
+    """
+    Pull quote data for *tickers* from Yahoo Finance and return it as a DataFrame.
+
+    Parameters
+    ----------
+    tickers
+        A list of ticker symbols (e.g., ``["AAPL", "MSFT"]``).
+
+    Returns
+    -------
+    DataFrame[SchemaExternal]
+        A Pandas DataFrame conforming to :class:`SchemaExternal`.
+    """
+    resp = requests.get(API_URL, params={"symbols": ",".join(tickers)}, timeout=10)
+    resp.raise_for_status()
+    payload = json.loads(resp.text)
+
+    quotes = payload["quoteResponse"]["result"]
+    df_raw = pd.json_normalize(quotes)[
+        ["symbol", "regularMarketPrice", "regularMarketTime"]
+    ]
+    # Rename columns for consistency with SchemaExternal
+    df_raw = df_raw.rename(
+        columns={
+            "symbol": "symbol",
+            "regularMarketPrice": "regularMarketPrice",
+            "regularMarketTime": "regularMarketTime",
+        }
+    )
+    return pa.typing.DataFrame[SchemaExternal](df_raw)

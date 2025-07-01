@@ -2,7 +2,60 @@
 
 This issue is for tracking the development of the ETL process that was copied from the `able-workflow-etl-copier` template.
 
-## Next steps
+Each of the sections below could be separated into a sub-issue. After each sub-issue, all tests should still pass.
+
+## Write a draft of the rule(s) in the `workflow/rules/{{ module_type }}/{{ module_name }}.smk` file
+
+If the ETL process will be running multiple times for different files, define a `{{ module_type }}_{{ module_name }}_{{ etl_name }}_run` rule with [wildcards](https://snakemake.readthedocs.io/en/stable/snakefiles/rules.html#wildcards), and then a `{{ module_type }}_{{ module_name }}_{{ etl_name }}_all` rule that uses the [`expand()`](https://snakemake.readthedocs.io/en/stable/snakefiles/rules.html#the-expand-function) function in the input section to specify the output files to be produced by the `{{ module_type }}_{{ module_name }}_{{ etl_name }}_run` rule.
+
+1. `{{ module_type }}_{{ module_name }}_{{ etl_name }}_run` rule
+
+  This rule should define the input files that a single run of this ETL process will produce.
+
+2. `{{ module_type }}_{{ module_name }}_{{ etl_name }}_all` rule
+
+  This rule expands values into the wildcards to produce all the expected files.
+
+At this point, this draft rule will not be run, but is just an opportunity to specify what the expected inputs and outputs are of a single run of the ETL process.
+
+{% if requires_extract_external %}
+## Write and test `{{ package_name }}/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/extract_external.py` and `schema_external.py`
+
+- [ ] **Create test dataset**: If possible, create a small (<1 MB) sample/test dataset from the external data source. If the external data resides on an external database server, develop a test query that returns a subset of the data for testing. If the external data is stored in a file, save and commit the test data to `data/tests/{{ module_name }}/{{ etl_name }}/`
+
+- [ ] **Draft the `extract_external` function**: Write the `extract_external` function in `runner/extract_external.py`.
+
+  If the data is stored in a file, this function should take as an argument a path to the data. DO NOT hardcode the path to the input data here (not even a default value). The paths will be provided by the `input:` directive of the Snakemake rule or via the tests.
+
+  If the data is stored on an external server, this function should take the URL, credentials, and query as an argument. You may wish to write a query builder function that parameterizes the query so that the the Snakemake rule only needs to pass a short `params:` value and not an entire URL and query.
+
+  For now, this function should return a `pandas` or `dask` dataframe of the data. The schema will be validated later.
+
+- [ ] **Draft the schema**: Write a [Pandera DataFrame Model](https://pandera.readthedocs.io/en/stable/dataframe_models.html) in `runner/schema_external.py` to validate each column in the expected data.
+
+- [ ] **Simple schema test**: Write a simple unit test in `tests/{{ package_name }}/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_schema_external.py`
+
+
+
+- [ ] **Draft the extract function**: Write the extract function in `runner/extract_external.py`.
+
+  If the data is stored in a file, this function should take as an argument a path to the data. DO NOT hardcode the path to the input data here (not even a default value). The paths will be provided by the `input:` directive of the Snakemake rule or via the tests.
+
+  If the data is stored on an external server, this function should take the URL, credentials, and query as an argument. You may wish to write a query builder function that parameterizes the query so that the the Snakemake rule only needs to pass a short `params:` value and not an entire URL and query.
+
+  This function should return a `pandera.typing.pandas.DataFrame[SchemaExternal]` validated dataframe of the data. (Alternatively, a `pandera.typing.dask.DataFrame[SchemaExternal]` if using Dask.)
+
+- [ ] **Draft the
+
+{% endif %}
+
+
+
+
+
+
+
+
 
 ### Required
 
@@ -14,9 +67,19 @@ This issue is for tracking the development of the ETL process that was copied fr
   - [ ] `runner/`
     {% if requires_extract_external -%}
     - [ ] `extract_external.py`
+    - [ ] `schema_external.py`
     {%- endif %}
     - [ ] `load.py`
     - [ ] `main.py`
     - [ ] `transform.py`
+- [ ] `.vscode/launch.json`
+- [ ] `tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/`
+  - [ ] `test_extract.py`
+  - [ ] `test_schema.py`
+  - [ ] `runner/`
+    - [ ] `test_extract_external.py`
+    - [ ] `test_load.py`
+    - [ ] `test_main.py`
+    - [ ] `test_transform.py`
 - [ ] `workflow/rules/{{ module_type }}/{{ module_name }}.smk`
   - [ ] Add this ETL process's output to the input of the `{{ module_type }}_{{ module_name }}_all` rule and describe in the rule's docstring.

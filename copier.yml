@@ -41,7 +41,6 @@ etl_name_long:
 etl_description:
   type: str
   help: "A short description of the ETL process."
-  default: "A short description of the ETL process."
 
 requires_extract_external:
   type: bool

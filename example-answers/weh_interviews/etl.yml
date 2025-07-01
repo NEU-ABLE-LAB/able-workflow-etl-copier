@@ -3,4 +3,4 @@ etl_name_long: "Convert Excel Coding Matrix to Parquet"
 etl_description: "Convert the coding matrix from an Excel file to a Parquet file."
 module_type: "datasets"
 module_name: "coding_matrix"
-requires_extract_external: true
+requires_extract_external: True

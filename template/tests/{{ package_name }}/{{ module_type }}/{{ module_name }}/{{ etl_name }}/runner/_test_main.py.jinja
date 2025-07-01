@@ -1,0 +1,48 @@
+
+from pathlib import Path
+from typing import Final, List
+
+import pytest
+from snakemake.io import (
+    InputFiles,
+    OutputFiles,
+    Params,
+    Wildcards,
+    Resources,
+    Log,
+)
+from snakemake.script import Snakemake
+
+from {{ package_name }}.{{ module_type }}.{{ module_name }}.{{ etl_name }}.runner.main import main
+
+RULE_NAME: Final[str] = "run_{{ etl_name }}"
+DEFAULT_TICKERS: Final[List[str]] = ["AAPL", "MSFT", "GOOGL", "AMZN"]
+ARTIFACT_PATH: Final[Path] = Path("data/{{ module_name }}/{{ etl_name }}/average_price.parquet")
+LOG_PATH: Final[Path] = Path(f"logs/{RULE_NAME}/runner.log")
+
+def test_run(
+    tmp_path: Path,
+    tickers: List[str] = DEFAULT_TICKERS,
+    artifact_path: Path = ARTIFACT_PATH,
+    log_path: Path = LOG_PATH,
+):
+    """Test the run() function with default values."""
+    rulename = RULE_NAME
+
+    # Create temporary file paths using pytest's tmp_path fixture
+    tmp_artifact_path = tmp_path / artifact_path
+    tmp_log_path = tmp_path / log_path
+
+    # Create Snakemake object with all required fields
+    main(
+        tickers=tickers,
+        artifact_path=tmp_artifact_path,
+        log_path=tmp_log_path,
+        rulename=rulename,
+    )
+
+    # Verify the artifact was created
+    assert tmp_artifact_path.exists(), f"Artifact file was not created at {tmp_artifact_path}"
+
+    # Verify the log was created
+    assert tmp_log_path.exists(), f"Log file was not created at {tmp_log_path}"
