@@ -5,9 +5,9 @@ rendering implemented in `scripts/sandbox_examples_generate.py`.
 The directory structure expected for every example under
 `example-answers/<name>/` is now:
 
-    • package.yml  – answers for the *package* template
-    • module.yml   – answers for the *module*  template
-    • etl.yml      – answers for **this repo’s** ETL template
+    • package.yml  - answers for the *package* template
+    • module.yml   - answers for the *module*  template
+    • etl.yml      - answers for **this repo's** ETL template
 
 Rendering chain:
 

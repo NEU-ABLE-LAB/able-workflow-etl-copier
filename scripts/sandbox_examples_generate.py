@@ -138,10 +138,10 @@ class Example:
 # ──────────────────────────────────────────────────────────────────────────────
 EXAMPLES: List[Example] = [
     Example(
-        name="able_weather",
-        package_answers_file=Path("example-answers/able_weather/package.yml"),
-        module_answers_file=Path("example-answers/able_weather/module.yml"),
-        etl_answers_file=Path("example-answers/able_weather/etl.yml"),
+        name="able-weather-01",
+        package_answers_file=Path("example-answers/able-weather-01/package.yml"),
+        module_answers_file=Path("example-answers/able-weather-01/module.yml"),
+        etl_answers_file=Path("example-answers/able-weather-01/etl.yml"),
     )
 ]
 

@@ -8,28 +8,19 @@ _subdirectory: "template"
 
 # --- Example Setup ----------------------------------------------------------
 
-render_example:
-  type: bool
+example_to_render:
+  type: str
   help: >-
     Whether to render an example of the ETL process in the generated code.
     This will include a working example of the ETL process in the generated code.
-  default: False
-
-example_to_render:
-  type: str
-  help: "Include a working example in the generated code."
   choices:
-    - ABLE Weather open_meteo
+    - able-weather-01
     - False
   default: False
-  when: "{{ render_example }}"
 
-example_answers_file:
+example_answers_dir:
   type: str
-  default: >-
-    {% if example_to_render == "ABLE Weather open_meteo" %}
-      example-answers/able_weather/etl.yml
-    {% endif %}
+  default: "example-answers/{{ example_to_render }}"
   when: False
 
 # --- Questions --------------------------------------------------------------
@@ -117,7 +108,7 @@ _answers_file: >-
 _external_data:
   parent_project_tpl: "{{ parent_project_tpl_answers_file }}"
   parent_module_tpl: "{{ parent_module_tpl_answers_file }}"
-  example_answers: "{% if render_example %}{{ example_answers_file }}{% endif %}"
+  example_answers: "{% if example_to_render %}{{ example_answers_file }}{% endif %}"
 
 package_name:
   type: str
@@ -141,6 +132,13 @@ _tasks:
       "{{ _copier_conf.src_path }}/tasks/append_smk_include.py",
       "{{ smk_file_name }}"
     ]
+  - command: [
+      "{{ _copier_python }}",
+      "{{ _copier_conf.src_path }}/tasks/copy_example.py",
+      "--example-subdir",
+      "{{ example_answers_dir }}/completed",
+    ]
+    when: "{{ example_to_render }}"
 
   # Run black, ruff, and snakefmt to format the code to fix line wraps
   # depending on length of generated code.
