@@ -15,7 +15,6 @@ rule datasets_weather_open_meteo_run:
     input:
         No input files are required as the data is fetched from the Open Meteo
         API directly.
-
     output:
         weather_data:
             Path to the Parquet file containing weather data for the specified
