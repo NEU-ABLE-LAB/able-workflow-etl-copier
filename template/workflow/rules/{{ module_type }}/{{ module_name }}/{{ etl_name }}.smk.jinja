@@ -22,3 +22,7 @@ rule {{ module_type }}_{{ module_name }}_{{ etl_name }}_all:
         # from other rules.
     # wildcards:
     # TODO: Add wildcards if needed. All wildcards should be named.
+    conda:
+        config["CONDA"]["ENVS"]["RUNNER"]
+    script:
+        str(WORKFLOW_BASE / "scripts" / "rules_CONDA_RUNNER" / {{ package_name }}_rules.py)
