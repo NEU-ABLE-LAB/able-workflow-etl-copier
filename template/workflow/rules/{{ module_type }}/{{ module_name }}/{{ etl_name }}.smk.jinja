@@ -1,3 +1,10 @@
+if (
+    "{{ module_type }}" in config
+    and "{{ module_name }}" in config["{{ module_type }}"]
+    and "{{ etl_name }}" in config["{{ module_type }}"]["{{ module_name }}"]
+):
+    validate(config, WORKFLOW_BASE / "schemas/{{ module_type }}/{{ module_name }}/config.schema.yaml")
+
 rule {{ module_type }}_{{ module_name }}_{{ etl_name }}_all:
     """
     This rule will run the entire {{ etl_name }} workflow

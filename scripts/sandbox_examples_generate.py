@@ -33,7 +33,7 @@ import sys
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, cast
 
 import typer
 from pytest_copie.plugin import Copie, Result
@@ -116,34 +116,44 @@ def _new_copie_instance(
 
 @dataclass
 class Example:
-    """Metadata for one sandbox rendering example."""
-
     name: str
-    package_answers_file: Path
-    module_answers_file: Path
-    etl_answers_file: Path
-    package_answers: Dict[str, Any] | None = None
-    module_answers: Dict[str, Any] | None = None
-    etl_answers: Dict[str, Any] | None = None
-
-    def __post_init__(self) -> None:
-        yaml = YAML(typ="safe")
-        self.package_answers = yaml.load(self.package_answers_file.read_text()) or {}
-        self.module_answers = yaml.load(self.module_answers_file.read_text()) or {}
-        self.etl_answers = yaml.load(self.etl_answers_file.read_text()) or {}
+    package_answers: Dict[str, Any]
+    module_answers: Dict[str, Any]
+    etl_answers: Dict[str, Any]
 
 
 # ──────────────────────────────────────────────────────────────────────────────
 #  Register all examples here
 # ──────────────────────────────────────────────────────────────────────────────
-EXAMPLES: List[Example] = [
-    Example(
-        name="able-weather-01",
-        package_answers_file=Path("example-answers/able-weather-01/package.yml"),
-        module_answers_file=Path("example-answers/able-weather-01/module.yml"),
-        etl_answers_file=Path("example-answers/able-weather-01/etl.yml"),
-    )
-]
+def _read_yaml(path: Path) -> Dict[str, Any]:
+    return cast(Dict[str, Any], YAML(typ="safe").load(path.read_text()) or {})
+
+
+def _discover_examples() -> List[Example]:
+    examples: List[Example] = []
+    for ans_dir in Path("example-answers").iterdir():
+        if not ans_dir.is_dir():
+            continue
+        pkg = ans_dir / "package.yml"
+        mod = ans_dir / "module.yml"
+        etl = ans_dir / "etl.yml"
+        if pkg.exists() and mod.exists() and etl.exists():
+            examples.append(
+                Example(
+                    name=ans_dir.name,
+                    package_answers=_read_yaml(pkg),
+                    module_answers=_read_yaml(mod),
+                    etl_answers=_read_yaml(etl),
+                )
+            )
+    if not examples:
+        raise RuntimeError(
+            "No examples found.  Each must contain package.yml, module.yml and etl.yml."
+        )
+    return examples
+
+
+EXAMPLES = _discover_examples()
 
 ###############################################################################
 #  CLI                                                                         #

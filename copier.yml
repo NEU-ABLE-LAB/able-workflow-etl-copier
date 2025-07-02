@@ -132,6 +132,13 @@ _tasks:
       "{{ _copier_conf.src_path }}/tasks/append_smk_include.py",
       "{{ smk_file_name }}"
     ]
+  # Add the config to the workflow profile
+  - command: [
+      "{{ _copier_python }}",
+      "{{ _copier_conf.src_path }}/tasks/append_config_include.py",
+      "config/{{ module_type }}/{{ module_name }}/{{ etl_name }}/config.yaml"
+    ]
+  # Overwrite with full example files
   - command: [
       "{{ _copier_python }}",
       "{{ _copier_conf.src_path }}/tasks/copy_example.py",
