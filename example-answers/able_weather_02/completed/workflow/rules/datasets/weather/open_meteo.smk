@@ -33,4 +33,4 @@ rule datasets_weather_open_meteo_run:
     conda:
         config["CONDA"]["ENVS"]["RUNNER"]
     script:
-        str(WORKFLOW_BASE / "scripts" / "rules_CONDA_RUNNER" / weh_interviews_rules.py)
+        str(WORKFLOW_BASE / "scripts" / "rules_conda_RUNNER" / "able_weather_rules.py")
