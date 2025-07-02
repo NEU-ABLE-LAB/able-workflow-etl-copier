@@ -1,0 +1,7 @@
+etl_name: "open_meteo"
+etl_name_long: "Convert Open Meteo API Data to Parquet"
+etl_description: "Convert weather data from the Open Meteo API to a Parquet file."
+module_type: "datasets"
+module_name: "weather"
+package_name: "able_weather"
+requires_extract_external: True

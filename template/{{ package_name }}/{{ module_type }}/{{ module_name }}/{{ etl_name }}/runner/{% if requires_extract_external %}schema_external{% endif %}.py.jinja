@@ -9,19 +9,3 @@ section. These dependencies are not imported by default, allowing other
 ETL processes to use the `extract` and `schema` modules without requiring
 the full functionality of the `runner` module.
 """
-
-import pandera.pandas as pa
-
-
-# --- DUMMY TEMPLATE CODE --- REPLACE WITH ACTUAL CODE -----------------------
-
-class SchemaExternal(pa.DataFrameModel):
-    """Schema for the raw ticker quote payload returned by `extract_external`."""
-
-    symbol: pa.typing.Series[str] = pa.Field(nullable=False, coerce=True)
-    regularMarketPrice: pa.typing.Series[float] = pa.Field(gt=0)
-    regularMarketTime: pa.typing.Series[int] = pa.Field(gt=0)
-
-    class Config:
-        strict = True
-        coerce = True

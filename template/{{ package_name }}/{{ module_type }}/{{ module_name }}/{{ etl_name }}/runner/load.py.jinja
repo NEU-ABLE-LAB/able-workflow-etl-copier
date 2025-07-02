@@ -15,29 +15,3 @@ This allows for a clear separation of concerns and keeps the dependencies
 light for other ETL processes that do not require the full functionality
 of this process.
 """
-
-import pathlib
-
-from pandera.typing import DataFrame
-
-from {{ package_name }}.{{ module_type }}.{{ module_name }}.{{ etl_name }}.schema import (
-    Schema,
-)
-
-# --- DUMMY TEMPLATE CODE --- REPLACE WITH ACTUAL CODE -----------------------
-
-
-def load(df: DataFrame[Schema], path: pathlib.Path | str) -> None:
-    """
-    Persist *df* to disk as a Parquet file.
-
-    Parameters
-    ----------
-    df
-        Transformed DataFrame validated by :class:`Schema`.
-    path
-        File path where the Parquet file will be written.
-    """
-    path = pathlib.Path(path)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    df.to_parquet(path, index=False)

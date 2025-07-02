@@ -5,33 +5,3 @@ This module can be used to extract from disk the output of this ETL process.
 from an external source, such as an API or proprietary file format, that
 is consumed by this ETL process.)
 """
-
-import pathlib
-
-import pandas as pd
-import pandera.pandas as pa
-from pandera.typing import DataFrame
-
-from {{ package_name }}.{{ module_type }}.{{ module_name }}.{{ etl_name }}.schema import (
-    Schema,
-)
-
-# --- DUMMY TEMPLATE CODE --- REPLACE WITH ACTUAL CODE -----------------------
-
-
-def extract(path: pathlib.Path | str) -> DataFrame[Schema]:
-    """
-    Read a Parquet file created by :func:`load` back into a DataFrame.
-
-    Parameters
-    ----------
-    path
-        Path to the Parquet file.
-
-    Returns
-    -------
-    DataFrame[Schema]
-        The loaded DataFrame, validated by :class:`Schema`.
-    """
-    df = pd.read_parquet(path)
-    return pa.typing.DataFrame[Schema](df)

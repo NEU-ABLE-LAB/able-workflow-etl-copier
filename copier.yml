@@ -6,6 +6,32 @@ _jinja_extensions:
 
 _subdirectory: "template"
 
+# --- Example Setup ----------------------------------------------------------
+
+render_example:
+  type: bool
+  help: >-
+    Whether to render an example of the ETL process in the generated code.
+    This will include a working example of the ETL process in the generated code.
+  default: False
+
+example_to_render:
+  type: str
+  help: "Include a working example in the generated code."
+  choices:
+    - ABLE Weather open_meteo
+    - False
+  default: False
+  when: "{{ render_example }}"
+
+example_answers_file:
+  type: str
+  default: >-
+    {% if example_to_render == "ABLE Weather open_meteo" %}
+      example-answers/able_weather/etl.yml
+    {% endif %}
+  when: False
+
 # --- Questions --------------------------------------------------------------
 
 module_type:
@@ -89,8 +115,9 @@ _answers_file: >-
 # --- External Data ----------------------------------------------------------
 
 _external_data:
-  parent_projec_tpl: "{{ parent_project_tpl_answers_file }}"
+  parent_project_tpl: "{{ parent_project_tpl_answers_file }}"
   parent_module_tpl: "{{ parent_module_tpl_answers_file }}"
+  example_answers: "{% if render_example %}{{ example_answers_file }}{% endif %}"
 
 package_name:
   type: str
@@ -99,7 +126,7 @@ package_name:
 
     DO NOT CHANGE THIS VALUE FROM THE DEFAULT
     IT SHOULD STAY IN SYNC WITH THE PARENT PROJECT TEMPLATE.
-  default: "{{ _external_data.parent_projec_tpl.package_name }}"
+  default: "{{ _external_data.parent_project_tpl.package_name }}"
 
   # --- Post-configuration -----------------------------------------------------
 
