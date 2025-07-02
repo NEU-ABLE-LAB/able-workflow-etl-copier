@@ -23,13 +23,13 @@ rule datasets_weather_open_meteo_run:
     output:
         weather_data = (
             Path(config["datasets"]["weather"]["data_dirs"]["raw"])
-            / {latitude}_{longitude}/{start_date}_{end_date}.parquet"
+            / "{latitude}_{longitude}/{start_date}_{end_date}.parquet"
         )
     wildcard_constraints:
-        latitude: r"[-+]?\d{1,2}\.\d{1,6}"  # Latitude in decimal degrees
-        longitude: r"[-+]?\d{1,3}\.\d{1,6}"  # Longitude in decimal degrees
-        start_date: r"\d{4}-\d{2}-\d{2}"  # Start date in YYYY-MM-DD format
-        end_date: r"\d{4}-\d{2}-\d{2}"  # End date in YYYY-MM-DD format
+        latitude = r"[-+]?\d{1,2}\.\d{1,6}",  # Latitude in decimal degrees
+        longitude = r"[-+]?\d{1,3}\.\d{1,6}",  # Longitude in decimal degrees
+        start_date = r"\d{4}-\d{2}-\d{2}",  # Start date in YYYY-MM-DD format
+        end_date = r"\d{4}-\d{2}-\d{2}",  # End date in YYYY-MM-DD format
     conda:
         config["CONDA"]["ENVS"]["RUNNER"]
     script:
