@@ -139,6 +139,11 @@ def pytest_generate_tests(metafunc):
 
                 etl = _run_copy_silently(metafunc.config, etl_copie, ex.etl_answers)
 
+                assert etl.project_dir is not None, (
+                    f"Copier render failed for variant {var_id}."
+                    "Look at the copier logs above for the actual error."
+                )
+
                 project_dir: Path = etl.project_dir
                 envs = _list_tox_envs(project_dir)
                 cache[var_id] = (project_dir, envs)

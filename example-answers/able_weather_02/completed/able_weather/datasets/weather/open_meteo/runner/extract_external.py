@@ -88,4 +88,4 @@ def extract_open_meteo_data(
 
     hourly_dataframe = pd.DataFrame(data=hourly_data)
 
-    return
+    return hourly_dataframe
