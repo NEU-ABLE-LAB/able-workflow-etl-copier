@@ -16,7 +16,7 @@ import pytest
 from typer.testing import CliRunner
 
 # ──────────────────────────────────────────────────────────────────────────────
-#  Dynamically import the script under test (scripts/ isn’t a Python package)
+#  Dynamically import the script under test (scripts/ isn't a Python package)
 # ──────────────────────────────────────────────────────────────────────────────
 ROOT_DIR = Path(__file__).resolve().parents[2]  # project root (…/repo/)
 SCRIPT_PATH = ROOT_DIR / "scripts" / "sandbox_examples_generate.py"
@@ -90,21 +90,18 @@ def _prepare_single_example(
 ) -> str:
     """
     Create a fake Example entry and patch the script so that only this entry
-    is rendered.  Returns the example’s name.
+    is rendered.  Returns the example's name.
     """
-    # 1️⃣  Minimal YAML answer files expected by `Example`
-    pkg_yml = tmp_path / "pkg.yml"
-    module_yml = tmp_path / "module.yml"
-    etl_yml = tmp_path / "etl.yml"
-    pkg_yml.write_text("a: 1\n")
-    module_yml.write_text("b: 2\n")
-    etl_yml.write_text("c: 3\n")
+    # 1️⃣  Minimal YAML answer dictionaries expected by `Example`
+    pkg_answers = {"a": 1}
+    module_answers = {"b": 2}
+    etl_answers = {"c": 3}
 
     example = seg.Example(
         name="fake-example",
-        package_answers_file=pkg_yml,
-        module_answers_file=module_yml,
-        etl_answers_file=etl_yml,  # ← new argument
+        package_answers=pkg_answers,
+        module_answers=module_answers,
+        etl_answers=etl_answers,
     )
 
     # 2️⃣  Replace EXAMPLES with just our synthetic one
