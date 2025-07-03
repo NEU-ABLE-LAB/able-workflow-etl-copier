@@ -201,12 +201,12 @@ plugins = [
 strict = true
 exclude = '(^|/)tests/.*\.py$'
 files = ["able_weather"]
+ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
 # Snakemake does not provide type hints for its modules,
 # so we need to ignore them
 module = "snakemake.*"
-ignore_missing_imports = true
 follow_imports = "skip"
 
 [[tool.mypy.overrides]]
