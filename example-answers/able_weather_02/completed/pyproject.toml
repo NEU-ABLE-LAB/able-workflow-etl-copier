@@ -245,6 +245,8 @@ mkdocs-inline-select-svg-plugin = { pip = true }
 mkdocs-mermaid2-plugin = { pip = true }
 mkdocs-section-index = { pip = true }
 mkdocstrings = { skip = true, packages = ["mkdocstrings-python>=1.16.10"] }
+openmeteo-requests = { pip = true }
+retry-requests = { pip = true }
 snakemake = { channel = "bioconda"}
 snakefmt = { channel = "bioconda"}
 
