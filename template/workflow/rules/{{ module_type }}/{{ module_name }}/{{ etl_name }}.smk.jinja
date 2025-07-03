@@ -25,4 +25,4 @@ rule {{ module_type }}_{{ module_name }}_{{ etl_name }}_all:
     conda:
         config["CONDA"]["ENVS"]["RUNNER"]
     script:
-        str(WORKFLOW_BASE / "scripts" / "rules_CONDA_RUNNER" / {{ package_name }}_rules.py)
+        str(WORKFLOW_BASE / "scripts" / "rules_CONDA_RUNNER" / "{{ package_name }}_rules.py")
