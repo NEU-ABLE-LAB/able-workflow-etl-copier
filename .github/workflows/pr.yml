@@ -31,7 +31,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: NEU-ABLE-LAB/able-workflow-copier-dev
-          ref: 29eb2c9d87f59b77cddc72228111e36a9c7da5d5
+          ref: aceb0e332bfc24808c8e876f93d263065a7178a9
           path: sandbox/able-workflow-copier-dev
           token: ${{ secrets.ABLE_REPOS_PAT }}
 
@@ -39,7 +39,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: NEU-ABLE-LAB/able-workflow-module-copier-dev
-          ref: eb89759eaa0a29cbe6c20f0edc8e4063b811e5b0
+          ref: 8aeaedb272dda10c49799b219aa831d58e454305
           path: sandbox/able-workflow-module-copier-dev
           token: ${{ secrets.ABLE_REPOS_PAT }}
 
