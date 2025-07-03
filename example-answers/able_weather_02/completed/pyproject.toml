@@ -170,6 +170,8 @@ Repository = "https://github.com/NEU-ABLE-LAB/able-workflow-weather-example"
 Documentation = "https://github.com/NEU-ABLE-LAB/able-workflow-weather-example"
 Homepage = "https://github.com/NEU-ABLE-LAB/able-workflow-weather-example"
 
+[tool.pytest.ini_options]
+
 [tool.coverage.run]
 parallel = true
 # TODO-copier-package Add docs and hooks python
