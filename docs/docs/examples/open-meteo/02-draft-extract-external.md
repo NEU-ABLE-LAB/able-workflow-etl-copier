@@ -62,3 +62,35 @@ def test_extract_external_remote_data() -> None:
       include "../../../../example-answers/able_weather_02/completed/tests/able_weather/datasets/weather/open_meteo/runner/test_extract_external.py"
     %}
     ```
+
+### Run the test
+
+The most reliable way to run the test is through `tox` with the following command that runs all the unit-tests for the package modules that require the `runner` extras.
+
+```bash
+tox run -e py312-package-unit-runner
+```
+
+By default, tox will skip tests with the `remotedata` marker. If you use the `remotedata` marker you can tell tox you want the tests to run with the following command:
+
+```bash
+tox run -e py312-package-unit-runner -- --remote-data=any
+```
+
+### Debug the test
+
+If you need to debug because the tests failed, or you just want to run this test file, you can use the VSCode python debugger. However, you *must* have the full `*-dev-runner` conda environment installed, which you can do with the following command and then use the [Python Environments](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-python-envs) extension to set the default environment.
+
+```bash
+snakemake conda_update`
+```
+
+Open the file you want to test, `test_extract_external.py` and open the VSCode command line (++ctrl+P++) and type the following, or click the caret symbol next to the play button in the top right corner of the file and select the "Debug using launch.json" option.
+
+```text
+Python Debugger: Python Debugger: Debug using launch.json
+```
+
+And then select "PyTest Debugger: Current Test" and select the option to run with remote data if needed.
+
+You can then set breakpoints, watch variables, and use the DEBUG CONSOLE to help your tests to pass.

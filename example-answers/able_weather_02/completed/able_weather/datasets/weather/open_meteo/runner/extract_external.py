@@ -74,6 +74,15 @@ def extract_open_meteo_data(
     # Process hourly data. The order of variables needs to be the same as requested.
     hourly = response.Hourly()
     hourly_temperature_2m = hourly.Variables(0).ValuesAsNumpy()
+    hourly_relative_humidity_2m = hourly.Variables(1).ValuesAsNumpy()
+    hourly_wind_speed_10m = hourly.Variables(2).ValuesAsNumpy()
+    hourly_cloud_cover = hourly.Variables(3).ValuesAsNumpy()
+    hourly_snowfall = hourly.Variables(4).ValuesAsNumpy()
+    hourly_snow_depth = hourly.Variables(5).ValuesAsNumpy()
+    hourly_rain = hourly.Variables(6).ValuesAsNumpy()
+    hourly_apparent_temperature = hourly.Variables(7).ValuesAsNumpy()
+    hourly_dew_point_2m = hourly.Variables(8).ValuesAsNumpy()
+    hourly_precipitation = hourly.Variables(9).ValuesAsNumpy()
 
     hourly_data = {
         "date": pd.date_range(
@@ -85,6 +94,15 @@ def extract_open_meteo_data(
     }
 
     hourly_data["temperature_2m"] = hourly_temperature_2m
+    hourly_data["relative_humidity_2m"] = hourly_relative_humidity_2m
+    hourly_data["wind_speed_10m"] = hourly_wind_speed_10m
+    hourly_data["cloud_cover"] = hourly_cloud_cover
+    hourly_data["snowfall"] = hourly_snowfall
+    hourly_data["snow_depth"] = hourly_snow_depth
+    hourly_data["rain"] = hourly_rain
+    hourly_data["apparent_temperature"] = hourly_apparent_temperature
+    hourly_data["dew_point_2m"] = hourly_dew_point_2m
+    hourly_data["precipitation"] = hourly_precipitation
 
     hourly_dataframe = pd.DataFrame(data=hourly_data)
 
