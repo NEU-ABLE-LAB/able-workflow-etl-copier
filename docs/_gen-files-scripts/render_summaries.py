@@ -11,6 +11,7 @@ Requires:
 
 import os
 from pathlib import Path
+from typing import Any, Optional
 
 import jinja2
 import mkdocs_gen_files as gen_files
@@ -29,7 +30,7 @@ yaml = YAML(typ="safe")  # “safe” keeps built‑ins off by default
 TAG = "tag:yaml.org,2002:python/object/apply:os.getenv"
 
 
-def _yaml_getenv(loader, node):
+def _yaml_getenv(loader: Any, node: Any) -> Optional[str]:
     """YAML constructor that expands !!python/object/apply:os.getenv."""
     args = loader.construct_sequence(node)  # ["SITE_NAME", "Default"]
     return os.getenv(*args)

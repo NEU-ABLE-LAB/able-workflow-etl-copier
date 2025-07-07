@@ -94,3 +94,7 @@ Python Debugger: Python Debugger: Debug using launch.json
 And then select "PyTest Debugger: Current Test" and select the option to run with remote data if needed.
 
 You can then set breakpoints, watch variables, and use the DEBUG CONSOLE to help your tests to pass.
+
+## Commit and CI
+
+Commit the changes, push to github, and ensure all the continuous integration tests pass. **NOTE**: The CI tests will skip any tests marked with `remote-data`.

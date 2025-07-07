@@ -114,8 +114,7 @@ plugins = [
   "pydantic.mypy",
 ]
 strict = true
-exclude = '(^|/)(tests|template)/.*\\.py$'
-files = ["hooks", "extensions"]
+files = ["docs/_gen-files-scripts", "extensions", "hooks", "scripts", "tasks"]
 
 [[tool.mypy.overrides]]
 module = "tests.*"
