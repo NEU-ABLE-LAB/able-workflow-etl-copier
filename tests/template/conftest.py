@@ -34,6 +34,20 @@ from loguru import logger
 from ruamel.yaml import YAML
 from pytest_copie.plugin import Copie
 
+
+# ──────────────────────────────────────────────────────────────────────────────
+#  Pytest configuration
+# ──────────────────────────────────────────────────────────────────────────────
+def pytest_addoption(parser):
+    """Add custom command line options."""
+    parser.addoption(
+        "--all-examples",
+        action="store_true",
+        default=False,
+        help="Run tests against all discovered examples. By default, only the highest numbered example in each series is used.",
+    )
+
+
 # ──────────────────────────────────────────────────────────────────────────────
 #  Static paths & helper-loading
 # ──────────────────────────────────────────────────────────────────────────────
@@ -122,7 +136,7 @@ def _read_yaml(path: Path) -> Dict[str, Any]:
     return cast(Dict[str, Any], YAML(typ="safe").load(path.read_text()) or {})
 
 
-def _discover_examples() -> List[Example]:
+def _discover_examples(all_examples: bool = False) -> List[Example]:
     examples: List[Example] = []
     for ans_dir in Path("example-answers").iterdir():
         if not ans_dir.is_dir():
@@ -143,17 +157,70 @@ def _discover_examples() -> List[Example]:
         raise RuntimeError(
             "No examples found.  Each must contain package.yml, module.yml and etl.yml."
         )
-    return examples
+
+    if all_examples:
+        return examples
+
+    # Filter to only keep the highest numbered example in each series
+    return _filter_to_latest_examples(examples)
 
 
-EXAMPLES = _discover_examples()
-_example_ids = [e.name for e in EXAMPLES]
+def _filter_to_latest_examples(examples: List[Example]) -> List[Example]:
+    """
+    Filter examples to only keep the highest numbered example in each series.
+
+    For example, if we have ['able_weather_00', 'able_weather_01', 'able_weather_02'],
+    this will only return 'able_weather_02'.
+    """
+    import re
+    from collections import defaultdict
+
+    # Group examples by their base name (everything before the last underscore + number)
+    groups = defaultdict(list)
+
+    for example in examples:
+        # Try to extract base name and number using regex
+        match = re.match(r"^(.+?)_(\d+)$", example.name)
+        if match:
+            base_name = match.group(1)
+            number = int(match.group(2))
+            groups[base_name].append((number, example))
+        else:
+            # If it doesn't match the pattern, treat it as its own group
+            groups[example.name].append((0, example))
+
+    # For each group, keep only the example with the highest number
+    filtered_examples = []
+    for base_name, group_examples in groups.items():
+        # Sort by number and take the highest
+        group_examples.sort(key=lambda x: x[0])
+        _, latest_example = group_examples[-1]
+        filtered_examples.append(latest_example)
+
+    return filtered_examples
+
+
+def _get_examples_for_session(config) -> List[Example]:
+    """Get examples based on pytest configuration, caching the result."""
+    # Cache the examples on the config object to avoid re-discovery
+    if not hasattr(config, "_cached_examples"):
+        all_examples = config.getoption("--all-examples") if config else False
+        config._cached_examples = _discover_examples(all_examples)
+    return config._cached_examples
+
+
+def pytest_generate_tests(metafunc):
+    """Dynamically generate test parameters based on command line options."""
+    if "rendered" in metafunc.fixturenames:
+        examples = _get_examples_for_session(metafunc.config)
+        example_ids = [e.name for e in examples]
+        metafunc.parametrize("rendered", examples, ids=example_ids, indirect=True)
 
 
 # ──────────────────────────────────────────────────────────────────────────────
 #  Fixture
 # ──────────────────────────────────────────────────────────────────────────────
-@pytest.fixture(scope="session", params=EXAMPLES, ids=_example_ids)
+@pytest.fixture(scope="session")
 def rendered(request):
     """
     Render the three-level template chain and yield ``(project_dir, example_name)``.

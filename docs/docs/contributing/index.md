@@ -17,3 +17,11 @@ Example Copier answers are provided in the `answers/` directory. The followign c
     ```bash
     tox run -e py312-template-generate
     ```
+
+### Writing examples
+
+When writing new examples, it can be helpful to save the example after each step of the instructions that the example is trying to show. However, running the full test suite for every step of every example can be computationally demanding. Instead if the example steps are named `example_00/`, `example_01/`, and `example_02/`, then only `example_02/` will be run in the continuous integration tests. To run all three tests locally, run tox with the following commands:
+
+```bash
+tox run -- --all-examples
+```

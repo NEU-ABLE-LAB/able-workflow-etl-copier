@@ -18,7 +18,7 @@ from pathlib import Path
 from loguru import logger
 
 from tests.template.conftest import (
-    EXAMPLES,
+    _get_examples_for_session,
     _make_copier_config,
     _new_copie,
     _run_copy_silently,
@@ -88,7 +88,10 @@ def pytest_generate_tests(metafunc):
             metafunc.config, "_tox_collect_cache", {}
         )
 
-        for ex in EXAMPLES:
+        # Get examples dynamically based on pytest configuration
+        examples = _get_examples_for_session(metafunc.config)
+
+        for ex in examples:
             var_id = ex.name
             if var_id not in cache:
 
