@@ -11,12 +11,10 @@ _subdirectory: "template"
 example_to_render:
   type: str
   help: >-
-    Whether to render an example of the ETL process in the generated code.
-    This will include a working example of the ETL process in the generated code.
-  choices:
-    - able-weather-01
-    - False
-  default: False
+    The subdirectory name of the example to render in the `example-answers/`.
+
+    If this is not set, the template will not render any example files.
+  default: ""
 
 example_answers_dir:
   type: str
