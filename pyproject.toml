@@ -73,8 +73,9 @@ typecheck = [
   # stubs
   "types-Jinja2>=2.11.9",
   "types-jsonschema>=4.24.0.20250528",
-  "loguru>=0.7.2",
-  "pydantic>=2.11.4",
+  # Dependencies for typechecked files
+  { include-group = "docs" },
+  { include-group = "test" },
 ]
 
 dev = [
