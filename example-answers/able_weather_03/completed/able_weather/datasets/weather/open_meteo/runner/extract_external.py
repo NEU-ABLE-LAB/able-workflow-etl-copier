@@ -4,17 +4,24 @@ Extract data from the Open Meteo API and return it as a Pandas DataFrame.
 
 import openmeteo_requests
 import pandas as pd
+import pandera.pandas as pa
 import requests_cache
 from loguru import logger
+from pandera.typing.pandas import DataFrame
 from retry_requests import retry
 
+from able_weather.datasets.weather.open_meteo.runner import (
+    schema_external,
+)
 
+
+@pa.check_types
 def extract_open_meteo_data(
     latitude: float,
     longitude: float,
     start_date: str,
     end_date: str,
-) -> pd.DataFrame:
+) -> DataFrame[schema_external.OpenMeteoSchema]:
     """
     Extract weather data from the Open Meteo API for a given
     latitude, longitude, and date range.
@@ -106,4 +113,4 @@ def extract_open_meteo_data(
 
     hourly_dataframe = pd.DataFrame(data=hourly_data)
 
-    return hourly_dataframe
+    return DataFrame[schema_external.OpenMeteoSchema](hourly_dataframe)

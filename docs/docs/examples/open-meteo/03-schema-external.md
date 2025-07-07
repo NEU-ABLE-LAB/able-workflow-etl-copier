@@ -1,6 +1,6 @@
 # Write and test `schema_external` methods
 
-## Draft `schema_external`
+## Draft `schema_external.py`
 
 !!! success
 
@@ -38,6 +38,22 @@ tox run -e py312-package-unit-runner -- --remote-data=any
 ```
 
 Use breakpoints, watch variables, and the debug console to modify the test and/or schema to ensure the code behaves as expected and the tests pass.
+
+## Update `extract_external` to validate schema
+
+Modify `extract_external` to convert the returned dataframe from the generic `pd.dataframe` to the `OpenMeteoSchema` dataframe model.
+
+```python
+return DataFrame[schema_external.OpenMeteoSchema](hourly_dataframe)
+```
+
+??? example "`schema_external.py`"
+
+    ```python
+    {%
+      include "../../../../example-answers/able_weather_03/completed/able_weather/datasets/weather/open_meteo/runner/schema_external.py"
+    %}
+    ```
 
 ## Commit and CI
 
