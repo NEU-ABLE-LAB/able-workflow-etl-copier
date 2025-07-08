@@ -121,6 +121,7 @@ package_name:
 
 _skip_if_exists:
   - "workflow/rules/includes.smk"
+  - "workflow/profiles/default/config.yaml"
 
 # Post-generation hooks
 _tasks:
