@@ -100,16 +100,16 @@ def extract_open_meteo_data(
         )
     }
 
-    hourly_data["temperature_2m"] = hourly_temperature_2m
+    hourly_data["temperature_deg_c_2m"] = hourly_temperature_2m
     hourly_data["relative_humidity_2m"] = hourly_relative_humidity_2m
-    hourly_data["wind_speed_10m"] = hourly_wind_speed_10m
+    hourly_data["wind_speed_kmh_10m"] = hourly_wind_speed_10m
     hourly_data["cloud_cover"] = hourly_cloud_cover
-    hourly_data["snowfall"] = hourly_snowfall
-    hourly_data["snow_depth"] = hourly_snow_depth
-    hourly_data["rain"] = hourly_rain
-    hourly_data["apparent_temperature"] = hourly_apparent_temperature
-    hourly_data["dew_point_2m"] = hourly_dew_point_2m
-    hourly_data["precipitation"] = hourly_precipitation
+    hourly_data["snowfall_cm"] = hourly_snowfall
+    hourly_data["snow_depth_m"] = hourly_snow_depth
+    hourly_data["rain_mm"] = hourly_rain
+    hourly_data["apparent_temperature_deg_c"] = hourly_apparent_temperature
+    hourly_data["dew_point_temperature_deg_c_2m"] = hourly_dew_point_2m
+    hourly_data["precipitation_mm"] = hourly_precipitation
 
     hourly_dataframe = pd.DataFrame(data=hourly_data)
 

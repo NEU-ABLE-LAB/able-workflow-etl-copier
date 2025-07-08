@@ -21,11 +21,14 @@ def transform(data: DataFrame[schema_external.OpenMeteoSchema]) -> pa.DataFrame:
 
     # Get column metadata from the schema to find temperature columns
     col_metadata = (
-        (schema_external.OpenMeteoSchema.get_metadata() or {}).get("Schema", {}) or {}
+        (schema_external.OpenMeteoSchema.get_metadata() or {}).get(
+            "OpenMeteoSchema", {}
+        )
+        or {}
     ).get("columns", {}) or {}
 
     col_units = {
-        col: (col_metadata.get(col, {}) or {}).get("unit")
+        col: (col_metadata.get(col, {}) or {}).get("units")
         for col in col_metadata.keys()
     }
 
@@ -34,7 +37,7 @@ def transform(data: DataFrame[schema_external.OpenMeteoSchema]) -> pa.DataFrame:
         if col in col_units and col_units[col] == "°C":
             data[col] = data[col].apply(celsius_to_fahrenheit)
             data.rename(
-                columns={col: col.replace("temperature_", "temperature_f_")},
+                columns={col: col.replace("_deg_c", "_deg_f")},
                 inplace=True,
             )
 
