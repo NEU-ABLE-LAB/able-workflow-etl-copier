@@ -40,13 +40,13 @@ def test_extract_external_remote_data() -> None:
     assert isinstance(df, pd.DataFrame)
     assert not df.empty
     assert "date" in df.columns
-    assert "temperature_2m" in df.columns
+    assert "temperature_deg_c_2m" in df.columns
     assert "relative_humidity_2m" in df.columns
-    assert "wind_speed_10m" in df.columns
+    assert "wind_speed_kmh_10m" in df.columns
     assert "cloud_cover" in df.columns
-    assert "snowfall" in df.columns
-    assert "snow_depth" in df.columns
-    assert "rain" in df.columns
-    assert "apparent_temperature" in df.columns
-    assert "dew_point_2m" in df.columns
-    assert "precipitation" in df.columns
+    assert "snowfall_cm" in df.columns
+    assert "snow_depth_m" in df.columns
+    assert "rain_mm" in df.columns
+    assert "apparent_temperature_deg_c" in df.columns
+    assert "dew_point_temperature_deg_c_2m" in df.columns
+    assert "precipitation_mm" in df.columns

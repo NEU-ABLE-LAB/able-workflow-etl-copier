@@ -22,7 +22,7 @@ class OpenMeteoSchema(pa.DataFrameModel):
     date: Series[Annotated[pd.DatetimeTZDtype, "ns", "UTC"]] = pa.Field(
         description="Date in datetime64[ns, UTC] format.",
     )
-    temperature_2m: Series[pd.Float32Dtype] = pa.Field(
+    temperature_deg_c_2m: Series[pd.Float32Dtype] = pa.Field(
         coerce=True,
         description="Air temperature at 2 meters above ground (°C)",
         metadata={"units": "°C"},
@@ -36,7 +36,7 @@ class OpenMeteoSchema(pa.DataFrameModel):
         ge=0.0,
         le=100.0,
     )
-    wind_speed_10m: Series[pd.Float32Dtype] = pa.Field(
+    wind_speed_kmh_10m: Series[pd.Float32Dtype] = pa.Field(
         coerce=True,
         description="Wind speed at 10 meters above ground level (km/h)",
         metadata={"units": "km/h"},
@@ -50,7 +50,7 @@ class OpenMeteoSchema(pa.DataFrameModel):
         ge=0.0,
         le=100.0,
     )
-    snowfall: Series[pd.Float32Dtype] = pa.Field(
+    snowfall_cm: Series[pd.Float32Dtype] = pa.Field(
         coerce=True,
         description=(
             "Snowfall amount of the preceding hour in centimeters. "
@@ -60,7 +60,7 @@ class OpenMeteoSchema(pa.DataFrameModel):
         metadata={"units": "cm"},
         ge=0.0,
     )
-    snow_depth: Series[pd.Float32Dtype] = pa.Field(
+    snow_depth_m: Series[pd.Float32Dtype] = pa.Field(
         coerce=True,
         description=(
             "Snow depth on the ground. Snow depth in ERA5-Land tends "
@@ -70,7 +70,7 @@ class OpenMeteoSchema(pa.DataFrameModel):
         metadata={"units": "m"},
         ge=0.0,
     )
-    rain: Series[pd.Float32Dtype] = pa.Field(
+    rain_mm: Series[pd.Float32Dtype] = pa.Field(
         coerce=True,
         description=(
             "Only liquid precipitation of the preceding hour including "
@@ -79,7 +79,7 @@ class OpenMeteoSchema(pa.DataFrameModel):
         metadata={"units": "mm"},
         ge=0.0,
     )
-    apparent_temperature: Series[pd.Float32Dtype] = pa.Field(
+    apparent_temperature_deg_c: Series[pd.Float32Dtype] = pa.Field(
         coerce=True,
         description=(
             "Apparent temperature is the perceived feels-like temperature "
@@ -90,14 +90,14 @@ class OpenMeteoSchema(pa.DataFrameModel):
         ge=MIN_DEG_C,
         le=MAX_DEG_C,
     )
-    dew_point_2m: Series[pd.Float32Dtype] = pa.Field(
+    dew_point_temperature_deg_c_2m: Series[pd.Float32Dtype] = pa.Field(
         coerce=True,
         description="Dew point temperature at 2 meters above ground (°C)",
         metadata={"units": "°C"},
         ge=MIN_DEG_C,
         le=MAX_DEG_C,
     )
-    precipitation: Series[pd.Float32Dtype] = pa.Field(
+    precipitation_mm: Series[pd.Float32Dtype] = pa.Field(
         coerce=True,
         description=(
             "Total precipitation (rain, showers, snow) sum of the "
