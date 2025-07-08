@@ -4,7 +4,12 @@ This repository contains a Copier template for created an ETL pipeline in a proj
 
 ## Initializing development environment
 
-The agent environment setup script installs miniforge for conda and tox for unit tests. The setup script also installs tox and caches all of the tox environments. For a development environment, activate the desired tox environment, e.g., `py312-dev`.
+The agent environment setup script installs miniforge for conda and tox for unit tests. The following environment variable (and secrets) are already configured:
+
+- `GITHUB_PAT`: The github personal access token (PAT) to use with private repositories
+- `GITHUB_USERNAME`: The github username to use for authentication with the PAT
+
+The setup script also installs tox and caches all of the tox environments. For a development environment, activate the desired tox environment, e.g., `py312-dev`.
 
 ```bash
 source ".tox/py312-dev/bin/activate"
@@ -38,10 +43,14 @@ conda activate
 pipx install uv
 uv tool install tox --with tox-uv
 
-# Create the sandbox
-./sandbox/sandbox_examples_generate.py
-
 # Cache Tox environment with access to conda
 tox run --recreate --notest --skip-missing-interpreters false
 tox run --recreate --notest --skip-missing-interpreters false -e py312-dev
+
+# Configure git to use token via credential helper
+git config --global credential.helper 'store --file ~/.git-credentials'
+echo "https://$GITHUB_USERNAME:$GITHUB_PAT@github.com" > ~/.git-credentials
+
+# Create the sandbox
+.tox/py312-dev/bin/python scripts/sandbox_examples_generate.py
 ```
