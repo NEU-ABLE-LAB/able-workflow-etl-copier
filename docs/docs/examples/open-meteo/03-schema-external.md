@@ -39,6 +39,10 @@ tox run -e py312-package-unit-runner -- --remote-data=any
 
 Use breakpoints, watch variables, and the debug console to modify the test and/or schema to ensure the code behaves as expected and the tests pass.
 
+```bash
+tox run-parallel --quiet -f py312 lint -f py312 typecheck
+```
+
 ## Update `extract_external` to validate schema
 
 Modify `extract_external` to convert the returned dataframe from the generic `pd.dataframe` to the `OpenMeteoSchema` dataframe model.
