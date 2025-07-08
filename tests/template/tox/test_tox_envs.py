@@ -222,6 +222,11 @@ def test_inner_tox_env_passes(variant_id, env_name, request):
             ]
         )
 
+    remotedata = request.config.getoption("remotedata")
+    if remotedata:
+        # Forward the pytest-remotedata option to the inner tox invocation
+        extra_args.append(f"--remote-data={remotedata}")
+
     verbosity = request.config.getoption("verbose")
     if verbosity >= 2:
         # If verbosity is 2 or higher, enable debug output

@@ -47,6 +47,20 @@ def pytest_addoption(parser):
         help=("Do not run the specified *inner* tox environment(s) in parallel."),
     )
 
+    # Support forwarding the pytest-remotedata option to the inner tox run.
+    # The plugin normally registers ``--remote-data`` but the outer test
+    # environment does not depend on pytest-remotedata.  Without registering
+    # the option here, running ``tox`` with ``--remotedata`` would result in an
+    # unknown-argument error.  Capture either spelling and store the value so
+    # that it can be propagated to the inner pytest invocation.
+    parser.addoption(
+        "--remotedata",
+        "--remote-data",
+        action="store",
+        dest="remotedata",
+        help="Forward the pytest-remotedata option to the inner tox run",
+    )
+
 
 # --- Helpers ----------------------------------------------------------------
 def _parse_env_list_from_config(project_dir: Path) -> list[str]:
