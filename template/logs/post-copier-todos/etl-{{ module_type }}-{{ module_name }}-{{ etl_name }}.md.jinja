@@ -4,67 +4,351 @@ This issue is for tracking the development of the ETL process that was copied fr
 
 Each of the sections below could be separated into a sub-issue. After each sub-issue, all tests should still pass.
 
-## Step 01: Write a draft of the rule(s) in the `workflow/rules/{{ module_type }}/{{ module_name }}.smk` file
-
-If the ETL process will be running multiple times for different files, define a `{{ module_type }}_{{ module_name }}_{{ etl_name }}_run` rule with [wildcards](https://snakemake.readthedocs.io/en/stable/snakefiles/rules.html#wildcards).
-
-Later a `{{ module_type }}_{{ module_name }}_{{ etl_name }}_all` rule can be written that uses the [`expand()`](https://snakemake.readthedocs.io/en/stable/snakefiles/rules.html#the-expand-function) function in the input section to specify the output files to be produced by the `{{ module_type }}_{{ module_name }}_{{ etl_name }}_run` rule.
-
-- [ ] Write the `{{ module_type }}_{{ module_name }}_{{ etl_name }}_run` rule. This rule should define the input files that a single run of this ETL process requires, and define the output that it will produce. At this point, this draft rule will not be run, but is just an opportunity to specify what the expected inputs and outputs are of a single run of the ETL process. This will help guide the development of the ETL module.
-
-{% if requires_extract_external -%}
-## Step 02: Write and test functions to extract and validate external data
-
-### 02.01 TODO-{{ module_type }}-{{ module_name }}-{{ etl_name }}: Create external test data
-
-- [ ] If possible, create a small (<1 MB) sample/test dataset from the external data source. If the external data resides on an external database server, develop a test query that returns a subset of the data for testing. If the external data is stored in a file, save and commit the test data to `data/tests/{{ module_name }}/{{ etl_name }}/`
-
-### 02.02 TODO-{{ module_type }}-{{ module_name }}-{{ etl_name }}: Extract External Data
-
-- [ ] **Draft the `extract_external` function**: Write the `extract_external` function in `runner/extract_external.py`.
-
-  If the data is stored in a file, this function should take as an argument a path to the data. DO NOT hardcode the path to the input data here (not even a default value). The paths will be provided by the `input:` directive of the Snakemake rule or via the tests.
-
-  If the data is stored on an external server, this function should take the URL, credentials, and query as an argument. You may wish to write a query builder function that parameterizes the query so that the the Snakemake rule only needs to pass a short `params:` value and not an entire URL and query.
-
-  For now, this function should return a `pandas` or `dask` dataframe of the data. The schema will be validated later.
-
-### TODO-{{ module_type }}-{{ module_name }}-{{ etl_name }}: Validate External Data
-
-- [ ] **Draft the schema**: Write a [Pandera DataFrame Model](https://pandera.readthedocs.io/en/stable/dataframe_models.html) in `runner/schema_external.py` to validate each column in the expected data.
-
-- [ ] **Simple schema unit-test**: Write a simple unit test in `tests/{{ package_name }}/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_schema_external.py`
 
 
 
-- [ ] **Draft the extract function**: Write the extract function in `runner/extract_external.py`.
-
-  If the data is stored in a file, this function should take as an argument a path to the data. DO NOT hardcode the path to the input data here (not even a default value). The paths will be provided by the `input:` directive of the Snakemake rule or via the tests.
-
-  If the data is stored on an external server, this function should take the URL, credentials, and query as an argument. You may wish to write a query builder function that parameterizes the query so that the the Snakemake rule only needs to pass a short `params:` value and not an entire URL and query.
-
-  This function should return a `pandera.typing.pandas.DataFrame[SchemaExternal]` validated dataframe of the data. (Alternatively, a `pandera.typing.dask.DataFrame[SchemaExternal]` if using Dask.)
-
-- [ ] **Draft the
-
-{%- endif %}
+## Draft rule
 
 
+### `workflow/rules/{{ module_type }}/{{ module_name }}.smk`
+
+- [ ] Draft the rule that will run the ETL process once.
+- [ ] Define the inputs, outputs, and wildcards for the rule.
+- [ ] Ensure that the rule's docstring describes the ETL process and its inputs and outputs.
+- [ ] If the rule will only produce a single file in the workflow, then use a fixed output file name. If the rule will produce multiple files, then create a wildcard for the output file name and create another rule with the `all` suffix that collects all the outputs of the ETL process.
+
+
+### `data/tests/all.yaml`
+
+- [ ] If this ETL process consumes `raw` or `external` data into this workflow, then add the names of the `raw` or `external` data to the `data/tests/all.yaml` file. This will ensure that the data is available for DAG generation, testing, and debugging.
+
+After completing the above steps, run the following command to ensure that the rule is valid and the DAG is generated correctly:
+
+```bash
+snakemake dag_svg_all
+```
+
+This DAG is automatically added to the `docs/docs/workflow/index.md` page of the documentation.
+
+
+### `config/{{ module_type }}/{{ module_name }}/{{ etl_name }}.config.yaml`
+
+This file is automatically read by the workflow as specified in `workflow/profiles/default/config.yaml`. If the ETL process requires any configuration parameters, then add them to this file. The parameters should be in the format of a YAML dictionary.
+
+- [ ] If the rule requires any configuration parameters not found in the templated `config.yaml` for the ETL process, then add those parameters to the `config/{{ module_type }}/{{ module_name }}/{{ etl_name }}.config.yaml` file.
+
+- [ ] If you add any parameters to the `config.yaml` file, then also add them to the `workflow/schemas/{{ module_type }}/{{ module_name }}/{{ etl_name }}.config.schema.yaml` file to ensure that the configuration is validated against the schema.
 
 
 
+## Draft and test `extract_external` methods if required
+
+If the ETL process requires external data (i.e., data that was not produced by an ETL process that has `extract` and `schema` modules, created with the `able-workflow-etl-copier` template, that can be imported), then draft the `extract_external` methods.
+
+
+### `pyproject.toml`
+
+- [ ] Add any extra dependencies that this module requires to `runner` in the `[project.optional-dependencies]` section of `pyproject.toml`. If those dependencies are not available on [conda-forge](https://anaconda.org/conda-forge/repo), then configure the `[tool.pyproject2conda.dependencies]` section of `pyproject.toml` to specify that they should be installed via `pip` instead of `conda`.
+
+
+### `{{ package_name }}/{{ module_type }}/{{ etl_name }}/runner/extract_external.py`
+
+- [ ] Write a method to extract the external data from the source. This method should return a `pd.DataFrame` (or `dd.DataFrame` if using Dask)that matches the schema defined in `schema_external.py`.
+
+- [ ] Ensure that the method handles any necessary API requests, data parsing, and error handling.
+
+- [ ] [Lint and typecheck](#lint-and-typecheck) the `extract_external.py` file using `tox`.
+
+- [ ] Commit and run [all CI tests](#CI-tests)
+
+
+### `tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_extract_external.py`
+
+Write a minimal unit test for `extract_external`. This unit test should consume a small but real test dataset from one of the following sources:
+
+  - [ ] a small test dataset committed to the `datasets/tests/` directory of this git repo,
+
+  - [ ] a remote data source (e.g., web API) using a relatively small query and the [`remote_data`](https://github.com/astropy/pytest-remotedata) [pytest marker](https://docs.pytest.org/en/stable/example/markers.html), or
+
+  - [ ] if you have not yet paired down the data on disk into a test dataset small enough to commit to the git repo (<2MB), then use the `remote_data` marker but have the test consume data from disk but not committed to the git repo. Ideally, these tests should still be <100 MB of data and can run on a laptop.
+
+    ```python
+    @pytest.mark.remote_data  # type: ignore[misc]
+    def test_extract_external_remote_data() -> None:
+    ```
+
+> Typically, a "unit test" should not require access to remote resources or the full dataset on local disk. However, the purpose of this test is to ensure that the real data is as expected.
+>
+> If you try to use an AI agent to write this unit test, it might try to [monkeypatch](https://docs.pytest.org/en/stable/how-to/monkeypatch.html) the web API and yield synthetic data to the `extract_external` function. It will make assumptions about what the test data or remote data looks like, but not actually test against the real data.
+
+The most reliable way to run the test is through `tox` with the following command that runs all the unit-tests for the package modules that require the `runner` extras.
+
+```bash
+tox run -e py312-package-unit-runner
+```
+
+By default, tox will skip tests with the `remotedata` marker. If you use the `remotedata` marker you can tell tox you want the tests to run with the following command:
+
+```bash
+tox run -e py312-package-unit-runner -- --remote-data=any
+```
+
+If you need to debug because the tests failed, or you just want to run this test file, you can use the VSCode python debugger. However, you *must* have the full `*-dev-runner` conda environment installed, which you can do with the following command and then use the [Python Environments](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-python-envs) extension to set the default environment.
+
+```bash
+snakemake conda_update`
+```
+
+Open the file you want to test, `test_extract_external.py` and open the VSCode command line (++ctrl+P++) and type the following, or click the caret symbol next to the play button in the top right corner of the file and select the "Debug using launch.json" option.
+
+```text
+Python Debugger: Python Debugger: Debug using launch.json
+```
+
+And then select "PyTest Debugger: Current Test" and select the option to run with remote data if needed.
+
+You can then set breakpoints, watch variables, and use the DEBUG CONSOLE to help your tests to pass.
+
+- [ ] [Lint and typecheck](#lint-and-typecheck) the additions using `tox`.
+
+- [ ] Ensure [remote data tests](#remote-data-tests) still pass.
+
+- [ ] Commit and run [all CI tests](#CI-tests)
 
 
 
+## Draft and test `schema_external`
 
-### Required
 
-- [ ] `pyproject.toml`
-  - [ ] Add any extra dependencies that this module requires to `runner` in the `[project.optional-dependencies]` section of `pyproject.toml`. If those dependencies are not available on [conda-forge](https://anaconda.org/conda-forge/repo), then configure the `[tool.pyproject2conda.dependencies]` section of `pyproject.toml` to specify that they should be installed via `pip` instead of `conda`.
+### `{{ package_name }}/{{ module_type }}/{{ etl_name }}/runner/schema_external.py`
+
+- [ ] If the external data is in a similar format to the data that this ETL process produces, then you may consider skipping the `schema_external.py` step and simply using the `extract_external.py` method to return a `pd.DataFrame` without validating the external schema, but then validating the output of the `transform.py` method in the `schema.py` step.
+
+- [ ] Write a Pandera DataFrame Model to validate the dataframe returned by `extract_external` based on the external data source's API documentation.
+
+- [ ] Ensure that the schema includes appropriate data types, descriptions, metadata (e.g., physical units), and validation checks for the external data.
+
+  - [ ] **column data types**: Define appropriate pandas data types for each column. The schema uses `pd.DatetimeTZDtype` for the date column to ensure timezone-aware datetime handling, and `pd.Float32Dtype` for numeric columns.
+
+  - [ ] **description**: Add clear, descriptive human-readable field descriptions that explain what each column represents and its purpose. These descriptions are extracted from the Open Meteo API documentation and help developers understand the data structure and meaning of each field.
+
+  - [ ] **metadata-units**: Include unit information in the metadata dictionary for each field (e.g., "°C", "%", "km/h", "mm", "cm", "m"). This metadata provides context for data interpretation and enables automated unit conversion or validation in downstream processing.
+
+  - [ ] **checks**: Implement data validation constraints using Pandera's validation features:
+    - Physical units are within reasonable bounds (e.g., temperature fields have realistic min/max bounds (-60°C to 60°C), percentage fields (humidity, cloud cover) are constrained to 0-100%, wind speed has a maximum realistic limit (200 km/h), precipitation and snow measurements are non-negative (≥0)).
+    - All numeric fields use `coerce=True` to handle type conversion gracefully. Except for `datetime` columns since datetime coersion may modify the true meaning of the data.
+
+- [ ] [Lint and typecheck](#lint-and-typecheck) using `tox`.
+
+
+### `tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_schema_external.py`
+
+- [ ] If your schema contains validation or coercion logic, write unit tests to ensure that the schema behaves as expected. This can include testing valid and invalid data against the schema.
+
+- [ ] Run [remote data tests](#remote-data-tests) and see the tests pass.
+
+Use breakpoints, watch variables, and the debug console to modify the test and/or schema to ensure the code behaves as expected and the tests pass.
+
+
+### Update `extract_external` to validate schema
+
+- [ ] Modify `extract_external` to convert the returned dataframe from the generic `pd.dataframe` to the `schema_external` dataframe model.
+
+  ```python
+  return dataframe_to_be_returned.pipe(DataFrame[schema_external.YourDataframeModel])
+  ```
+
+- [ ] Update the type hints (and logic as necessary) in `test_extract_external.py` to reflect the new return type of `extract_external`
+
+- [ ] Run [remote data tests](#remote-data-tests) and see if they pass.
+
+- [ ] Commit and run [all CI tests](#CI-tests)
+
+
+
+## Draft and test `transform` methods
+
+
+### `{{ package_name }}/{{ module_type }}/{{ etl_name }}/runner/transform.py`
+
+- [ ] Implement the `transform` method to apply any necessary transformations to the data extracted from the external source.
+
+- [ ] Ensure that the transformation logic is well-documented (each function has numpy style docstrings) and handles any necessary data cleaning, formatting, or enrichment.
+
+- [ ] The input data is type hinted using the schema_external dataframe model. **NOTE**: The return data will be type hinted in a later step after defining `schema.py`
+
+- If the ETL process transforms data from other ETL processes, then import the `schema` from those processes and use it to type hint the input data.
+
+- [ ] [Lint and typecheck](#lint-and-typecheck) the `transform.py` file using `tox`.
+
+
+### `tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_transform.py`
+
+- [ ] Write unit tests to ensure the transformation works as intended. This can use test data from the `data/tests/` directory, or hard-code simple test data. These tests should not use the `remote_data` marker since the transformation should not depend on remote data.
+
+- [ ] Run the tests through `tox` with the following command. Alternatively, use the VSCode debugger launch.json with PyTest and remote data.
+
+  ```bash
+  tox run -e py312-package-unit-runner
+  ```
+
+- [ ] Run [remote data tests](#remote-data-tests) and see if they pass.
+
+- [ ] Commit and run [all CI tests](#CI-tests)
+
+
+
+## `schema.py` and `test_schema.py`
+
+
+### `{{ package_name }}/{{ module_type }}/{{ etl_name }}/schema.py`
+
+- [ ] Write a Pandera DataFrame Model to validate the dataframe returned by `transform`.
+
+- [ ] Update the type hints and return type in `transform.py` to reflect the new return type of the `transform` method.
+
+
+### `tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/test_schema.py`
+
+- [ ] Write unit tests to ensure the schema behaves as expected. This can include testing valid and invalid data against the schema.
+
+
+
+## `load.py` and `test_load.py`
+
+
+### `{{ package_name }}/{{ module_type }}/{{ etl_name }}/runner/load.py`
+
+- [ ] Implement the `load` method to save the transformed data to the desired output format (e.g., Parquet). The function(s) should take as arguments file paths (do not include default values to avoid confusion) and the dataframe produced by `transform.py` to be saved.
+
+
+### `tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_load.py`
+
+- [ ] Write unit tests to ensure the loading works as intended. This can use test data from the `data/tests/` directory, or hard-code simple test data. These tests should not use the `remote_data` marker since the loading should not depend on remote data.
+
+
+
+## `extract.py` and `test_extract.py`
+
+
+### `{{ package_name }}/{{ module_type }}/{{ etl_name }}/extract.py`
+
+- [ ] Implement the `extract` method which will be used by other ETL processes to extract (i.e., read from disk) the data produced by the `load` methods of this ETL process. This method should return a `pd.DataFrame` (or `dd.DataFrame` if using Dask) that matches the schema defined in `schema.py`.
+
+
+### `tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/test_extract.py`
+
+- [ ] Write unit tests to ensure the extraction works as intended. This can use test data from the `data/tests/` directory, or hard-code simple test data. These tests should not use the `remote_data` marker since the extraction should not depend on remote data.
+
+
+
+## `main.py` and `test_main.py`
+
+
+### `{{ package_name }}/{{ module_type }}/{{ etl_name }}/runner/main.py`
+
+The `main.py` script is the entry point for the ETL process. It should orchestrate the execution of the ETL steps in the correct order.
+
+- `run()` should take descriptive arguments for the input, output, and parameters of the ETL process. It should then call the following methods in the correct order:
+
+    {% if requires_extract_external -%}
+  - [ ] `extract_external()` file paths or API parameters and return a `pd.DataFrame` (or `dd.DataFrame` if using Dask) that matches the schema defined in `schema_external.py`.
+    {%- endif %}
+
+  - [ ] If this ETL process reads data produced by other `able-workflow` ETL processes, then import and call the `extract` methods to read the data from disk.
+
+  - [ ] `transform()`, takes the dataframes produces by `extract_external()` and/or other processes' `extract()` methods as input and returns a transformed dataframe that matches the schema defined in `schema.py`.
+
+  - [ ] `load()`, takes the output file path and the dataframe produced by `transform()` as input and saves the dataframe to disk in the desired format (e.g., Parquet).
+
+  - [ ] `extract()`, to ensure the data was saved to disk correctly, this method should read the data that was just saved to disk and return a `pd.DataFrame` (or `dd.DataFrame` if using Dask) and then validated with the schema defined in `schema.py`. This is useful for testing and debugging the ETL process.
+
+- `run_smk()` should take the `snakemake.script.Snakemake` object passed to it by `workflow/scripts/rules_conda_RUNNER/{{ package_name }}_rules.py` that is specified in the `script:` directive of the `snakemake` rule in `workflow/rules/{{ module_type }}/{{ module_name }}.smk`, parse the `input`, `output`, `wildcards`, and `params` from the `snakemake` object, and then pass those to a call the main `run` function as arguments.
+
+
+### `tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_main.py`
+
+- [ ] Write unit tests to ensure the `main.py` script works as intended. This can use test data from the `data/tests/` directory, or hard-code simple test data. These tests should not use the `remote_data` marker since the main script should not depend on remote data.
+
+- [ ] `run()` If the ETL simply follows the steps defined above, then minimal or no unit tests may be needed. However, if the ETL process has complex logic or transformations, then write unit tests to ensure that the `run()` function behaves as expected.
+
+- [ ] `run_smk()` Write unit tests to ensure that the `run_smk()` function correctly parses the `snakemake` object and calls the `run()` function with the correct arguments. This can be done by creating a dummy `snakemake` object and checking that the correct arguments are passed to `run()`.
+
+## Integration test
+
+- [ ] `data/tests/{{ module_name }}/{{ etl_name }}/external/`
+
+  - [ ] Create a directory for the external data used by the ETL process.
+
+  - [ ] Add a small test dataset that can be used to test the `extract_external` method. This dataset should be small enough to commit to the git repo and should not exceed 2MB in size.
+
+  - [ ] Ensure that the dataset is in a format that can be read by the `extract_external` method.
+
+- [ ] `data/tests/{{ module_name }}/{{ etl_name }}/raw/`
+
+  - [ ] Create a directory for the raw data produced by the ETL process.
+
+  - [ ] Add a small test dataset that can be used to test the `extract_external` method. This dataset should be small enough to commit to the git repo and should not exceed 2MB in size.
+
+  - [ ] Ensure that the dataset is in a format that can be read by the `extract_external` method.
+
+- [ ] `tests/workflow/rules/{{ module_type }}/{{ module_name }}/test_snakemake_{{ etl_name }}.py`
+
+  - [ ] Write an integration test that runs the entire ETL process from start to finish.
+
+
+
+## documentation
+
+### `docs/docs/{{ module_type }}/{{ module_name }}/{{ etl_name }}/index.md`
+
+- [ ] Write documentation for the ETL process, including a description of the inputs and outputs.
+
+### `docs/docs/{{ module_type }}/{{ module_name }}/{{ etl_name }}/config.md`
+
+- [ ] Write documentation for the configuration file, including a description of the parameters and their default values.
+
+### `docs/docs/contributing/templates/module-{{ module_type }}-{{ module_name }}/etl-{{ etl_name }}/index.md`
+
+- [ ] These files should not need to be modified as they describe how to update this ETL process with changes to the `able-workflow-etl-copier` template.
+
+
+
+## CI tests
+
+
+### Lint and typecheck
+
+- [ ] Lint and typecheck the `extract_external.py` method using `tox`.
+
+  ```bash
+  tox run-parallel --quiet -f py312 lint -f py312 typecheck
+  ```
+
+
+### Remote data tests
+
+- [ ] Run tests that extract data from the remote source using the `remote_data` pytest marker. This will ensure that the methods works as expected with real data.
+
+  ```bash
+  tox run-parallel -e py312-package-unit-runner -- --remote-data=any
+  ```
+
+
+### Full test suite
+
+- [ ] Run the full `tox` test suite to ensure that all tests pass after the changes made in the previous steps.
+
+  ```bash
+  tox run-parallel
+  ```
+
+
+## Final file creation/modification checklist
+
 - [ ] `{{ package_name }}/{{ module_type }}/{{ etl_name }}/`
-  - [ ] `extract.py`
-  - [ ] `schema.py`
   - [ ] `runner/`
+    - [ ] `__init__.py`
     {% if requires_extract_external -%}
     - [ ] `extract_external.py`
     - [ ] `schema_external.py`
@@ -72,14 +356,40 @@ Later a `{{ module_type }}_{{ module_name }}_{{ etl_name }}_all` rule can be wri
     - [ ] `load.py`
     - [ ] `main.py`
     - [ ] `transform.py`
-- [ ] `.vscode/launch.json`
-- [ ] `tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/`
-  - [ ] `test_extract.py`
-  - [ ] `test_schema.py`
-  - [ ] `runner/`
-    - [ ] `test_extract_external.py`
-    - [ ] `test_load.py`
-    - [ ] `test_main.py`
-    - [ ] `test_transform.py`
-- [ ] `workflow/rules/{{ module_type }}/{{ module_name }}.smk`
-  - [ ] Add this ETL process's output to the input of the `{{ module_type }}_{{ module_name }}_all` rule and describe in the rule's docstring.
+  - [ ] `__init__.py`
+  - [ ] `extract.py`
+  - [ ] `schema.py`
+- [ ] `data/tests/`
+  - [ ] `{{ module_name }}/{{ etl_name }}/`
+    - [ ] `external/`
+    - [ ] `raw/`
+  - [ ] `all.yaml`
+- [ ]  `docs/docs/`
+  - [ ] `{{ module_type }}/{{ module_name }}/{{ etl_name }}/`
+    - [ ] `config.md`
+    - [ ] `index.md`
+    - [ ] `SUMMARY.md`
+  - [ ] `contributing/templates/module-{{ module_type }}-{{ module_name }}/etl-{{ etl_name }}/`
+    - [ ] `index.md`
+    - [ ] `SUMMARY.md`
+- [ ] `tests/`
+  - [ ] `{{ module_type }}/{{ module_name }}/{{ etl_name }}/`
+    - [ ] `runner/`
+      {% if requires_extract_external -%}
+      - [ ] `test_extract_external.py`
+      - [ ] `test_schemas_external.py`
+      {%- endif %}
+      - [ ] `test_load.py`
+      - [ ] `test_main.py`
+      - [ ] `test_transform.py`
+    - [ ] `test_extract.py`
+    - [ ] `test_schema.py`
+  - [ ] `workflow/rules/{{ module_type }}/{{ module_name }}/test_snakemake_{{ etl_name }}.py`
+- [ ] `config/{{ module_type }}/{{ module_name }}/{{ etl_name }}.config.yaml`
+- [ ] `workflow/`
+  - [ ] `profiles/default/config.yaml`
+  - [ ] `rules/`
+    - [ ] `{{ module_type }}/{{ module_name }}.smk`
+    - [ ] `includes.smk`
+  - [ ] `schemas/{{ module_type }}/{{ module_name }}/{{ etl_name }}.config.schema.yaml`
+- [ ] `pyproject.toml`
