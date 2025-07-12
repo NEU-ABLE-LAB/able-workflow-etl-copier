@@ -1,0 +1,11 @@
+# 06. Draft and test `load.py` and `test_load.py` for `{{ module_type }}/{{ etl_name }}`
+
+
+## `{{ package_name }}/{{ module_type }}/{{ etl_name }}/runner/load.py`
+
+- [ ] Implement the `load` method to save the transformed data to the desired output format (e.g., Parquet). The function(s) should take as arguments file paths (do not include default values to avoid confusion) and the dataframe produced by `transform.py` to be saved.
+
+
+## `tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_load.py`
+
+- [ ] Write unit tests to ensure the loading works as intended. This can use test data from the `data/tests/` directory, or hard-code simple test data. These tests should not use the `remote_data` marker since the loading should not depend on remote data.

@@ -1,0 +1,11 @@
+# 07. Draft and test `extract.py` and `test_extract.py` for `{{ module_type }}/{{ etl_name }}`
+
+
+## `{{ package_name }}/{{ module_type }}/{{ etl_name }}/extract.py`
+
+- [ ] Implement the `extract` method which will be used by other ETL processes to extract (i.e., read from disk) the data produced by the `load` methods of this ETL process. This method should return a `pd.DataFrame` (or `dd.DataFrame` if using Dask) that matches the schema defined in `schema.py`.
+
+
+## `tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/test_extract.py`
+
+- [ ] Write unit tests to ensure the extraction works as intended. This can use test data from the `data/tests/` directory, or hard-code simple test data. These tests should not use the `remote_data` marker since the extraction should not depend on remote data.

@@ -1,0 +1,73 @@
+# 02. Draft and test `extract_external` methods for `{{ module_type }}/{{ etl_name }}`
+
+If the ETL process requires external data (i.e., data that was not produced by an ETL process that has `extract` and `schema` modules, created with the `able-workflow-etl-copier` template, that can be imported), then draft the `extract_external` methods.
+
+
+## `pyproject.toml`
+
+- [ ] Add any extra dependencies that this module requires to `runner` in the `[project.optional-dependencies]` section of `pyproject.toml`. If those dependencies are not available on [conda-forge](https://anaconda.org/conda-forge/repo), then configure the `[tool.pyproject2conda.dependencies]` section of `pyproject.toml` to specify that they should be installed via `pip` instead of `conda`.
+
+
+## `{{ package_name }}/{{ module_type }}/{{ etl_name }}/runner/extract_external.py`
+
+- [ ] Write a method to extract the external data from the source. This method should return a `pd.DataFrame` (or `dd.DataFrame` if using Dask)that matches the schema defined in `schema_external.py`.
+
+- [ ] Ensure that the method handles any necessary API requests, data parsing, and error handling.
+
+- [ ] [Lint and typecheck](#lint-and-typecheck) the `extract_external.py` file using `tox`.
+
+- [ ] Commit and run [all CI tests](#CI-tests)
+
+
+## `tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_extract_external.py`
+
+Write a minimal unit test for `extract_external`. This unit test should consume a small but real test dataset from one of the following sources:
+
+  - [ ] a small test dataset committed to the `datasets/tests/` directory of this git repo,
+
+  - [ ] a remote data source (e.g., web API) using a relatively small query and the [`remote_data`](https://github.com/astropy/pytest-remotedata) [pytest marker](https://docs.pytest.org/en/stable/example/markers.html), or
+
+  - [ ] if you have not yet paired down the data on disk into a test dataset small enough to commit to the git repo (<2MB), then use the `remote_data` marker but have the test consume data from disk but not committed to the git repo. Ideally, these tests should still be <100 MB of data and can run on a laptop.
+
+    ```python
+    @pytest.mark.remote_data  # type: ignore[misc]
+    def test_extract_external_remote_data() -> None:
+    ```
+
+> Typically, a "unit test" should not require access to remote resources or the full dataset on local disk. However, the purpose of this test is to ensure that the real data is as expected.
+>
+> If you try to use an AI agent to write this unit test, it might try to [monkeypatch](https://docs.pytest.org/en/stable/how-to/monkeypatch.html) the web API and yield synthetic data to the `extract_external` function. It will make assumptions about what the test data or remote data looks like, but not actually test against the real data.
+
+The most reliable way to run the test is through `tox` with the following command that runs all the unit-tests for the package modules that require the `runner` extras.
+
+```bash
+tox run -e py312-package-unit-runner
+```
+
+By default, tox will skip tests with the `remotedata` marker. If you use the `remotedata` marker you can tell tox you want the tests to run with the following command:
+
+```bash
+tox run -e py312-package-unit-runner -- --remote-data=any
+```
+
+If you need to debug because the tests failed, or you just want to run this test file, you can use the VSCode python debugger. However, you *must* have the full `*-dev-runner` conda environment installed, which you can do with the following command and then use the [Python Environments](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-python-envs) extension to set the default environment.
+
+```bash
+snakemake conda_update`
+```
+
+Open the file you want to test, `test_extract_external.py` and open the VSCode command line (++ctrl+P++) and type the following, or click the caret symbol next to the play button in the top right corner of the file and select the "Debug using launch.json" option.
+
+```text
+Python Debugger: Python Debugger: Debug using launch.json
+```
+
+And then select "PyTest Debugger: Current Test" and select the option to run with remote data if needed.
+
+You can then set breakpoints, watch variables, and use the DEBUG CONSOLE to help your tests to pass.
+
+- [ ] [Lint and typecheck](#lint-and-typecheck) the additions using `tox`.
+
+- [ ] Ensure [remote data tests](#remote-data-tests) still pass.
+
+- [ ] Commit and run [all CI tests](#CI-tests)

@@ -1,0 +1,21 @@
+# 09. Integration test for  for `{{ module_type }}/{{ etl_name }}`
+
+- [ ] `data/tests/{{ module_name }}/{{ etl_name }}/external/`
+
+  - [ ] Create a directory for the external data used by the ETL process.
+
+  - [ ] Add a small test dataset that can be used to test the `extract_external` method. This dataset should be small enough to commit to the git repo and should not exceed 2MB in size.
+
+  - [ ] Ensure that the dataset is in a format that can be read by the `extract_external` method.
+
+- [ ] `data/tests/{{ module_name }}/{{ etl_name }}/raw/`
+
+  - [ ] Create a directory for the raw data produced by the ETL process.
+
+  - [ ] Add a small test dataset that can be used to test the `extract_external` method. This dataset should be small enough to commit to the git repo and should not exceed 2MB in size.
+
+  - [ ] Ensure that the dataset is in a format that can be read by the `extract_external` method.
+
+- [ ] `tests/workflow/rules/{{ module_type }}/{{ module_name }}/test_snakemake_{{ etl_name }}.py`
+
+  - [ ] Write an integration test that runs the entire ETL process from start to finish.

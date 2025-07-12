@@ -1,0 +1,46 @@
+# 01. Draft `{{ module_name }}/{{ etl_name }}` rule
+
+## `workflow/rules/{{ module_type }}/{{ module_name }}/{{ etl_name }}.smk`
+
+- [ ] Draft the rule that will run the ETL process once.
+- [ ] Define the inputs, outputs, and wildcards for the rule.
+- [ ] Ensure that the rule's docstring describes the ETL process and its inputs and outputs.
+- [ ] If the rule will only produce a single file in the workflow, then use a fixed output file name. If the rule will produce multiple files, then create a wildcard for the output file name and create another rule with the `_all` suffix that collects all the outputs of the ETL process.
+
+## `data/tests/all.yaml` and the Workflow DAG
+
+- [ ] If this ETL process consumes `raw` or `external` data into this workflow, then add the names of the `raw` or `external` data to the `data/tests/all.yaml` file. This will ensure that the data is available for DAG generation, testing, and debugging.
+
+- [ ] `workflow/rules/{{ module_type }}/{{ module_name }}.smk`
+
+    Configure/confirm the `input:` of the `{{ module_type }}_{{ module_name }}_all` rule in `{{ module_name }}.smk` to require the `output:` from this ETL process: `*rules.{{ module_type }}_{{ module_name }}_{{ etl_name }}_all.output`.
+
+- [ ] `workflow/rules/includes.smk`
+
+    Modify the order of the included snakefiles in `includes.smk` so that `workflow/{{ module_type }}/{{ module_name }}/{{ etl_name }}.smk` is imported **after** `workflow/{{ module_type }}/{{ module_name }}.smk` so that `{{ module_name }}.smk` has access to the rule information from `{{ etl_name }}.smk`.
+
+- [ ] `workflow/Snakefile`
+
+    Configure/confirm the `input:` of the `all_data` rule in the `Snakefile` to require  the `output:` from this module: `*rules.{{ module_type }}_{{ module_name }}_all.input`.
+
+    **NOTICE** The `output:` of `all_data` requires the `input:` of the `{{ module_type }}_{{ module_name }}_all` rule. Since there is no output, Snakemake works its way up the chain of required `input:` until it finds an `output:` and adds that rule to the DAG.
+
+> **NOTE** All rule names in the workflow **must** be unique. That is why the templated rule names include the `module_type`, `module_name`, and `etl_name` separated by underscores.
+
+After completing the above steps, run the following command to ensure that the rule is valid and the DAG is generated correctly:
+
+```bash
+snakemake dag_svg_all
+```
+
+This DAG is automatically added to the `docs/docs/workflow/index.md` page of the documentation.
+
+- [ ] Confirm the DAG shows the Workflow processing the files and rules as expected.
+
+## `config/{{ module_type }}/{{ module_name }}/{{ etl_name }}.config.yaml`
+
+This file is automatically read by the workflow as specified in `workflow/profiles/default/config.yaml`. If the ETL process requires any configuration parameters, then add them to this file. The parameters should be in the format of a YAML dictionary.
+
+- [ ] If the rule requires any configuration parameters not found in the templated `config.yaml` for the ETL process, then add those parameters to the `config/{{ module_type }}/{{ module_name }}/{{ etl_name }}.config.yaml` file.
+
+- [ ] If you add any parameters to the `config.yaml` file, then also add them to the `workflow/schemas/{{ module_type }}/{{ module_name }}/{{ etl_name }}.config.schema.yaml` file to ensure that the configuration is validated against the schema.
