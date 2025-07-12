@@ -165,5 +165,9 @@ _message_after_copy: |
 
   See `logs/post-copier-todos/etl-{{ module_type }}-{{ module_name }}-{{ etl_name }}.md`
   for next steps on implementing your rule into the project.
+
+  You may wish to wait until reading the to-do list before committing
+  the changes made by the Copier template.
+
   You can copy-paste the contents of that file into a GitHub issue
   or a project management tool to track the implementation of the rule.

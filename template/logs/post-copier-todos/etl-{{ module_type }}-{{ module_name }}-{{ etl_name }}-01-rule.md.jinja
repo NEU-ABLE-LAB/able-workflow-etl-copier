@@ -1,5 +1,8 @@
 # 01. Draft `{{ module_name }}/{{ etl_name }}` rule
 
+- [ ] In this github subissue, create a new branch to work on the issue
+- [ ] Pull and checkout that branch in your local development environment.
+
 ## `workflow/rules/{{ module_type }}/{{ module_name }}/{{ etl_name }}.smk`
 
 - [ ] Draft the rule that will run the ETL process once.
@@ -44,3 +47,21 @@ This file is automatically read by the workflow as specified in `workflow/profil
 - [ ] If the rule requires any configuration parameters not found in the templated `config.yaml` for the ETL process, then add those parameters to the `config/{{ module_type }}/{{ module_name }}/{{ etl_name }}.config.yaml` file.
 
 - [ ] If you add any parameters to the `config.yaml` file, then also add them to the `workflow/schemas/{{ module_type }}/{{ module_name }}/{{ etl_name }}.config.schema.yaml` file to ensure that the configuration is validated against the schema.
+
+## Test
+
+### Lint and typecheck
+
+- [ ] Lint and typecheck using `tox`.
+
+  ```bash
+  tox run-parallel --quiet -f py312 lint -f py312 typecheck
+  ```
+
+### Full test suite
+
+- [ ] Run the full `tox` test suite to ensure that all tests pass after the changes made in the previous steps.
+
+  ```bash
+  tox run-parallel
+  ```

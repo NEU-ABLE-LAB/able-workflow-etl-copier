@@ -1,5 +1,8 @@
 # 03. Draft and test `schema_external` for `{{ module_type }}/{{ etl_name }}`
 
+- [ ] In this github subissue, create a new branch to work on the issue
+- [ ] Pull and checkout that branch in your local development environment.
+
 
 ## `{{ package_name }}/{{ module_type }}/{{ etl_name }}/runner/schema_external.py`
 
@@ -26,7 +29,7 @@
 
 - [ ] If your schema contains validation or coercion logic, write unit tests to ensure that the schema behaves as expected. This can include testing valid and invalid data against the schema.
 
-- [ ] Run [remote data tests](#remote-data-tests) and see the tests pass.
+- [ ] Run unit tests and see the tests pass.
 
 Use breakpoints, watch variables, and the debug console to modify the test and/or schema to ensure the code behaves as expected and the tests pass.
 
@@ -41,6 +44,28 @@ Use breakpoints, watch variables, and the debug console to modify the test and/o
 
 - [ ] Update the type hints (and logic as necessary) in `test_extract_external.py` to reflect the new return type of `extract_external`
 
-- [ ] Run [remote data tests](#remote-data-tests) and see if they pass.
+## Test
 
-- [ ] Commit and run [all CI tests](#CI-tests)
+### Lint and typecheck
+
+- [ ] Lint and typecheck using `tox`.
+
+  ```bash
+  tox run-parallel --quiet -f py312 lint -f py312 typecheck
+  ```
+
+### Unit tests
+
+- [ ] Run the unit tests to ensure that the schema behaves as expected. This can include testing valid and invalid data against the schema.
+
+  ```bash
+  tox run -e py312-package-unit-runner
+  ```
+
+### Full test suite
+
+- [ ] Run the full `tox` test suite to ensure that all tests pass after the changes made in the previous steps.
+
+  ```bash
+  tox run-parallel
+  ```

@@ -1,5 +1,8 @@
 # 09. Integration test for  for `{{ module_type }}/{{ etl_name }}`
 
+- [ ] In this github subissue, create a new branch to work on the issue
+- [ ] Pull and checkout that branch in your local development environment.
+
 - [ ] `data/tests/{{ module_name }}/{{ etl_name }}/external/`
 
   - [ ] Create a directory for the external data used by the ETL process.
@@ -19,3 +22,29 @@
 - [ ] `tests/workflow/rules/{{ module_type }}/{{ module_name }}/test_snakemake_{{ etl_name }}.py`
 
   - [ ] Write an integration test that runs the entire ETL process from start to finish.
+
+## Test
+
+### Lint and typecheck
+
+- [ ] Lint and typecheck using `tox`.
+
+  ```bash
+  tox run-parallel --quiet -f py312 lint -f py312 typecheck
+  ```
+
+### Remote data tests
+
+- [ ] Run tests that extract data from the remote source using the `remote_data` pytest marker. This will ensure that the methods works as expected with real data.
+
+  ```bash
+  tox run-parallel -e py312-workflow-rules -- --remote-data=any
+  ```
+
+### Full test suite
+
+- [ ] Run the full `tox` test suite to ensure that all tests pass after the changes made in the previous steps.
+
+  ```bash
+  tox run-parallel
+  ```

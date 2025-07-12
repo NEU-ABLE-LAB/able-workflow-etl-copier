@@ -1,5 +1,8 @@
 # 08. Draft and test `main.py` and `test_main.py` for `{{ module_type }}/{{ etl_name }}`
 
+- [ ] In this github subissue, create a new branch to work on the issue
+- [ ] Pull and checkout that branch in your local development environment.
+
 
 ## `{{ package_name }}/{{ module_type }}/{{ etl_name }}/runner/main.py`
 
@@ -29,3 +32,29 @@ The `main.py` script is the entry point for the ETL process. It should orchestra
 - [ ] `run()` If the ETL simply follows the steps defined above, then minimal or no unit tests may be needed. However, if the ETL process has complex logic or transformations, then write unit tests to ensure that the `run()` function behaves as expected.
 
 - [ ] `run_smk()` Write unit tests to ensure that the `run_smk()` function correctly parses the `snakemake` object and calls the `run()` function with the correct arguments. This can be done by creating a dummy `snakemake` object and checking that the correct arguments are passed to `run()`.
+
+## Test
+
+### Lint and typecheck
+
+- [ ] Lint and typecheck using `tox`.
+
+  ```bash
+  tox run-parallel --quiet -f py312 lint -f py312 typecheck
+  ```
+
+### Remote data tests
+
+- [ ] Run unit tests to ensure that the `main.py` script works as intended. This can use test data from the `data/tests/` directory, or hard-code simple test data. These tests should not use the `remote_data` marker since the main script should not depend on remote data.
+
+  ```bash
+  tox run-parallel -e py312-package-unit-runner
+  ```
+
+### Full test suite
+
+- [ ] Run the full `tox` test suite to ensure that all tests pass after the changes made in the previous steps.
+
+  ```bash
+  tox run-parallel
+  ```

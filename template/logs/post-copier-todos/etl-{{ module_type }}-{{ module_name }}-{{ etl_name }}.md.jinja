@@ -4,6 +4,8 @@ This issue is for tracking the development of the ETL process that was copied fr
 
 - [ ] Copy-paste these contents into a new github issue for the ETL process
 - [ ] In the github issue, create a new branch to work on the issue
+- [ ] Pull and checkout that branch in your local development environment.
+- [ ] If you haven't already, commit the changes made by the Copier template to the branch.
 - [ ] Create sub-issues by copy-pasting the following files
   - [ ] `logs/post-copier-todos/etl-{{ module_type }}-{{ module_name }}-{{ etl_name }}-01-rule.md`
   {% if requires_extract_external -%}
@@ -18,7 +20,6 @@ This issue is for tracking the development of the ETL process that was copied fr
   - [ ] `logs/post-copier-todos/etl-{{ module_type }}-{{ module_name }}-{{ etl_name }}-09-integration-tests.md`
   - [ ] `logs/post-copier-todos/etl-{{ module_type }}-{{ module_name }}-{{ etl_name }}-10-docs.md`
 - [ ] Update each of the links in the subissue list below with the issue number from each of the sub issues created above.
-- [ ] Pull and checkout that branch in your local development environment.
 - [ ] Complete each of the subissues in the order they are listed below.
   - [ ] 01. #
   {% if requires_extract_external -%}

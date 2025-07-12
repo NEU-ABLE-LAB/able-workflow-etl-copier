@@ -1,5 +1,8 @@
 # 02. Draft and test `extract_external` methods for `{{ module_type }}/{{ etl_name }}`
 
+- [ ] In this github subissue, create a new branch to work on the issue
+- [ ] Pull and checkout that branch in your local development environment.
+
 If the ETL process requires external data (i.e., data that was not produced by an ETL process that has `extract` and `schema` modules, created with the `able-workflow-etl-copier` template, that can be imported), then draft the `extract_external` methods.
 
 
@@ -66,8 +69,28 @@ And then select "PyTest Debugger: Current Test" and select the option to run wit
 
 You can then set breakpoints, watch variables, and use the DEBUG CONSOLE to help your tests to pass.
 
-- [ ] [Lint and typecheck](#lint-and-typecheck) the additions using `tox`.
+## Test
 
-- [ ] Ensure [remote data tests](#remote-data-tests) still pass.
+### Lint and typecheck
 
-- [ ] Commit and run [all CI tests](#CI-tests)
+- [ ] Lint and typecheck using `tox`.
+
+  ```bash
+  tox run-parallel --quiet -f py312 lint -f py312 typecheck
+  ```
+
+### Remote data tests
+
+- [ ] Run tests that extract data from the remote source using the `remote_data` pytest marker. This will ensure that the methods works as expected with real data.
+
+  ```bash
+  tox run-parallel -e py312-package-unit-runner -- --remote-data=any
+  ```
+
+### Full test suite
+
+- [ ] Run the full `tox` test suite to ensure that all tests pass after the changes made in the previous steps.
+
+  ```bash
+  tox run-parallel
+  ```
