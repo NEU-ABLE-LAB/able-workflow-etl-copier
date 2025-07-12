@@ -120,9 +120,10 @@ package_name:
   # --- Post-configuration -----------------------------------------------------
 
 _skip_if_exists:
-  - "snakefmt.toml"
+  - "tests/{{ package_name }}/{{ module_type }}/{{ module_name }}/__init__.py"
   - "workflow/rules/includes.smk"
   - "workflow/profiles/default/config.yaml"
+  - "snakefmt.toml"
 
 # Post-generation hooks
 _tasks:
