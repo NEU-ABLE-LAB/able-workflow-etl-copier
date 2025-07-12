@@ -164,7 +164,7 @@ _message_after_copy: |
   The {{ module_type }}/{{ module_name }}/{{ etl_name }} ETL process
   has been created successfully.
 
-  See `logs/post-copier-todos/etl-{{ module_type }}-{{ module_name }}-{{ etl_name }}.md`
+  See `.copier-answers/post-copier-todos/etl-{{ module_type }}-{{ module_name }}-{{ etl_name }}.md`
   for next steps on implementing your rule into the project.
 
   You may wish to wait until reading the to-do list before committing
