@@ -10,8 +10,31 @@ rule {{ module_type }}_{{ module_name }}_{{ etl_name }}_all:
     This rule will run the entire {{ etl_name }} workflow
     to generate {{ etl_description }}.
 
-    input:
-        Description of the input files required for this rule.
+    input
+    -----
+    readme:
+        A README file that describes the data and the workflow.
+
+    params
+    ------
+    func:
+        The function in the {{ package_name }} package to call in
+        order to execute this rule.
+
+    log
+    ---
+    loguru:
+        The log file where python will log to using loguru.
+
+    conda
+    -----
+    The {{ package_name }} conda environment
+    with the `runner` extra dependencies.
+
+    script
+    ------
+    The standard script for running rules in the {{ package_name }} package.
+    Reads `params.func` to determine which function to call.
     """
     input:
         # TODO: Define input files if needed. All inputs should be named.
@@ -22,6 +45,19 @@ rule {{ module_type }}_{{ module_name }}_{{ etl_name }}_all:
         # from other rules.
     # wildcards:
     # TODO: Add wildcards if needed. All wildcards should be named.
+    params:
+        func=(
+            "{{ package_name }}.{{ module_type }}.{{ module_name }}"
+            ".{{ etl_name }}.runner.main:run_smk"
+        ),
+    log:
+        loguru=str(
+            LOG_DIR
+            / "{{ module_type }}_{{ module_name }}_{{ etl_name }}_all"
+            / "loguru.log"
+        ),
+        # TODO add `stdout` and/or `stderr` if the python calls
+        #   a subprocess that produces output.
     conda:
         config["CONDA"]["ENVS"]["RUNNER"]
     script:
