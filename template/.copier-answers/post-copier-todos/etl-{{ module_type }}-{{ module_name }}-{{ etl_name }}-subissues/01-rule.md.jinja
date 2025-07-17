@@ -3,6 +3,18 @@
 - [ ] In this github subissue, create a new branch to work on the issue
 - [ ] Pull and checkout that branch in your local development environment.
 
+While working on this checklist you may want to use VSCode to automatically open for editing the following files:
+
+```bash
+code pyproject.toml
+code config/{{ module_type }}/{{ module_name }}/{{ etl_name }}.config.yaml
+code data/tests/all.yaml
+code workflow/Snakefile
+code workflow/rules/includes.smk
+code workflow/rules/{{ module_type }}/{{ module_name }}.smk
+code workflow/rules/{{ module_type }}/{{ module_name }}/{{ etl_name }}.smk
+```
+
 ## `workflow/rules/{{ module_type }}/{{ module_name }}/{{ etl_name }}.smk`
 
 - [ ] Draft the rule that will run the ETL process once.

@@ -5,6 +5,13 @@
 
 If the ETL process requires external data (i.e., data that was not produced by an ETL process that has `extract` and `schema` modules, created with the `able-workflow-etl-copier` template, that can be imported), then draft the `extract_external` methods.
 
+While working on this checklist you may want to use VSCode to automatically open for editing the following files:
+
+```bash
+code pyproject.toml
+code {{ package_name }}/{{ module_type }}/{{ etl_name }}/runner/extract_external.py
+code tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_extract_external.py
+```
 
 ## `pyproject.toml`
 
@@ -13,11 +20,11 @@ If the ETL process requires external data (i.e., data that was not produced by a
 
 ## `{{ package_name }}/{{ module_type }}/{{ etl_name }}/runner/extract_external.py`
 
-- [ ] Write a method to extract the external data from the source. This method should return a `pd.DataFrame` (or `dd.DataFrame` if using Dask)that matches the schema defined in `schema_external.py`.
+- [ ] Write a method to extract the external data from the source. This method should return a `pd.DataFrame` (or `dd.DataFrame` if using Dask).
 
 - [ ] Ensure that the method handles any necessary API requests, data parsing, and error handling.
 
-- [ ] [Lint and typecheck](#lint-and-typecheck) the `extract_external.py` file using `tox`.
+- [ ] Lint and typecheck (see below) the `extract_external.py` file using `tox`.
 
 - [ ] Commit and run [all CI tests](#CI-tests)
 
