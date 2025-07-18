@@ -23,6 +23,10 @@ jobs:
       FORCE_COLOR: "1"
       PYTEST_ADDOPTS: "--color=yes"
 
+    defaults:
+      run:
+        shell: bash -el {0}
+
     steps:
       - name: Checkout this repository
         uses: actions/checkout@v4
@@ -43,16 +47,14 @@ jobs:
           path: sandbox/able-workflow-module-copier-dev
           token: ${{ secrets.ABLE_REPOS_PAT }}
 
-      - name: Set up CPython ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
+      - uses: conda-incubator/setup-miniconda@v3
         with:
-          python-version: ${{ matrix.python-version }}
-          cache: pip
-
-      - name: Install tox + tox-gh-actions plug-in
-        run: |
-          python -m pip install --upgrade pip
-          pip install "tox>=4.25" "tox-gh-actions>=3.3.0" "tox-uv>=1.25.0"
+          activate-environment: able-workflow-etl-copier
+          channels: conda-forge, bioconda
+          channel-priority: strict
+          conda-remove-defaults: "true"
+          environment-file: environment-py312-dev.yaml
+          miniforge-version: latest
 
       - name: Setup test suite
         run: tox run-parallel --parallel auto --parallel-no-spinner --notest --skip-missing-interpreters false
