@@ -19,7 +19,7 @@ This template assumes that you have already created an [`able-workflow-copier`](
 
 ### Environment configuration
 
-See the environment configuration [`able-workflow-copier`](https://github.com/NEU-ABLE-LAB/able-workflow-copier-dev).
+See the environment configuration [`able-workflow-copier`](https://github.com/NEU-ABLE-LAB/able-workflow-copier).
 
 1. Create a development environment with conda
 

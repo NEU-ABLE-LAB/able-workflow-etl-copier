@@ -6,7 +6,7 @@
 
 A [copier](https://copier.readthedocs.io/en/stable/) template for generating an extract-transform-load process to generate datasets, features, or models with the project's python package.
 
-This template assumes that you have already created an [`able-workflow-copier`](https://github.com/NEU-ABLE-LAB/able-workflow-copier-dev) project and created a [`able-workflow-module-copier`](https://github.com/NEU-ABLE-LAB/able-workflow-module-copier-dev) module.
+This template assumes that you have already created an [`able-workflow-copier`](https://github.com/NEU-ABLE-LAB/able-workflow-copier) project and created a [`able-workflow-module-copier`](https://github.com/NEU-ABLE-LAB/able-workflow-module-copier) module.
 
 ## Overview of ABLE Workflow copier templates
 
@@ -19,7 +19,7 @@ This template assumes that you have already created an [`able-workflow-copier`](
 
 ### Environment configuration
 
-See the environment configuration [`able-workflow-copier`](https://github.com/NEU-ABLE-LAB/able-workflow-copier-dev).
+See the environment configuration [`able-workflow-copier`](https://github.com/NEU-ABLE-LAB/able-workflow-copier).
 
 1. Create a development environment with conda
 

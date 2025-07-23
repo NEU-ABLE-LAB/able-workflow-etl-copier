@@ -11,8 +11,8 @@ The directory structure expected for every example under
 
 Rendering chain:
 
-    1. able-workflow-copier-dev          (package, parent-most)
-    2. able-workflow-module-copier-dev   (module, middle)
+    1. able-workflow-copier          (package, parent-most)
+    2. able-workflow-module-copier   (module, middle)
     3. THIS repository                   (etl / child)
 
 The session-scoped fixture yields ``(project_dir, example_name)`` where
