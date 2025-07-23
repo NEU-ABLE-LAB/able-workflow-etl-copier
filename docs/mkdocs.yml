@@ -91,6 +91,9 @@ extra:
     "ABLE_WORKFLOW_RULE_COPIER_DOCS",
     "https://rule.able-workflow.thisismikekane.com"
   ]
+  analytics:
+    provider: google
+    property: G-NRGXM9WMH9
   version:
     provider: mike
 
