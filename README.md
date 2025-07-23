@@ -3,6 +3,7 @@
 [![Copier](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/copier-org/copier/master/img/badge/badge-grayscale-inverted-border-purple.json)](https://github.com/copier-org/copier)
 [![Checked with mypy](http://www.mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Common Changelog](https://common-changelog.org/badge.svg)](https://common-changelog.org)
 
 A [copier](https://copier.readthedocs.io/en/stable/) template for generating an extract-transform-load process to generate datasets, features, or models with the project's python package.
 
