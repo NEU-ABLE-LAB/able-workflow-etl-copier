@@ -1,0 +1,17 @@
+# Configuring the {{ etl_name_long }} ETL process
+
+This page describes how to configure the {{ etl_name_long }} ETL process. The configuration is stored in the `config.yml` file in the `config/{{ module_type }}/{{ module_name }}/{{ etl_name }}/` directory of this repo. If you importing this workflow as a module into your workflow, you can copy this file into your workflow's `config/{{ module_type }}/{{ module_name }}{{ etl_name }}/` directory and modify it as needed.
+
+If you need to add [tabular configuration data](https://snakemake.readthedocs.io/en/stable/snakefiles/configuration.html#tabular-configuration) be sure that it is loaded along side this configuration in `workflow/profiles/default/config.yaml`.
+
+## Configuration file schema
+
+{% raw %}
+``` yaml
+{%
+{% endraw %}
+    include "../../../../../workflow/schemas/{{ module_type }}/{{ module_name }}/{{ etl_name }}/config.schema.yaml"
+{% raw %}
+%}
+```
+{% endraw %}

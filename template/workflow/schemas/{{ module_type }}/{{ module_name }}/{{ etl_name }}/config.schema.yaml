@@ -1,0 +1,26 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+description: The main configuration schema the {{ module_type }} module named {{ module_name }}.
+
+properties:
+  {{  module_type }}:
+    type: object
+    properties:
+      {{ module_name }}:
+        type: object
+        description: >-
+          These configuration options are specific to the {{ etl_name_long }}
+          ETL process, in addition to the configuration options found
+          in the parent module configuration file."
+
+          Generally, this configuration file does not specify file names
+          or paths, but rather configuration options that are used by the
+          ETL process to determine how to process the {{ module_type }}.
+        properties:
+          {{ etl_name }}:
+            type: object
+        required:
+          - {{ etl_name }}
+    required:
+      - {{ module_name }}
+required:
+  - {{ module_type }}

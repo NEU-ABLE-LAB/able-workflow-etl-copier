@@ -1,0 +1,14 @@
+"""
+This file transforms the input extracted by `extract_external` and/or
+the `extract` module of other ETL processes developed using the
+`able-workflow-copier` template. The output of this transformation is
+loaded to disk by the `load` module of this process.
+
+Thie contents of the `runner` module require extra
+dependencies (specified as `project.optional-dependencies.runner` in
+`pyproject.toml`) and are not imported required to be imported by other
+ETL processes that only need to extract and validate the {{ module_type }}.
+This allows for a clear separation of concerns and keeps the dependencies
+light for other ETL processes that do not require the full functionality
+of this process.
+"""

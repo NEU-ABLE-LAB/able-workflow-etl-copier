@@ -1,0 +1,12 @@
+# This is a dummy file that is needed for `copier update` to work.
+# If you see this file in your project, it means that something
+# went wrong. Instead you should see the contents of this file
+# match the version in `able-workflow-copier` repository.
+
+# The contents of this file should be incorporated into `pyproject.toml`
+# under the `[tool.snakefmt]` section. However, `snakefmt` has
+# a bug that prevents it from reading this project's `pyproject.toml` file
+# https://github.com/snakemake/snakefmt/issues/255
+[tool.snakefmt]
+line_length = 79
+include = '\.smk$|^Snakefile$'

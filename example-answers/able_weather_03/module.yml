@@ -1,0 +1,4 @@
+module_type: "datasets"
+module_name: "weather"
+module_name_long: "Weather Data"
+package_name: "able_weather"

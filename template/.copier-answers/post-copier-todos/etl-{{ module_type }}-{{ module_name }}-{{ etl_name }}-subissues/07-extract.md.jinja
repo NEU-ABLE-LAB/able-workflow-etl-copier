@@ -1,0 +1,47 @@
+# 07. Draft and test `extract.py` and `test_extract.py` for `{{ module_type }}/{{ etl_name }}`
+
+- [ ] In this github subissue, create a new branch to work on the issue
+- [ ] Pull and checkout that branch in your local development environment.
+
+While working on this checklist you may want to use VSCode to automatically open for editing the following files:
+
+```bash
+code {{ package_name }}/{{ module_type }}/{{ etl_name }}/extract.py
+code tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/test_extract.py
+```
+
+
+## `{{ package_name }}/{{ module_type }}/{{ etl_name }}/extract.py`
+
+- [ ] Implement the `extract` method which will be used by other ETL processes to extract (i.e., read from disk) the data produced by the `load` methods of this ETL process. This method should return a `pd.DataFrame` (or `dd.DataFrame` if using Dask) that matches the schema defined in `schema.py`.
+
+
+## `tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/test_extract.py`
+
+- [ ] Write unit tests to ensure the extraction works as intended. This can use test data from the `data/tests/` directory, or hard-code simple test data. These tests should not use the `remote_data` marker since the extraction should not depend on remote data.
+
+## Test
+
+### Lint and typecheck
+
+- [ ] Lint and typecheck using `tox`.
+
+  ```bash
+  tox run-parallel --quiet -f py312 lint -f py312 typecheck
+  ```
+
+### Remote data tests
+
+- [ ] Run unit tests to ensure that the extraction works as intended. This can use test data from the `data/tests/` directory, or hard-code simple test data. These tests should not use the `remote_data` marker since the extraction should not depend on remote data.
+
+  ```bash
+  tox run-parallel -e py312-package-unit-runner
+  ```
+
+### Full test suite
+
+- [ ] Run the full `tox` test suite to ensure that all tests pass after the changes made in the previous steps.
+
+  ```bash
+  tox run-parallel
+  ```

@@ -1,0 +1,62 @@
+# 04. Draft and test `transform` methods for `{{ module_type }}/{{ etl_name }}`
+
+- [ ] In this github subissue, create a new branch to work on the issue
+- [ ] Pull and checkout that branch in your local development environment.
+
+While working on this checklist you may want to use VSCode to automatically open for editing the following files:
+
+```bash
+code {{ package_name }}/{{ module_type }}/{{ etl_name }}/runner/schema_external.py
+code {{ package_name }}/{{ module_type }}/{{ etl_name }}/runner/transform.py
+code tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_transform.py
+```
+
+
+## `{{ package_name }}/{{ module_type }}/{{ etl_name }}/runner/transform.py`
+
+- [ ] Implement the `transform` method to apply any necessary transformations to the data extracted from the external source.
+
+- [ ] Ensure that the transformation logic is well-documented (each function has numpy style docstrings) and handles any necessary data cleaning, formatting, or enrichment.
+
+- [ ] The input data is type hinted using the schema_external dataframe model. **NOTE**: The return data will be type hinted in a later step after defining `schema.py`
+
+- If the ETL process transforms data from other ETL processes, then import the `schema` from those processes and use it to type hint the input data.
+
+- [ ] [Lint and typecheck](#lint-and-typecheck) the `transform.py` file using `tox`.
+
+
+## `tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_transform.py`
+
+- [ ] Write unit tests to ensure the transformation works as intended. This can use test data from the `data/tests/` directory, or hard-code simple test data. These tests should not use the `remote_data` marker since the transformation should not depend on remote data.
+
+- [ ] Run the tests through `tox` with the following command. Alternatively, use the VSCode debugger launch.json with PyTest and remote data.
+
+  ```bash
+  tox run -e py312-package-unit-runner
+  ```
+
+## Test
+
+### Lint and typecheck
+
+- [ ] Lint and typecheck using `tox`.
+
+  ```bash
+  tox run-parallel --quiet -f py312 lint -f py312 typecheck
+  ```
+
+### Unit tests
+
+- [ ] Run the unit tests to ensure that the transformation works as intended. This can use test data from the `data/tests/` directory, or hard-code simple test data. These tests should not use the `remote_data` marker since the transformation should not depend on remote data.
+
+  ```bash
+  tox run -e py312-package-unit-runner
+  ```
+
+### Full test suite
+
+- [ ] Run the full `tox` test suite to ensure that all tests pass after the changes made in the previous steps.
+
+  ```bash
+  tox run-parallel
+  ```

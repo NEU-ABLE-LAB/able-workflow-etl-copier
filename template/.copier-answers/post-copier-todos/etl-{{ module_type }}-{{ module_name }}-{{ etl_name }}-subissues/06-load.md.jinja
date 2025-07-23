@@ -1,0 +1,47 @@
+# 06. Draft and test `load.py` and `test_load.py` for `{{ module_type }}/{{ etl_name }}`
+
+- [ ] In this github subissue, create a new branch to work on the issue
+- [ ] Pull and checkout that branch in your local development environment.
+
+While working on this checklist you may want to use VSCode to automatically open for editing the following files:
+
+```bash
+code {{ package_name }}/{{ module_type }}/{{ etl_name }}/runner/load.py
+code tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_load.py
+```
+
+
+## `{{ package_name }}/{{ module_type }}/{{ etl_name }}/runner/load.py`
+
+- [ ] Implement the `load` method to save the transformed data to the desired output format (e.g., Parquet). The function(s) should take as arguments file paths (do not include default values to avoid confusion) and the dataframe produced by `transform.py` to be saved.
+
+
+## `tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_load.py`
+
+- [ ] Write unit tests to ensure the loading works as intended. This can use test data from the `data/tests/` directory, or hard-code simple test data. These tests should not use the `remote_data` marker since the loading should not depend on remote data.
+
+## Test
+
+### Lint and typecheck
+
+- [ ] Lint and typecheck using `tox`.
+
+  ```bash
+  tox run-parallel --quiet -f py312 lint -f py312 typecheck
+  ```
+
+### Remote data tests
+
+- [ ] Run unit tests to ensure that the loading works as intended. This can use test data from the `data/tests/` directory, or hard-code simple test data. These tests should not use the `remote_data` marker since the loading should not depend on remote data.
+
+  ```bash
+  tox run-parallel -e py312-package-unit-runner
+  ```
+
+### Full test suite
+
+- [ ] Run the full `tox` test suite to ensure that all tests pass after the changes made in the previous steps.
+
+  ```bash
+  tox run-parallel
+  ```
