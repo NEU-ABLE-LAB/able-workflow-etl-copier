@@ -45,7 +45,7 @@ module_name = ensure_package_repo_path.stem
 spec = importlib.util.spec_from_file_location(module_name, ensure_package_repo_path)
 if spec is None:
     raise RuntimeError(f"Failed to load module spec from {ensure_package_repo_path}")
-module = importlib.util.module_from_spec(spec)  # type: ignore[arg-type]
+module = importlib.util.module_from_spec(spec)
 sys.modules[module_name] = module
 spec.loader.exec_module(module)  # type: ignore[union-attr]
 ensure_parent_template_repos = module.ensure_parent_template_repos

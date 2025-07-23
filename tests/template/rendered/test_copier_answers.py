@@ -18,9 +18,7 @@ expected_strings = {
 }
 
 
-def test_template_contains_file(
-    rendered, expected_file: Dict[str, Path] | Path = None
-):
+def test_template_contains_file(rendered, expected_file: Dict[str, Path] | Path = None):
     if expected_file is None:
         expected_file = Path("pyproject.toml")
     """Test that the rendered template contains the expected file."""
