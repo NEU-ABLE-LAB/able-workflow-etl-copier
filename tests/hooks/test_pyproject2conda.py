@@ -33,7 +33,11 @@ spec.loader.exec_module(pyproject2conda_hook)
 main = pyproject2conda_hook.main
 
 
-class DummyCompleted:  # mimics subprocess.CompletedProcess enough for this module
+class DummyCompleted:
+    """
+    mimics subprocess.CompletedProcess enough for this module
+    """
+
     def __init__(self, returncode: int = 0):
         self.returncode = returncode
 
