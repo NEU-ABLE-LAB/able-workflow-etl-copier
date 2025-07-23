@@ -1,0 +1,50 @@
+# 10. Documentation for `{{ module_type }}/{{ etl_name }}`
+
+- [ ] In this github subissue, create a new branch to work on the issue
+- [ ] Pull and checkout that branch in your local development environment.
+
+While working on this checklist you may want to use VSCode to automatically open for editing the following files:
+
+```bash
+code docs/docs/{{ module_type }}/{{ module_name }}/{{ etl_name }}/index.md
+code docs/docs/{{ module_type }}/{{ module_name }}/{{ etl_name }}/config.md
+code docs/docs/contributing/templates/module-{{ module_type }}-{{ module_name }}/etl-{{ etl_name }}/index.md
+```
+
+## `docs/docs/{{ module_type }}/{{ module_name }}/{{ etl_name }}/index.md`
+
+- [ ] Write documentation for the ETL process, including a description of the inputs and outputs.
+
+## `docs/docs/{{ module_type }}/{{ module_name }}/{{ etl_name }}/config.md`
+
+- [ ] Write documentation for the configuration file, including a description of the parameters and their default values.
+
+## `docs/docs/contributing/templates/module-{{ module_type }}-{{ module_name }}/etl-{{ etl_name }}/index.md`
+
+- [ ] These files should not need to be modified as they describe how to update this ETL process with changes to the `able-workflow-etl-copier` template.
+
+## Test
+
+### Lint and typecheck
+
+- [ ] Lint and typecheck using `tox`.
+
+  ```bash
+  tox run-parallel --quiet -f py312 lint -f py312 typecheck
+  ```
+
+### Remote data tests
+
+- [ ] Run unit tests to ensure that the documentation can be built by the `docs_build` rule.
+
+  ```bash
+  tox run-parallel -e py312-workflow-rules
+  ```
+
+### Full test suite
+
+- [ ] Run the full `tox` test suite to ensure that all tests pass after the changes made in the previous steps.
+
+  ```bash
+  tox run-parallel
+  ```

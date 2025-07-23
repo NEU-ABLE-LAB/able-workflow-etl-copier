@@ -1,0 +1,51 @@
+# 05. Draft and test `schema.py` and `test_schema.py` for `{{ module_type }}/{{ etl_name }}`
+
+- [ ] In this github subissue, create a new branch to work on the issue
+- [ ] Pull and checkout that branch in your local development environment.
+
+While working on this checklist you may want to use VSCode to automatically open for editing the following files:
+
+```bash
+code {{ package_name }}/{{ module_type }}/{{ etl_name }}/schema.py
+code {{ package_name }}/{{ module_type }}/{{ etl_name }}/runner/transform.py
+code tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/test_schema.py
+```
+
+
+## `{{ package_name }}/{{ module_type }}/{{ etl_name }}/schema.py`
+
+- [ ] Write a Pandera DataFrame Model to validate the dataframe returned by `transform`.
+
+- [ ] Update the type hints and return type in `transform.py` to reflect the new return type of the `transform` method.
+
+
+## `tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/test_schema.py`
+
+- [ ] Write unit tests to ensure the schema behaves as expected. This can include testing valid and invalid data against the schema.
+
+
+## Test
+
+### Lint and typecheck
+
+- [ ] Lint and typecheck using `tox`.
+
+  ```bash
+  tox run-parallel --quiet -f py312 lint -f py312 typecheck
+  ```
+
+### Remote data tests
+
+- [ ] Run unit tests to ensure that the schema behaves as expected. This can include testing valid and invalid data against the schema. These tests should not use the `remote_data` marker since the schema should not depend on remote data.
+
+  ```bash
+  tox run-parallel -e py312-package-unit-runner
+  ```
+
+### Full test suite
+
+- [ ] Run the full `tox` test suite to ensure that all tests pass after the changes made in the previous steps.
+
+  ```bash
+  tox run-parallel
+  ```

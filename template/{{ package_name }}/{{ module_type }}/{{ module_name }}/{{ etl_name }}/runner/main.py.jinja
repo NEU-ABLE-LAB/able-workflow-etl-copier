@@ -1,0 +1,64 @@
+"""
+This is the main entry point for the {{ etl_name_long }} ETL process.
+
+It orchestrates the execution of the ETL process by calling the
+`extract`, `transform`, and `load` modules in sequence. The process
+can be run from the command line or executed with Snakemake using the
+`{{ package_name }}_rules.py` script as part of a snakemake rule.
+"""
+
+import typer
+from loguru import logger
+from snakemake.script import Snakemake
+
+# TODO import module methods
+
+# Make the `run()` function available as a
+# command line interface using Typer.
+app = typer.Typer()
+
+def run_smk(smk: Snakemake) -> None:
+    """
+    A wrapper for the run function that accepts a Snakemake object.
+    """
+
+    # Log a message
+    # Loguru is automatically configured to log to
+    # `smk.log.loguru`by the Snakemake script.
+    logger.info(f"Running {__file__} with Snakemake")
+
+    # TODO Parse Snakemake object for `run()` arguments
+
+    # Pass arguments to the `run()` function
+    run()
+
+@app.command()
+def run() -> None:
+    """
+    The main function to run the ETL process.
+    This function is called by Snakemake.
+    """
+
+    # --- Extract External Data Sources ---------------------------------------
+    logger.info("Starting the extract phase")
+    # TODO use `extract_external` or import extract methods to
+    #   return the dataframes to be transformed.
+
+    # --- Transform ----------------------------------------------------------
+    logger.info("Starting the transform phase")
+    # TODO pass the dataframes to the transform methods
+
+    # --- Load Transformed Data to Disk---------------------------------------
+    logger.info("Starting the load phase")
+    # TODO use `load methods to save the transformed dataframes to disk.
+
+    # --- Validate Data -------------------------------------------------------
+    logger.info("Starting the validation phase")
+    # TODO use this module's `extract` method to load the data back from disk
+    #   and validate it against the schema.
+
+    logger.info("ETL process completed successfully")
+
+
+if __name__ == "__main__":
+    app()

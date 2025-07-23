@@ -1,0 +1,10 @@
+"""
+This file extracts input into the {{ etl_name_long }} from an external
+source, such as an API or proprietary file format.
+
+It may require additional dependencies specified in the
+`pyproject.toml` file under the `project.optional-dependencies.runner`
+section. These dependencies are not imported by default, allowing other
+ETL processes to use the `extract` and `schema` modules without requiring
+the full functionality of the `runner` module.
+"""

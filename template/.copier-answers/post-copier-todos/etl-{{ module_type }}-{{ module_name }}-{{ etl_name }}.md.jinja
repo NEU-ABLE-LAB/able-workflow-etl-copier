@@ -1,0 +1,112 @@
+# Post Copier To-Do's for the `{{ module_type }}/{{ module_name }}/{{ etl_name }}` ETL process
+
+This issue is for tracking the development of the ETL process that was copied from the `able-workflow-etl-copier` template.
+
+- [ ] Copy-paste these contents into a new github issue for the ETL process
+- [ ] In the github issue, create a new branch to work on the issue
+- [ ] Pull and checkout that branch in your local development environment.
+- [ ] If you haven't already, commit the changes made by the Copier template to the branch.
+- [ ] Create sub-issues by copy-pasting the following files
+  - [ ] `.copier-answers/post-copier-todos/etl-{{ module_type }}-{{ module_name }}-{{ etl_name }}-subissues/01-rule.md`
+  {% if requires_extract_external -%}
+  - [ ] `.copier-answers/post-copier-todos/etl-{{ module_type }}-{{ module_name }}-{{ etl_name }}-subissues/02-extract_external.md`
+  - [ ] `.copier-answers/post-copier-todos/etl-{{ module_type }}-{{ module_name }}-{{ etl_name }}-subissues/03-schema_external.md`
+  {%- endif %}
+  - [ ] `.copier-answers/post-copier-todos/etl-{{ module_type }}-{{ module_name }}-{{ etl_name }}-subissues/04-transform.md`
+  - [ ] `.copier-answers/post-copier-todos/etl-{{ module_type }}-{{ module_name }}-{{ etl_name }}-subissues/05-schema.md`
+  - [ ] `.copier-answers/post-copier-todos/etl-{{ module_type }}-{{ module_name }}-{{ etl_name }}-subissues/06-load.md`
+  - [ ] `.copier-answers/post-copier-todos/etl-{{ module_type }}-{{ module_name }}-{{ etl_name }}-subissues/07-extract.md`
+  - [ ] `.copier-answers/post-copier-todos/etl-{{ module_type }}-{{ module_name }}-{{ etl_name }}-subissues/08-main.md`
+  - [ ] `.copier-answers/post-copier-todos/etl-{{ module_type }}-{{ module_name }}-{{ etl_name }}-subissues/09-integration-tests.md`
+  - [ ] `.copier-answers/post-copier-todos/etl-{{ module_type }}-{{ module_name }}-{{ etl_name }}-subissues/10-docs.md`
+- [ ] Update each of the links in the subissue list below with the issue number from each of the sub issues created above.
+- [ ] Complete each of the subissues in the order they are listed below.
+  - [ ] 01. #
+  {% if requires_extract_external -%}
+  - [ ] 02. #
+  - [ ] 03. #
+  {%- endif %}
+  - [ ] 04. #
+  - [ ] 05. #
+  - [ ] 06. #
+  - [ ] 07. #
+  - [ ] 08. #
+  - [ ] 09. #
+  - [ ] 10. #
+- [ ] Complete all of final review steps below before merging the branch into `main`.
+
+## Test
+
+### Lint and typecheck
+
+- [ ] Lint and typecheck using `tox`.
+
+  ```bash
+  tox run-parallel --quiet -f py312 lint -f py312 typecheck
+  ```
+
+### Remote data tests
+
+- [ ] Run tests that extract data from the remote source using the `remote_data` pytest marker. This will ensure that the methods works as expected with real data.
+
+  ```bash
+  tox run-parallel -e py312-package-unit-runner -- --remote-data=any
+  ```
+
+### Full test suite
+
+- [ ] Run the full `tox` test suite to ensure that all tests pass after the changes made in the previous steps.
+
+  ```bash
+  tox run-parallel
+  ```
+
+## Final file creation/modification checklist
+
+- [ ] `{{ package_name }}/{{ module_type }}/{{ etl_name }}/`
+  - [ ] `runner/`
+    - [ ] `__init__.py`
+    {% if requires_extract_external -%}
+    - [ ] `extract_external.py`
+    - [ ] `schema_external.py`
+    {%- endif %}
+    - [ ] `load.py`
+    - [ ] `main.py`
+    - [ ] `transform.py`
+  - [ ] `__init__.py`
+  - [ ] `extract.py`
+  - [ ] `schema.py`
+- [ ] `data/tests/`
+  - [ ] `{{ module_name }}/{{ etl_name }}/`
+    - [ ] `external/`
+    - [ ] `raw/`
+  - [ ] `all.yaml`
+- [ ]  `docs/docs/`
+  - [ ] `{{ module_type }}/{{ module_name }}/{{ etl_name }}/`
+    - [ ] `config.md`
+    - [ ] `index.md`
+    - [ ] `SUMMARY.md`
+  - [ ] `contributing/templates/module-{{ module_type }}-{{ module_name }}/etl-{{ etl_name }}/`
+    - [ ] `index.md`
+    - [ ] `SUMMARY.md`
+- [ ] `tests/`
+  - [ ] `{{ module_type }}/{{ module_name }}/{{ etl_name }}/`
+    - [ ] `runner/`
+      {% if requires_extract_external -%}
+      - [ ] `test_extract_external.py`
+      - [ ] `test_schemas_external.py`
+      {%- endif %}
+      - [ ] `test_load.py`
+      - [ ] `test_main.py`
+      - [ ] `test_transform.py`
+    - [ ] `test_extract.py`
+    - [ ] `test_schema.py`
+  - [ ] `workflow/rules/{{ module_type }}/{{ module_name }}/test_snakemake_{{ etl_name }}.py`
+- [ ] `config/{{ module_type }}/{{ module_name }}/{{ etl_name }}.config.yaml`
+- [ ] `workflow/`
+  - [ ] `profiles/default/config.yaml`
+  - [ ] `rules/`
+    - [ ] `{{ module_type }}/{{ module_name }}.smk`
+    - [ ] `includes.smk`
+  - [ ] `schemas/{{ module_type }}/{{ module_name }}/{{ etl_name }}.config.schema.yaml`
+- [ ] `pyproject.toml`

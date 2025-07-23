@@ -3,18 +3,17 @@
 [![Copier](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/copier-org/copier/master/img/badge/badge-grayscale-inverted-border-purple.json)](https://github.com/copier-org/copier)
 [![Checked with mypy](http://www.mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![Common Changelog](https://common-changelog.org/badge.svg)](https://common-changelog.org)
 
-A [copier](https://copier.readthedocs.io/en/stable/) template for generating an extract-transform-load process to generate datasets, features, or models with the project's python package.
+A [copier](https://copier.readthedocs.io/en/stable/) template for an extract-transform-load (ETL) process that generates datasets, features, or models module for the project's python package.
 
-This template assumes that you have already created an [`able-workflow-copier`](https://github.com/NEU-ABLE-LAB/able-workflow-copier) project and created a [`able-workflow-module-copier`](https://github.com/NEU-ABLE-LAB/able-workflow-module-copier) module.
+This template assumes that you have already created an [`able-workflow-copier`]({{ able_workflow_copier_docs }}) project and created a [`able-workflow-module-copier`]({{ able_workflow_module_copier_docs }}) module
 
 ## Overview of ABLE Workflow copier templates
 
-- [`able-workflow-copier`](https://github.com/NEU-ABLE-LAB/able-workflow-copier)
-- [`able-workflow-module-copier`](https://github.com/NEU-ABLE-LAB/able-workflow-module-copier)
-- [`able-workflow-etl-copier`](https://github.com/NEU-ABLE-LAB/able-workflow-etl-copier)
-- [`able-workflow-rule-rule-copier`](https://github.com/NEU-ABLE-LAB/able-workflow-rule-copier)
+- [`able-workflow-copier`]({{ able_workflow_copier_docs }})
+- [`able-workflow-module-copier`]({{ able_workflow_module_copier_docs }})
+- [`able-workflow-etl-copier`]({{ able_workflow_etl_copier_docs }})
+- [`able-workflow-rule-copier`]({{ able_workflow_rule_copier_docs }})
 
 ## Contributing
 

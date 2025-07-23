@@ -1,0 +1,157 @@
+# yaml-language-server: $schema=https://squidfunk.github.io/mkdocs-material/schema.json
+
+site_name: ABLE Workflow ETL Copier
+site_author: Michael Kane
+docs_dir: docs
+repo_name: "NEU-ABLE-LAB/able-workflow-etl-copier/"
+repo_url: !ENV [
+  "ABLE_WORKFLOW_ETL_COPIER_REPO",
+  "https://github.com/NEU-ABLE-LAB/able-workflow-etl-copier"
+]
+edit_uri: edit/main/docs/docs  # enables “Edit on GitHub”
+dev_addr: '127.0.0.1:8003'
+
+theme:
+  name: material
+  palette:
+
+    # Palette toggle for automatic mode
+    - media: "(prefers-color-scheme)"
+      primary: blue grey
+      accent: red
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: blue grey
+      accent: red
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: blue grey
+      accent: red
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system preference
+
+  font:
+    text: Work Sans
+    code: Space Mono
+
+  features:
+    - content.code.annotate
+    - content.code.copy
+    - content.code.select
+    - navigation.sections
+    - navigation.tabs
+    - navigation.top
+    - search.suggest
+    - search.highlight
+
+  logo: _images/logo.png
+  favicon: _images/logo.png
+
+extra:
+  able_workflow_copier_repo: !ENV [
+    "ABLE_WORKFLOW_COPIER_REPO",
+    "https://github.com/NEU-ABLE-LAB/able-workflow-copier"
+  ]
+  able_workflow_copier_docs: !ENV [
+    "ABLE_WORKFLOW_COPIER_DOCS",
+    "https://able-workflow.thisismikekane.com"
+  ]
+  able_workflow_module_copier_repo: !ENV [
+    "ABLE_WORKFLOW_MODULE_COPIER_REPO",
+    "https://github.com/NEU-ABLE-LAB/able-workflow-module-copier"
+  ]
+  able_workflow_module_copier_docs: !ENV [
+    "ABLE_WORKFLOW_MODULE_COPIER_DOCS",
+    "https://module.able-workflow.thisismikekane.com"
+  ]
+  able_workflow_etl_copier_repo: !ENV [
+    "ABLE_WORKFLOW_ETL_COPIER_REPO",
+    "https://github.com/NEU-ABLE-LAB/able-workflow-etl-copier"
+  ]
+  able_workflow_etl_copier_docs: !ENV [
+    "ABLE_WORKFLOW_ETL_COPIER_DOCS",
+    "https://etl.able-workflow.thisismikekane.com"
+  ]
+  able_workflow_rule_copier_repo: !ENV [
+    "ABLE_WORKFLOW_RULE_COPIER_REPO",
+    "https://github.com/NEU-ABLE-LAB/able-workflow-rule-copier"
+  ]
+  able_workflow_rule_copier_docs: !ENV [
+    "ABLE_WORKFLOW_RULE_COPIER_DOCS",
+    "https://rule.able-workflow.thisismikekane.com"
+  ]
+  analytics:
+    provider: google
+    property: G-NRGXM9WMH9
+  version:
+    provider: mike
+
+plugins:
+  - gen-files:
+      scripts:
+        - _gen-files-scripts/render_summaries.py
+  - git-revision-date-localized
+  - include-markdown
+  - inline-select-svg
+  - literate-nav:
+      nav_file: SUMMARY.md
+      implicit_index: true
+      tab_length: 2
+  - macros
+  - mike
+  - mkdocs-jupyter:
+      include_source: false
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: numpy
+  - search
+  - section-index
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - def_list
+  - toc:
+      toc_depth: 3
+      permalink: true
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.blocks.html
+  - pymdownx.details
+  - pymdownx.emoji
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.snippets:
+      check_paths: True
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: mermaid2.fence_mermaid_custom
+  - pymdownx.tasklist:
+      custom_checkbox: true
+
+extra_javascript:
+  - _js/mathjax.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
+
+validation:
+  links:
+    unrecognized_links: ignore

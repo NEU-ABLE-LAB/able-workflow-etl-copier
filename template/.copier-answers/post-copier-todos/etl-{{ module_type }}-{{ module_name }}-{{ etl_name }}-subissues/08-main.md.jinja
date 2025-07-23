@@ -1,0 +1,67 @@
+# 08. Draft and test `main.py` and `test_main.py` for `{{ module_type }}/{{ etl_name }}`
+
+- [ ] In this github subissue, create a new branch to work on the issue
+- [ ] Pull and checkout that branch in your local development environment.
+
+While working on this checklist you may want to use VSCode to automatically open for editing the following files:
+
+```bash
+code {{ package_name }}/{{ module_type }}/{{ etl_name }}/runner/main.py
+code tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_main.py
+```
+
+
+## `{{ package_name }}/{{ module_type }}/{{ etl_name }}/runner/main.py`
+
+The `main.py` script is the entry point for the ETL process. It should orchestrate the execution of the ETL steps in the correct order.
+
+- `run()` should take descriptive arguments for the input, output, and parameters of the ETL process. It should then call the following methods in the correct order:
+
+    {% if requires_extract_external -%}
+  - [ ] `extract_external()` file paths or API parameters and return a `pd.DataFrame` (or `dd.DataFrame` if using Dask) that matches the schema defined in `schema_external.py`.
+    {%- endif %}
+
+  - [ ] If this ETL process reads data produced by other `able-workflow` ETL processes, then import and call the `extract` methods to read the data from disk.
+
+  - [ ] `transform()`, takes the dataframes produces by `extract_external()` and/or other processes' `extract()` methods as input and returns a transformed dataframe that matches the schema defined in `schema.py`.
+
+  - [ ] `load()`, takes the output file path and the dataframe produced by `transform()` as input and saves the dataframe to disk in the desired format (e.g., Parquet).
+
+  - [ ] `extract()`, to ensure the data was saved to disk correctly, this method should read the data that was just saved to disk and return a `pd.DataFrame` (or `dd.DataFrame` if using Dask) and then validated with the schema defined in `schema.py`. This is useful for testing and debugging the ETL process.
+
+- `run_smk()` should take the `snakemake.script.Snakemake` object passed to it by `workflow/scripts/rules_conda_RUNNER/{{ package_name }}_rules.py` that is specified in the `script:` directive of the `snakemake` rule in `workflow/rules/{{ module_type }}/{{ module_name }}.smk`, parse the `input`, `output`, `wildcards`, and `params` from the `snakemake` object, and then pass those to a call the main `run` function as arguments.
+
+
+## `tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_main.py`
+
+- [ ] Write unit tests to ensure the `main.py` script works as intended. This can use test data from the `data/tests/` directory, or hard-code simple test data. These tests should not use the `remote_data` marker since the main script should not depend on remote data.
+
+- [ ] `run()` If the ETL simply follows the steps defined above, then minimal or no unit tests may be needed. However, if the ETL process has complex logic or transformations, then write unit tests to ensure that the `run()` function behaves as expected.
+
+- [ ] `run_smk()` Write unit tests to ensure that the `run_smk()` function correctly parses the `snakemake` object and calls the `run()` function with the correct arguments. This can be done by creating a dummy `snakemake` object and checking that the correct arguments are passed to `run()`.
+
+## Test
+
+### Lint and typecheck
+
+- [ ] Lint and typecheck using `tox`.
+
+  ```bash
+  tox run-parallel --quiet -f py312 lint -f py312 typecheck
+  ```
+
+### Remote data tests
+
+- [ ] Run unit tests to ensure that the `main.py` script works as intended. This can use test data from the `data/tests/` directory, or hard-code simple test data. These tests should not use the `remote_data` marker since the main script should not depend on remote data.
+
+  ```bash
+  tox run-parallel -e py312-package-unit-runner
+  ```
+
+### Full test suite
+
+- [ ] Run the full `tox` test suite to ensure that all tests pass after the changes made in the previous steps.
+
+  ```bash
+  tox run-parallel
+  ```

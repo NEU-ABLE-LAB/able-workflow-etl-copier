@@ -1,0 +1,81 @@
+# 03. Draft and test `schema_external` for `{{ module_type }}/{{ etl_name }}`
+
+- [ ] In this github subissue, create a new branch to work on the issue
+- [ ] Pull and checkout that branch in your local development environment.
+
+While working on this checklist you may want to use VSCode to automatically open for editing and viewing the following files:
+
+```bash
+code {{ package_name }}/{{ module_type }}/{{ etl_name }}/runner/extract_external.py
+code {{ package_name }}/{{ module_type }}/{{ etl_name }}/runner/schema_external.py
+code tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_extract_external.py
+code tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_schema_external.py
+```
+
+- [ ] If your external data will be validated with the same schema as the data produced by the ETL process, then you may modify `schema.py` file directly in this step to validate both the external data and the data produced by the ETL process. However, be sure that the schema does not require any of the `runner` extra dependencies.
+
+## `{{ package_name }}/{{ module_type }}/{{ etl_name }}/runner/schema_external.py`
+
+- [ ] If the external data is in a similar format to the data that this ETL process produces, then you may consider skipping the `schema_external.py` step and simply using the `extract_external.py` method to return a `pd.DataFrame` without validating the external schema, but then validating the output of the `transform.py` method in the `schema.py` step.
+
+- [ ] Write a Pandera DataFrame Model to validate the dataframe returned by `extract_external` based on the external data source's API documentation.
+
+- [ ] Ensure that the schema includes appropriate data types, descriptions, metadata (e.g., physical units), and validation checks for the external data.
+
+  - [ ] **column data types**: Define appropriate pandas data types for each column. The schema uses `pd.DatetimeTZDtype` for the date column to ensure timezone-aware datetime handling, and `pd.Float32Dtype` for numeric columns.
+
+  - [ ] **description**: Add clear, descriptive human-readable field descriptions that explain what each column represents and its purpose. These descriptions are extracted from the Open Meteo API documentation and help developers understand the data structure and meaning of each field.
+
+  - [ ] **metadata-units**: Include unit information in the metadata dictionary for each field (e.g., "°C", "%", "km/h", "mm", "cm", "m"). This metadata provides context for data interpretation and enables automated unit conversion or validation in downstream processing.
+
+  - [ ] **checks**: Implement data validation constraints using Pandera's validation features:
+    - Physical units are within reasonable bounds (e.g., temperature fields have realistic min/max bounds (-60°C to 60°C), percentage fields (humidity, cloud cover) are constrained to 0-100%, wind speed has a maximum realistic limit (200 km/h), precipitation and snow measurements are non-negative (≥0)).
+    - All numeric fields use `coerce=True` to handle type conversion gracefully. Except for `datetime` columns since datetime coersion may modify the true meaning of the data.
+
+- [ ] [Lint and typecheck](#lint-and-typecheck) using `tox`.
+
+
+## `tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_schema_external.py`
+
+- [ ] If your schema contains validation or coercion logic, write unit tests to ensure that the schema behaves as expected. This can include testing valid and invalid data against the schema.
+
+- [ ] Run unit tests and see the tests pass.
+
+Use breakpoints, watch variables, and the debug console to modify the test and/or schema to ensure the code behaves as expected and the tests pass.
+
+
+## Update `extract_external` to validate schema
+
+- [ ] Modify `extract_external` to convert the returned dataframe from the generic `pd.dataframe` to the `schema_external` dataframe model.
+
+  ```python
+  return dataframe_to_be_returned.pipe(DataFrame[schema_external.YourDataframeModel])
+  ```
+
+- [ ] Update the type hints (and logic as necessary) in `test_extract_external.py` to reflect the new return type of `extract_external`
+
+## Test
+
+### Lint and typecheck
+
+- [ ] Lint and typecheck using `tox`.
+
+  ```bash
+  tox run-parallel --quiet -f py312 lint -f py312 typecheck
+  ```
+
+### Unit tests
+
+- [ ] Run the unit tests to ensure that the schema behaves as expected. This can include testing valid and invalid data against the schema.
+
+  ```bash
+  tox run -e py312-package-unit-runner
+  ```
+
+### Full test suite
+
+- [ ] Run the full `tox` test suite to ensure that all tests pass after the changes made in the previous steps.
+
+  ```bash
+  tox run-parallel
+  ```

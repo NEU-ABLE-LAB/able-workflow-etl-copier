@@ -1,0 +1,65 @@
+name: docs-pages
+
+on:
+  push:
+    branches: [main]
+  release:
+    types: [published]
+  workflow_dispatch:
+
+concurrency:
+    group: docs
+    cancel-in-progress: true
+
+jobs:
+
+  build-and-deploy:
+
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash -el {0}
+
+    steps:
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: conda-incubator/setup-miniconda@v3
+        with:
+          activate-environment: able-workflow-etl-copier
+          channels: conda-forge, bioconda
+          channel-priority: strict
+          conda-remove-defaults: "true"
+          environment-file: environment-py312-dev.yaml
+          miniforge-version: latest
+
+      - name: Configure git
+        run: |
+          git config user.name ci-bot
+          git config user.email ci-bot@example.com
+
+      - name: Build documentation
+        run: |
+          VER=${GITHUB_REF_NAME:-dev}
+          mike deploy \
+            --config-file docs/mkdocs.yml \
+            --branch gh-pages \
+            --update-aliases \
+            "$VER" \
+            latest
+
+      - name: Set default version
+        run: |
+          mike set-default \
+            --config-file docs/mkdocs.yml \
+            --branch gh-pages \
+            latest
+
+      - name: Push changes
+        # Don't deploy on forks
+        if: ${{ github.repository == 'NEU-ABLE-LAB/able-workflow-etl-copier' }}
+        run: |
+          git push origin gh-pages

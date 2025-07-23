@@ -1,0 +1,99 @@
+name: test
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+jobs:
+  tox:
+    name: >-
+      ${{ matrix.python-version }} • ${{ matrix.os }}
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.12", "3.11"]
+        os: ["ubuntu-latest"]
+
+    env:
+      TERM: xterm-256color
+      PY_COLORS: "1"
+      FORCE_COLOR: "1"
+      PYTEST_ADDOPTS: "--color=yes"
+
+    defaults:
+      run:
+        shell: bash -el {0}
+
+    steps:
+      - name: Checkout this repository
+        uses: actions/checkout@v4
+
+      - name: Checkout the `able-workflow-copier` repository
+        uses: actions/checkout@v4
+        with:
+          repository: NEU-ABLE-LAB/able-workflow-copier-dev
+          ref: f87e44dbeee3797bb9f9bafd516630af189aab12
+          path: sandbox/able-workflow-copier-dev
+          token: ${{ secrets.ABLE_REPOS_PAT }}
+
+      - name: Checkout the `able-workflow-module-copier` repository
+        uses: actions/checkout@v4
+        with:
+          repository: NEU-ABLE-LAB/able-workflow-module-copier-dev
+          ref: 8aeaedb272dda10c49799b219aa831d58e454305
+          path: sandbox/able-workflow-module-copier-dev
+          token: ${{ secrets.ABLE_REPOS_PAT }}
+
+      - uses: conda-incubator/setup-miniconda@v3
+        with:
+          activate-environment: able-workflow-etl-copier
+          channels: conda-forge, bioconda
+          channel-priority: strict
+          conda-remove-defaults: "true"
+          environment-file: environment-py312-dev.yaml
+          miniforge-version: latest
+
+      - name: Setup test suite
+        run: tox run-parallel --parallel auto --parallel-no-spinner --notest --skip-missing-interpreters false
+
+      # Allow any git command in this job (including copier’s tmp clones)
+      # to access private repos over HTTPS without prompting.
+      - name: Authorise git for nested clones
+        run: |
+          git config --global url."https://${{ secrets.ABLE_REPOS_PAT }}@github.com/".insteadOf \
+                         "https://github.com/"
+          git config --global user.name  "github-actions[bot]"
+          git config --global user.email "github-actions@github.com"
+
+      - name: Run tox
+        run: tox run-parallel --parallel auto --parallel-no-spinner --skip-pkg-install
+
+      - name: Build XML coverage
+        if: always()
+        run: |
+          python -Im pip install --quiet "coverage[toml]"
+          # Merge every .cover/.* created by tox in the `.cover/` directory into one .coverage
+          python -Im coverage combine .cover
+          # Produce the XML file Codecov will look for
+          python -Im coverage xml -i \
+              -o .cover/coverage.${{ matrix.python-version }}.xml
+
+
+      - name: Upload coverage to Codecov
+        if: always()
+        uses: codecov/codecov-action@v5
+        with:
+          files: .cover/coverage.${{ matrix.python-version }}.xml
+          flags: py${{ matrix.python-version }}
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Upload test results to Codecov
+        if: always()
+        uses: codecov/test-results-action@v1
+        with:
+          # pick up every junit.*.xml written by tox in the `.junit/` directory
+          files: .junit/junit.*.xml
+          token: ${{ secrets.CODECOV_TOKEN }}
