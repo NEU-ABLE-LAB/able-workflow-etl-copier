@@ -72,8 +72,11 @@ def _parse_env_list_from_config(project_dir: Path) -> list[str]:
     try:
         data = tomllib.loads(pyproject.read_text())
         return data.get("tool", {}).get("tox", {}).get("env_list", []) or []
-    except Exception as exc:  # pragma: no cover
-        logger.warning("Failed to parse env_list from pyproject.toml: {}", exc)
+    except tomllib.TOMLDecodeError as exc:  # pragma: no cover
+        logger.warning("Invalid TOML in pyproject.toml: {}", exc)
+        return []
+    except FileNotFoundError as exc:  # pragma: no cover
+        logger.warning("pyproject.toml not found: {}", exc)
         return []
 
 
