@@ -4,7 +4,10 @@ site_name: ABLE Workflow ETL Copier
 site_author: Michael Kane
 docs_dir: docs
 repo_name: "NEU-ABLE-LAB/able-workflow-etl-copier-dev/"
-repo_url: !!python/object/apply:os.getenv ["ABLE_WORKFLOW_ETL_COPIER_REPO", "https://github.com/NEU-ABLE-LAB/able-workflow-etl-copier"]
+repo_url: !ENV [
+  "ABLE_WORKFLOW_ETL_COPIER_REPO",
+  "https://github.com/NEU-ABLE-LAB/able-workflow-etl-copier-dev"
+]
 edit_uri: edit/main/docs/docs  # enables “Edit on GitHub”
 dev_addr: '127.0.0.1:8003'
 
@@ -56,14 +59,38 @@ theme:
   favicon: _images/logo.png
 
 extra:
-  able_workflow_copier_repo: !!python/object/apply:os.getenv ["ABLE_WORKFLOW_COPIER_REPO", "https://github.com/NEU-ABLE-LAB/able-workflow-copier"]
-  able_workflow_copier_docs: !!python/object/apply:os.getenv ["ABLE_WORKFLOW_COPIER_DOCS", "https://NEU-ABLE-LAB.github.io/able-workflow-copier"]
-  able_workflow_module_copier_repo: !!python/object/apply:os.getenv ["ABLE_WORKFLOW_MODULE_COPIER_REPO", "https://github.com/NEU-ABLE-LAB/able-workflow-module-copier"]
-  able_workflow_module_copier_docs: !!python/object/apply:os.getenv ["ABLE_WORKFLOW_MODULE_COPIER_DOCS", "https://NEU-ABLE-LAB.github.io/able-workflow-module-copier"]
-  able_workflow_etl_copier_repo: !!python/object/apply:os.getenv ["ABLE_WORKFLOW_ETL_COPIER_REPO", "https://github.com/NEU-ABLE-LAB/able-workflow-etl-copier"]
-  able_workflow_etl_copier_docs: !!python/object/apply:os.getenv ["ABLE_WORKFLOW_ETL_COPIER_DOCS", "https://NEU-ABLE-LAB.github.io/able-workflow-etl-copier"]
-  able_workflow_rule_copier_repo: !!python/object/apply:os.getenv ["ABLE_WORKFLOW_RULE_COPIER_REPO", "https://github.com/NEU-ABLE-LAB/able-workflow-rule-copier"]
-  able_workflow_rule_copier_docs: !!python/object/apply:os.getenv ["ABLE_WORKFLOW_RULE_COPIER_DOCS", "https://NEU-ABLE-LAB.github.io/able-workflow-rule-copier"]
+  able_workflow_copier_repo: !ENV [
+    "ABLE_WORKFLOW_COPIER_REPO",
+    "https://github.com/NEU-ABLE-LAB/able-workflow-copier-dev"
+  ]
+  able_workflow_copier_docs: !ENV [
+    "ABLE_WORKFLOW_COPIER_DOCS",
+    "https://able-workflow.thisismikekane.com"
+  ]
+  able_workflow_module_copier_repo: !ENV [
+    "ABLE_WORKFLOW_MODULE_COPIER_REPO",
+    "https://github.com/NEU-ABLE-LAB/able-workflow-module-copier-dev"
+  ]
+  able_workflow_module_copier_docs: !ENV [
+    "ABLE_WORKFLOW_MODULE_COPIER_DOCS",
+    "https://module.able-workflow.thisismikekane.com"
+  ]
+  able_workflow_etl_copier_repo: !ENV [
+    "ABLE_WORKFLOW_ETL_COPIER_REPO",
+    "https://github.com/NEU-ABLE-LAB/able-workflow-etl-copier-dev"
+  ]
+  able_workflow_etl_copier_docs: !ENV [
+    "ABLE_WORKFLOW_ETL_COPIER_DOCS",
+    "https://etl.able-workflow.thisismikekane.com"
+  ]
+  able_workflow_rule_copier_repo: !ENV [
+    "ABLE_WORKFLOW_RULE_COPIER_REPO",
+    "https://github.com/NEU-ABLE-LAB/able-workflow-rule-copier-dev"
+  ]
+  able_workflow_rule_copier_docs: !ENV [
+    "ABLE_WORKFLOW_RULE_COPIER_DOCS",
+    "https://rule.able-workflow.thisismikekane.com"
+  ]
   version:
     provider: mike
 
