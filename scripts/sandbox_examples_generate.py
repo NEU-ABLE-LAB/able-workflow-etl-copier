@@ -43,6 +43,8 @@ PROJECT_ROOT: Path = Path(__file__).resolve().parents[1]
 ensure_package_repo_path = PROJECT_ROOT / "scripts" / "pull_able_workflow_copier.py"
 module_name = ensure_package_repo_path.stem
 spec = importlib.util.spec_from_file_location(module_name, ensure_package_repo_path)
+if spec is None:
+    raise RuntimeError(f"Failed to load module spec from {ensure_package_repo_path}")
 module = importlib.util.module_from_spec(spec)  # type: ignore[arg-type]
 sys.modules[module_name] = module
 spec.loader.exec_module(module)  # type: ignore[union-attr]
