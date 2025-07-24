@@ -10,7 +10,7 @@ code tests/workflow/rules/{{ module_type }}/{{ module_name }}/test_snakemake_{{ 
 code workflow/rules/{{ module_type }}/{{ module_name }}/{{ etl_name }}.smk
 ```
 
-- [ ] `data/tests/{{ module_name }}/{{ etl_name }}/external/`
+- [ ] `data/tests/{{ module_name }}/external/`
 
   - [ ] Create a directory for the external data used by the ETL process.
 
@@ -18,7 +18,7 @@ code workflow/rules/{{ module_type }}/{{ module_name }}/{{ etl_name }}.smk
 
   - [ ] Ensure that the dataset is in a format that can be read by the `extract_external` method.
 
-- [ ] `data/tests/{{ module_name }}/{{ etl_name }}/raw/`
+- [ ] `data/tests/{{ module_name }}/raw/`
 
   - [ ] Create a directory for the raw data produced by the ETL process.
 
