@@ -6,12 +6,12 @@
 While working on this checklist you may want to use VSCode to automatically open for editing the following files:
 
 ```bash
-code {{ package_name }}/{{ module_type }}/{{ etl_name }}/extract.py
+code {{ package_name }}/{{ module_type }}/{{ module_name }}/{{ etl_name }}/extract.py
 code tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/test_extract.py
 ```
 
 
-## `{{ package_name }}/{{ module_type }}/{{ etl_name }}/extract.py`
+## `{{ package_name }}/{{ module_type }}/{{ module_name }}/{{ etl_name }}/extract.py`
 
 - [ ] Implement the `extract` method which will be used by other ETL processes to extract (i.e., read from disk) the data produced by the `load` methods of this ETL process. This method should return a `pd.DataFrame` (or `dd.DataFrame` if using Dask) that matches the schema defined in `schema.py`.
 
