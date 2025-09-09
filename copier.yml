@@ -101,6 +101,13 @@ smk_file_name:
 _answers_file: >-
   ./copier-answers/etl-{{ module_type }}-{{ module_name }}-{{ etl_name }}.yml
 
+# --- External Data ----------------------------------------------------------
+
+_external_data:
+  parent_project_tpl: "{{ parent_project_tpl_answers_file }}"
+  parent_module_tpl: "{{ parent_module_tpl_answers_file }}"
+  example_answers: "{% if example_to_render %}{{ example_answers_file }}{% endif %}"
+
 package_name:
   type: str
   help: >-
@@ -108,6 +115,7 @@ package_name:
 
     DO NOT CHANGE THIS VALUE FROM THE DEFAULT
     IT SHOULD STAY IN SYNC WITH THE PARENT PROJECT TEMPLATE.
+  default: "{{ _external_data.parent_project_tpl.package_name }}"
 
   # --- Post-configuration -----------------------------------------------------
 
