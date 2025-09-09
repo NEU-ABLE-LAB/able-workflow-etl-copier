@@ -177,7 +177,7 @@ pythonpath = [
 
 [tool.ruff]
 line-length = 79
-exclude = [
+extend-exclude = [
   "template",
 ]
 
