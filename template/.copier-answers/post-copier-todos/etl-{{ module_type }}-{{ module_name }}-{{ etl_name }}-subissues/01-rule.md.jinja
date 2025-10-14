@@ -32,7 +32,7 @@ code workflow/rules/{{ module_type }}/{{ module_name }}/{{ etl_name }}.smk
 
 - [ ] `workflow/rules/includes.smk`
 
-    Modify the order of the included snakefiles in `includes.smk` so that `workflow/{{ module_type }}/{{ module_name }}/{{ etl_name }}.smk` is imported **after** `workflow/{{ module_type }}/{{ module_name }}.smk` so that `{{ module_name }}.smk` has access to the rule information from `{{ etl_name }}.smk`.
+    Modify the order of the included snakefiles in `includes.smk` so that `workflow/{{ module_type }}/{{ module_name }}/{{ etl_name }}.smk` is imported **before** `workflow/{{ module_type }}/{{ module_name }}.smk` so that `{{ module_name }}.smk` has access to the rule information from `{{ etl_name }}.smk`.
 
 - [ ] `workflow/Snakefile`
 
