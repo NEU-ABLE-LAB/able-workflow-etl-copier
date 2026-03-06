@@ -51,4 +51,4 @@ dependencies:
       - mkdocs-inline-select-svg-plugin>=0.1.0
       - mkdocs-mermaid2-plugin>=1.2.1
       - mkdocs-section-index>=0.3.10
-      - pytest-copie@git+https://github.com/thisIsMikeKane/pytest-copie.git
+      - pytest-copie>=0.3.1

@@ -57,7 +57,7 @@ lint = [
 
 test = [
   "pytest>=8.3.5",
-  "pytest-copie @ git+https://github.com/thisIsMikeKane/pytest-copie.git",
+  "pytest-copie>=0.3.1",
   "pytest-cov>=6.1.1",
   "pytest-order>=1.3.0",
   "pytest-sugar>=1.0.0",
