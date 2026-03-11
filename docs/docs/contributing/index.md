@@ -29,7 +29,10 @@ The `example-answers/` directory serves two purposes:
 2. **End-user documentation examples**: each example's `completed/` directory
   is the canonical reference output that is included in the docs.
 
-Since users are expected to edit the output of the template before applying another (child or sibling) template, examples are split into multiple steps (e.g., `example-answers/able_weather_*`) between the `sandbox/` and `example-answers/`.
+Since users are expected to edit the output of the template before applying another
+(child or sibling) template, examples have a `completed/` subdirectory with
+modified files that are copied overwriting the files produced by the template.
+(This is done by the post-copier task hook `tasks/copy_example.py`)
 
 The following command runs the tests for these examples:
 
