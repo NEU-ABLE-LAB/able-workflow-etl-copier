@@ -25,24 +25,11 @@ Example Copier answers are provided in the `example-answers/` directory.
 The `example-answers/` directory serves two purposes:
 
 1. **CI test fixtures**: the files `package.yml`, `module.yml`, and `etl.yml`
-   are used to render and validate example projects in automated tests.
+   are used to render and validate example projects in automated tests (e.g., `tests/template`).
 2. **End-user documentation examples**: each example's `completed/` directory
   is the canonical reference output that is included in the docs.
 
-The following tests exercise these fixtures:
-
-- `tests/template/conftest.py`: discovers examples from
-  `example-answers/` (`_discover_examples`) and parameterizes/renders them via
-  the `rendered` fixture.
-- `tests/template/rendered/test_dir.py` and
-  `tests/template/rendered/test_dir_pyproject_toml.py`: basic checks that each
-  rendered example is valid and includes key files.
-- `tests/template/rendered/test_copier_answers.py`: asserts fixture-specific
-- content from rendered output.
-- `tests/template/tox/conftest.py` and `tests/template/tox/test_tox_envs.py`:
-   run each rendered example's inner tox environments.
-- `tests/template/test_example_filtering.py`: checks example selection behavior
-  (including `--all-examples`).
+Since users are expected to edit the output of the template before applying another (child or sibling) template, examples are split into multiple steps (e.g., `example-answers/able_weather_*`) between the `sandbox/` and `example-answers/`.
 
 The following command runs the tests for these examples:
 
@@ -64,7 +51,7 @@ This runs `tests/template/tox`.
 
 If this template or either parent template (
 `able-workflow-copier` / `able-workflow-module-copier`;
-sometimes referred to as `able-copier-workflow` / `able-copier-module-workflow`|
+sometimes referred to as `able-copier-workflow` / `able-copier-module-workflow`
 ) is updated, regenerate examples so CI fixtures and docs stay in sync.
 
 1. Remove cached parent-template checkouts so they can be re-pulled
