@@ -16,6 +16,15 @@ example_to_render:
     If this is not set, the template will not render any example files.
   default: ""
 
+example_copy_diff:
+  type: bool
+  help: >-
+    Whether to copy the diff files for the example answers.
+
+    This is useful for debugging the template and seeing what changes are made
+    by the template when generating the files.
+  default: true
+
 example_answers_dir:
   type: str
   default: "example-answers/{{ example_to_render }}"
@@ -146,7 +155,7 @@ _tasks:
       "--example-subdir",
       "{{ example_answers_dir }}/completed",
     ]
-    when: "{{ example_to_render }}"
+    when: "{{ (example_to_render and example_copy_diff) }}"
 
   # Run black, ruff, and snakefmt to format the code to fix line wraps
   # depending on length of generated code.
