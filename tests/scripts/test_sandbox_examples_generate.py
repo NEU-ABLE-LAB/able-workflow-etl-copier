@@ -138,7 +138,7 @@ def test_cli_generate_happy_path(
     assert all(p.is_file() for p in sentinels)
 
 
-def test_cli_generate_no_apply_diffs_writes_no_diff_dirs(
+def test_cli_generate_no_apply_diffs_writes_no_diffs_example_dir(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     ex_name = _prepare_single_example(tmp_path, monkeypatch=monkeypatch)
@@ -159,10 +159,10 @@ def test_cli_generate_no_apply_diffs_writes_no_diff_dirs(
         result = attempt
     assert result.exit_code == 0, result.output
 
-    example_root = seg.SANDBOX_ROOT / f"example-{ex_name}"
-    assert (example_root / "package_run_no_diff").is_dir()
-    assert (example_root / "module_run_no_diff").is_dir()
-    assert (example_root / "etl_run_no_diff").is_dir()
+    example_root = seg.SANDBOX_ROOT / f"example-{ex_name}_no_diffs"
+    assert (example_root / "package_run").is_dir()
+    assert (example_root / "module_run").is_dir()
+    assert (example_root / "etl_run").is_dir()
 
     assert _RecordingCopie.calls
     etl_answers = _RecordingCopie.calls[-1]

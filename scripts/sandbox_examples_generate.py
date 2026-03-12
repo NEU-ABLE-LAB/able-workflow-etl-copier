@@ -142,7 +142,7 @@ def generate_cmd(
     no_apply_diffs: bool = typer.Option(
         False,
         "--no-apply-diffs",
-        help="Render ETL examples with example_copy_diff=false and write *_no_diff run directories.",
+        help="Render ETL examples with example_copy_diff=false in `example-<name>_no_diffs/` directories.",
     ),
 ) -> None:
     SANDBOX_ROOT.mkdir(exist_ok=True)
@@ -158,18 +158,17 @@ def generate_cmd(
             raise typer.Exit(1)
         to_render = [lookup[name] for name in examples]
 
-    run_suffix = "_no_diff" if no_apply_diffs else ""
-
     for ex in to_render:
-        ex_dir = SANDBOX_ROOT / f"example-{ex.name}"
-        if ex_dir.exists() and not no_apply_diffs:
+        dir_suffix = "_no_diffs" if no_apply_diffs else ""
+        ex_dir = SANDBOX_ROOT / f"example-{ex.name}{dir_suffix}"
+        if ex_dir.exists():
             shutil.rmtree(ex_dir)
         ex_dir.mkdir(parents=True, exist_ok=True)
 
         tmp_root = Path(tempfile.mkdtemp(prefix=f"copie_{ex.name}_"))
         config_file = _make_copier_config(tmp_root)
 
-        package_test_dir = ex_dir / f"package_run{run_suffix}"
+        package_test_dir = ex_dir / "package_run"
         if package_test_dir.exists():
             shutil.rmtree(package_test_dir)
         package_test_dir.mkdir()
@@ -194,7 +193,7 @@ def generate_cmd(
             )
             continue
 
-        mod_test_dir = ex_dir / f"module_run{run_suffix}"
+        mod_test_dir = ex_dir / "module_run"
         if mod_test_dir.exists():
             shutil.rmtree(mod_test_dir)
         mod_test_dir.mkdir()
@@ -213,7 +212,7 @@ def generate_cmd(
             )
             continue
 
-        etl_test_dir = ex_dir / f"etl_run{run_suffix}"
+        etl_test_dir = ex_dir / "etl_run"
         if etl_test_dir.exists():
             shutil.rmtree(etl_test_dir)
         etl_test_dir.mkdir()

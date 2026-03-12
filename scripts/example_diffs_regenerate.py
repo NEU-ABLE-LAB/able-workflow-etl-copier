@@ -52,7 +52,7 @@ def regenerate_cmd(
     )
 
     for name in selected:
-        before_root = SANDBOX_ROOT / f"example-{name}" / "etl_run_no_diff" / "copie000"
+        before_root = SANDBOX_ROOT / f"example-{name}_no_diffs" / "etl_run" / "copie000"
         after_root = SANDBOX_ROOT / f"example-{name}" / "etl_run" / "copie000"
         diff_root = ANSWERS_ROOT / name / "diffs"
 

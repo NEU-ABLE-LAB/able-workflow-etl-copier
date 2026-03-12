@@ -71,8 +71,8 @@ use the workflow below.
     python scripts/sandbox_examples_generate.py --no-apply-diffs
     ```
 
-   This writes run directories with a `_no_diff` suffix (for example
-   `package_run_no_diff/`, `module_run_no_diff/`, and `etl_run_no_diff/`).
+   This writes sandbox example directories with a `_no_diffs` suffix
+   (for example `sandbox/example-able_weather_04_no_diffs/`).
 
 3. Render examples with diffs enabled (normal behavior):
 
@@ -97,7 +97,9 @@ use the workflow below.
    Option B (manual command pattern):
 
     ```bash
-    git diff --no-index       sandbox/example-<example_name>/etl_run_no_diff/copie000/<relative_path>       sandbox/example-<example_name>/etl_run/copie000/<relative_path>
+    git diff --no-index \
+      sandbox/example-<example_name>_no_diffs/etl_run/copie000/<relative_path> \
+      sandbox/example-<example_name>/etl_run/copie000/<relative_path>
     ```
 
 6. Re-run template tests:
