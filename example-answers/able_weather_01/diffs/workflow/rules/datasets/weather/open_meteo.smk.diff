@@ -1,18 +1,17 @@
-diff --git a/workflow/rules/datasets/weather/open_meteo.smk b/workflow/rules/datasets/weather/open_meteo.smk
-index 88868fe..beaf6be 100644
---- a/workflow/rules/datasets/weather/open_meteo.smk
-+++ b/workflow/rules/datasets/weather/open_meteo.smk
-@@ -7,61 +7,31 @@ if (
-         config, WORKFLOW_BASE / "schemas/datasets/weather/config.schema.yaml"
+diff --git aworkflow/rules/datasets/weather/open_meteo.smk bworkflow/rules/datasets/weather/open_meteo.smk
+index 88868fe..03ea2e0 100644
+--- aworkflow/rules/datasets/weather/open_meteo.smk
++++ bworkflow/rules/datasets/weather/open_meteo.smk
+@@ -8,60 +8,31 @@ if (
      )
- 
--
+
+
 -rule datasets_weather_open_meteo_all:
 +rule datasets_weather_open_meteo_run:
      """
      This rule will run the entire open_meteo workflow
      to generate Convert weather data from the Open Meteo API to a Parquet file..
- 
+
 -    input
 -    -----
 -    readme:
@@ -36,7 +35,7 @@ index 88868fe..beaf6be 100644
 +    input:
 +        No input files are required as the data is fetched from the Open Meteo
 +        API directly.
- 
+
 -    script
 -    ------
 -    The standard script for running rules in the able_weather package.
