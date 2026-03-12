@@ -14,7 +14,7 @@ For this example, the data will be converted from °C to °F. The metadata from 
 
     ```python
     {%
-      include "../../../../example-answers/able_weather_04/completed/able_weather/datasets/weather/open_meteo/runner/transform.py"
+      include "../../../../example-answers/able_weather_04/completed/able_weather/datasets/weather/open_meteo/runner/transform.py.diff"
     %}
     ```
 
@@ -44,7 +44,7 @@ Write unit tests to confirm that columns with `°C` metadata units are converted
 
     ```python
     {%
-      include "../../../../example-answers/able_weather_04/completed/tests/able_weather/datasets/weather/open_meteo/runner/test_transform.py"
+      include "../../../../example-answers/able_weather_04/completed/tests/able_weather/datasets/weather/open_meteo/runner/test_transform.py.diff"
     %}
     ```
 

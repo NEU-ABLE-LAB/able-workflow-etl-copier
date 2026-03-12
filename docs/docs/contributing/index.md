@@ -27,12 +27,12 @@ The `example-answers/` directory serves two purposes:
 1. **CI test fixtures**: the files `package.yml`, `module.yml`, and `etl.yml`
    are used to render and validate example projects in automated tests (e.g., `tests/template`).
 2. **End-user documentation examples**: each example's `completed/` directory
-  is the canonical reference output that is included in the docs.
+  contains canonical patch files that are included in the docs.
 
 Since users are expected to edit the output of the template before applying another
 (child or sibling) template, examples have a `completed/` subdirectory with
-modified files that are copied overwriting the files produced by the template.
-(This is done by the post-copier task hook `tasks/copy_example.py`)
+`*.diff` patch files that are applied to the files produced by the template.
+(This is done by the post-copier task hook `tasks/copy_example.py`, which applies `*.diff` patches).
 
 The following command runs the tests for these examples:
 
@@ -78,7 +78,7 @@ sometimes referred to as `able-copier-workflow` / `able-copier-module-workflow`
 
 3. For each updated example, copy the generated final project
    (the path printed by `sandbox_examples_generate.py`) into
-   `example-answers/<example_name>/completed/`.
+   `example-answers/<example_name>/completed/` as `*.diff` files.
 
 4. Re-run template tests:
 

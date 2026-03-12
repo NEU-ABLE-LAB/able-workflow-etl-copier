@@ -148,7 +148,7 @@ _tasks:
       "{{ _copier_conf.src_path }}/tasks/append_config_include.py",
       "config/{{ module_type }}/{{ module_name }}/{{ etl_name }}/config.yaml"
     ]
-  # Overwrite with full example files
+  # Apply example patch files to the generated project
   - command: [
       "{{ _copier_python }}",
       "{{ _copier_conf.src_path }}/tasks/copy_example.py",
