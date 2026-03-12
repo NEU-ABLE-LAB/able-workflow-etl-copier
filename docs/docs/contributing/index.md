@@ -50,12 +50,13 @@ tox run -e py312-template-tox -- --remote-data=any
 
 This runs `tests/template/tox`.
 
-### Regenerating examples after template updates
+### Regenerating examples and diff files
 
 If this template or either parent template (
 `able-workflow-copier` / `able-workflow-module-copier`;
 sometimes referred to as `able-copier-workflow` / `able-copier-module-workflow`
-) is updated, regenerate examples so CI fixtures and docs stay in sync.
+) is updated, or if you want to intentionally change the example diffs,
+use the workflow below.
 
 1. Remove cached parent-template checkouts so they can be re-pulled
    at the versions pinned in `.github/workflows/pr.yml`:
@@ -64,23 +65,42 @@ sometimes referred to as `able-copier-workflow` / `able-copier-module-workflow`
     rm -rf sandbox/able-workflow-copier-dev sandbox/able-workflow-module-copier-dev
     ```
 
-2. Re-render sandbox examples:
+2. Render baseline examples **without applying diffs**:
+
+    ```bash
+    python scripts/sandbox_examples_generate.py --no-apply-diffs
+    ```
+
+   This writes run directories with a `_no_diff` suffix (for example
+   `package_run_no_diff/`, `module_run_no_diff/`, and `etl_run_no_diff/`).
+
+3. Render examples with diffs enabled (normal behavior):
 
     ```bash
     python scripts/sandbox_examples_generate.py
     ```
 
-    To render only one example:
+   If diff application fails for an example, delete the failing patch files in
+   `example-answers/<example_name>/diffs/` and rerun this command.
+
+4. Manually edit the rendered examples in `sandbox/example-<example_name>/etl_run/copie000/`
+   to the desired final state.
+
+5. Regenerate `example-answers/*/diffs/*.diff` files.
+
+   Option A (recommended helper script):
 
     ```bash
-    python scripts/sandbox_examples_generate.py <example_name>
+    python scripts/example_diffs_regenerate.py
     ```
 
-3. For each updated example, copy the generated final project
-   (the path printed by `sandbox_examples_generate.py`) into
-   `example-answers/<example_name>/diffs/` as `*.diff` files.
+   Option B (manual command pattern):
 
-4. Re-run template tests:
+    ```bash
+    git diff --no-index       sandbox/example-<example_name>/etl_run_no_diff/copie000/<relative_path>       sandbox/example-<example_name>/etl_run/copie000/<relative_path>
+    ```
+
+6. Re-run template tests:
 
     ```bash
     tox run -e py312-template-generate

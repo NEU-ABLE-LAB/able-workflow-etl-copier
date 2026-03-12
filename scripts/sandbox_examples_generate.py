@@ -22,7 +22,10 @@ Usage
     python scripts/sandbox_examples_generate.py
 
     # Only specific examples
-    python scripts/sandbox_examples_generate.py example-answers-able
+    python scripts/sandbox_examples_generate.py able_weather_04
+
+    # Render without applying example diffs
+    python scripts/sandbox_examples_generate.py --no-apply-diffs able_weather_04
 """
 
 from __future__ import annotations
@@ -48,38 +51,19 @@ sys.modules[module_name] = module
 spec.loader.exec_module(module)  # type: ignore[union-attr]
 ensure_parent_template_repos = module.ensure_parent_template_repos
 
-###############################################################################
-#  Static paths used by every run                                             #
-###############################################################################
-
-
 SANDBOX_ROOT: Path = PROJECT_ROOT / "sandbox"
-
-# Get both parent paths
 _parent_paths = ensure_parent_template_repos(PROJECT_ROOT)
-
-# Resolve them – child (=this repo) stays the same
 TEMPLATE_PACKAGE_DIR: Path = _parent_paths["able-workflow-copier"]
 TEMPLATE_MODULE_DIR: Path = _parent_paths["able-workflow-module-copier"]
 TEMPLATE_CHILD_DIR: Path = PROJECT_ROOT
 
 
-###############################################################################
-#  Convenience helpers                                                         #
-###############################################################################
-
-
 def _make_copier_config(work_root: Path) -> Path:
-    """
-    Re-implement the `_copier_config_file` fixture: create a copier config file
-    that points into *work_root* and return its path.
-    """
     copier_dir = work_root / "copier"
     replay_dir = work_root / "copier_replay"
     copier_dir.mkdir(parents=True, exist_ok=True)
     replay_dir.mkdir(parents=True, exist_ok=True)
 
-    # Build a small copier-config and write it with ruamel.yaml
     config = {"copier_dir": str(copier_dir), "replay_dir": str(replay_dir)}
     config_path = work_root / "config"
 
@@ -98,20 +82,12 @@ def _new_copie_instance(
     config_file: Path,
     parent_result: Result | None = None,
 ) -> Copie:
-    """
-    A tiny wrapper that makes it explicit what we need to pass to `Copie(...)`.
-    """
     return Copie(
         default_template_dir=template_dir.resolve(),
         test_dir=test_dir.resolve(),
         config_file=config_file.resolve(),
         parent_result=parent_result,
     )
-
-
-###############################################################################
-#  Example definition                                                          #
-###############################################################################
 
 
 @dataclass
@@ -122,9 +98,6 @@ class Example:
     etl_answers: Dict[str, Any]
 
 
-# ──────────────────────────────────────────────────────────────────────────────
-#  Register all examples here
-# ──────────────────────────────────────────────────────────────────────────────
 def _read_yaml(path: Path) -> Dict[str, Any]:
     return cast(Dict[str, Any], YAML(typ="safe").load(path.read_text()) or {})
 
@@ -154,12 +127,7 @@ def _discover_examples() -> List[Example]:
 
 
 EXAMPLES = _discover_examples()
-
-###############################################################################
-#  CLI                                                                         #
-###############################################################################
-
-app = typer.Typer(add_completion=False)  # we do not need shell completion
+app = typer.Typer(add_completion=False)
 
 
 @app.command("generate")
@@ -170,17 +138,15 @@ def generate_cmd(
             "Subset of examples to render "
             f"(available: {', '.join(e.name for e in EXAMPLES)})"
         ),
-    )
+    ),
+    no_apply_diffs: bool = typer.Option(
+        False,
+        "--no-apply-diffs",
+        help="Render ETL examples with example_copy_diff=false and write *_no_diff run directories.",
+    ),
 ) -> None:
-    """
-    Render one or more *extra-answers* files into the «sandbox» directory.
-
-    The command works exactly the same way as the original pytest fixture would,
-    but you can run it ad-hoc from the shell - no pytest needed.
-    """
     SANDBOX_ROOT.mkdir(exist_ok=True)
 
-    # Determine the list of examples we need to work on
     to_render: list[Example]
     if not examples:
         to_render = EXAMPLES
@@ -192,19 +158,20 @@ def generate_cmd(
             raise typer.Exit(1)
         to_render = [lookup[name] for name in examples]
 
-    # Work each example
+    run_suffix = "_no_diff" if no_apply_diffs else ""
+
     for ex in to_render:
         ex_dir = SANDBOX_ROOT / f"example-{ex.name}"
-        if ex_dir.exists():
+        if ex_dir.exists() and not no_apply_diffs:
             shutil.rmtree(ex_dir)
-        ex_dir.mkdir(parents=True)
+        ex_dir.mkdir(parents=True, exist_ok=True)
 
-        # A dedicated temp root for *all* Copie runs belonging to this example
         tmp_root = Path(tempfile.mkdtemp(prefix=f"copie_{ex.name}_"))
         config_file = _make_copier_config(tmp_root)
 
-        # ───── 1. Run the *package* template ────────────────────────────────
-        package_test_dir = ex_dir / "package_run"
+        package_test_dir = ex_dir / f"package_run{run_suffix}"
+        if package_test_dir.exists():
+            shutil.rmtree(package_test_dir)
         package_test_dir.mkdir()
         c_pkg = _new_copie_instance(
             template_dir=TEMPLATE_PACKAGE_DIR,
@@ -227,8 +194,9 @@ def generate_cmd(
             )
             continue
 
-        # ───── 2. Run the *module* template ─────────────────────────────────
-        mod_test_dir = ex_dir / "module_run"
+        mod_test_dir = ex_dir / f"module_run{run_suffix}"
+        if mod_test_dir.exists():
+            shutil.rmtree(mod_test_dir)
         mod_test_dir.mkdir()
         c_mod = _new_copie_instance(
             template_dir=TEMPLATE_MODULE_DIR,
@@ -245,20 +213,24 @@ def generate_cmd(
             )
             continue
 
-        # ───── 3. Run *this* (child) template ───────────────────────────────
-        child_test_dir = ex_dir / "child_run"
-        child_test_dir.mkdir()
+        etl_test_dir = ex_dir / f"etl_run{run_suffix}"
+        if etl_test_dir.exists():
+            shutil.rmtree(etl_test_dir)
+        etl_test_dir.mkdir()
         c_child = _new_copie_instance(
             template_dir=TEMPLATE_CHILD_DIR,
-            test_dir=child_test_dir,
+            test_dir=etl_test_dir,
             config_file=config_file,
             parent_result=mod_result,
         )
-        child_result = c_child.copy(extra_answers=ex.etl_answers or {})
+        etl_answers = dict(ex.etl_answers or {})
+        if no_apply_diffs:
+            etl_answers["example_copy_diff"] = False
+        child_result = c_child.copy(extra_answers=etl_answers)
 
         if child_result.exception or child_result.exit_code != 0:  # pragma: no cover
             typer.echo(
-                f"[{ex.name}] Child template failed: {child_result.exception}",
+                f"[{ex.name}] ETL template failed: {child_result.exception}",
                 err=True,
             )
             continue
