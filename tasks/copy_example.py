@@ -17,7 +17,7 @@ app = typer.Typer(
 
 
 def _run_git_apply(diff_file: Path, dst: Path, *, check: bool) -> subprocess.CompletedProcess[str]:
-    args = ["git", "apply", "--unsafe-paths", "--directory", str(dst)]
+    args = ["git", "apply", "--unsafe-paths"]
     if check:
         args.append("--check")
     args.append(str(diff_file))
@@ -27,6 +27,7 @@ def _run_git_apply(diff_file: Path, dst: Path, *, check: bool) -> subprocess.Com
         capture_output=True,
         text=True,
         check=False,
+        cwd=dst,
     )
 
 
@@ -60,13 +61,13 @@ def apply_diff_files(diff_root: Path, dst: Path) -> None:
 
     # Preflight: validate every patch to avoid partially-applied examples.
     for diff_file in diff_files:
-        logger.debug(f"Checking diff file {diff_file}")
+        logger.debug(f"Checking diff file {diff_file} against destination {dst}")
         check_result = _run_git_apply(diff_file, dst, check=True)
         if check_result.returncode != 0:
             _raise_apply_error(diff_file, check_result)
 
     for diff_file in diff_files:
-        logger.debug(f"Applying diff file {diff_file}")
+        logger.debug(f"Applying diff file {diff_file} to destination {dst}")
         apply_result = _run_git_apply(diff_file, dst, check=False)
         if apply_result.returncode != 0:
             _raise_apply_error(diff_file, apply_result)
@@ -101,7 +102,10 @@ def main(
 
     example_root = template_root / example_subdir
 
-    logger.info(f"Applying example diffs from {example_root} to {dest_root}")
+    logger.info(
+        f"Applying example diffs from {example_root} to {dest_root} "
+        f"(task cwd: {Path.cwd()})"
+    )
     apply_diff_files(example_root, dest_root)
     logger.info("Example diffs applied successfully")
 
