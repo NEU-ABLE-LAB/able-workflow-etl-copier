@@ -34,7 +34,7 @@ def _build_patch(before_file: Path, after_file: Path, *, rel_path: Path) -> str:
 
 
 def _should_skip_rel_path(rel: Path) -> bool:
-    return rel.parts and rel.parts[0] == ".copier-answers"
+    return bool(rel.parts) and rel.parts[0] == ".copier-answers"
 
 
 @app.command("regenerate")
