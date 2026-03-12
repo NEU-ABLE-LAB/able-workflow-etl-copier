@@ -33,6 +33,10 @@ def _build_patch(before_file: Path, after_file: Path, *, rel_path: Path) -> str:
     return patch
 
 
+def _should_skip_rel_path(rel: Path) -> bool:
+    return rel.parts and rel.parts[0] == ".copier-answers"
+
+
 @app.command("regenerate")
 def regenerate_cmd(
     examples: Optional[list[str]] = typer.Argument(
@@ -75,6 +79,9 @@ def regenerate_cmd(
 
         written = 0
         for rel in all_rel_files:
+            if _should_skip_rel_path(rel):
+                continue
+
             before_file = before_root / rel
             after_file = after_root / rel
             patch = _build_patch(before_file, after_file, rel_path=rel)
