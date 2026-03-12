@@ -29,7 +29,8 @@ def _build_patch(before_file: Path, after_file: Path, *, rel_path: Path) -> str:
         raise RuntimeError(result.stderr.strip() or result.stdout.strip())
 
     rel = rel_path.as_posix()
-    patch = result.stdout.replace(str(before_file), rel).replace(str(after_file), rel)
+    patch = result.stdout.replace(str(before_file), "/" + rel)
+    patch = patch.replace(str(after_file), "/" + rel)
     return patch
 
 
