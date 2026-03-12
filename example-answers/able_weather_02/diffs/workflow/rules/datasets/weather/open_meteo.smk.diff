@@ -1,18 +1,17 @@
 diff --git a/workflow/rules/datasets/weather/open_meteo.smk b/workflow/rules/datasets/weather/open_meteo.smk
-index 88868fe..8509e45 100644
+index 88868fe..03ea2e0 100644
 --- a/workflow/rules/datasets/weather/open_meteo.smk
 +++ b/workflow/rules/datasets/weather/open_meteo.smk
-@@ -7,61 +7,30 @@ if (
-         config, WORKFLOW_BASE / "schemas/datasets/weather/config.schema.yaml"
+@@ -8,60 +8,31 @@ if (
      )
- 
--
+
+
 -rule datasets_weather_open_meteo_all:
 +rule datasets_weather_open_meteo_run:
      """
      This rule will run the entire open_meteo workflow
      to generate Convert weather data from the Open Meteo API to a Parquet file..
- 
+
 -    input
 -    -----
 -    readme:
@@ -33,13 +32,20 @@ index 88868fe..8509e45 100644
 -    -----
 -    The able_weather conda environment
 -    with the `runner` extra dependencies.
--
++    input:
++        No input files are required as the data is fetched from the Open Meteo
++        API directly.
+
 -    script
 -    ------
 -    The standard script for running rules in the able_weather package.
 -    Reads `params.func` to determine which function to call.
--    """
-     input:
++    output:
++        weather_data:
++            Path to the Parquet file containing weather data for the specified
++            latitude, longitude, and date range.
+     """
+-    input:
 -        # TODO: Define input files if needed. All inputs should be named.
 -        readme="data/README.md",
 -    # output:
@@ -56,13 +62,6 @@ index 88868fe..8509e45 100644
 -        loguru=str(LOG_DIR / "datasets_weather_open_meteo_all" / "loguru.log"),
 -        # TODO add `stdout` and/or `stderr` if the python calls
 -        #   a subprocess that produces output.
-+        No input files are required as the data is fetched from the Open Meteo
-+        API directly.
-+    output:
-+        weather_data:
-+            Path to the Parquet file containing weather data for the specified
-+            latitude, longitude, and date range.
-+    """
 +    output:
 +        weather_data = (
 +            Path(config["datasets"]["weather"]["data_dirs"]["raw"])

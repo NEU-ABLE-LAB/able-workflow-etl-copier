@@ -1,19 +1,19 @@
 diff --git a/pyproject.toml b/pyproject.toml
-index ef75703..8e9fa79 100644
+index 47c6e70..9c76c3a 100755
 --- a/pyproject.toml
 +++ b/pyproject.toml
-@@ -44,6 +44,10 @@ dependencies = [
- # must be able to be installed simultaneously.
+@@ -45,6 +45,10 @@ dependencies = [
  runner = [
-   "snakemake>=9.3.3",
+   # This snakemake version should match the version in `dependency-groups.snakemake`
+   "snakemake>=9.16.3",
 +  # open-meteo API dependencies
 +  "openmeteo-requests",
 +  "requests-cache",
 +  "retry-requests",
    # Add additional dependencies for new modules and ETL process here.
  ]
- 
-@@ -242,6 +246,8 @@ mkdocs-inline-select-svg-plugin = { pip = true }
+
+@@ -244,6 +248,8 @@ mkdocs-inline-select-svg-plugin = { pip = true }
  mkdocs-mermaid2-plugin = { pip = true }
  mkdocs-section-index = { pip = true }
  mkdocstrings = { skip = true, packages = ["mkdocstrings-python>=1.16.10"] }
@@ -21,4 +21,3 @@ index ef75703..8e9fa79 100644
 +retry-requests = { pip = true }
  snakemake = { channel = "bioconda"}
  snakefmt = { channel = "bioconda"}
- 
