@@ -16,16 +16,46 @@ app = typer.Typer(
 )
 
 
+def _resolve_git_apply_directory(dst: Path) -> str:
+    """Return the ``git apply --directory`` value for ``dst``.
+
+    If ``dst`` is inside a git repository, return the path to ``dst``
+    relative to that repository root. Otherwise, return ``dst`` as-is.
+    """
+    git_root_result = subprocess.run(
+        ["git", "rev-parse", "--show-toplevel"],
+        capture_output=True,
+        text=True,
+        check=False,
+        cwd=dst,
+    )
+
+    if git_root_result.returncode != 0:
+        return str(dst)
+
+    git_root_text = git_root_result.stdout.strip()
+    if not git_root_text:
+        return str(dst)
+
+    try:
+        relative_dst = dst.resolve().relative_to(Path(git_root_text).resolve())
+    except ValueError:
+        return str(dst)
+
+    return relative_dst.as_posix() if str(relative_dst) != "." else "."
+
+
 def _run_git_apply(
     diff_file: Path, dst: Path, *, check: bool
 ) -> subprocess.CompletedProcess[str]:
+    directory_arg = _resolve_git_apply_directory(dst)
     args = [
         "git",
         "apply",
         "--unsafe-paths",
         "--verbose",
         "--directory",
-        str(dst),
+        directory_arg,
     ]
     if check:
         args.append("--check")
