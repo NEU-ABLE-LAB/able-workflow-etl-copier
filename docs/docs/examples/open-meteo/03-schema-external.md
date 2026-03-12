@@ -25,7 +25,7 @@ Starting with the [Open Meteo API documentation](https://open-meteo.com/en/docs/
 
     ```python
     {%
-      include "../../../../example-answers/able_weather_03/completed/able_weather/datasets/weather/open_meteo/runner/schema_external.py.diff"
+      include "../../../../example-answers/able_weather_03/diffs/able_weather/datasets/weather/open_meteo/runner/schema_external.py.diff"
     %}
     ```
 
@@ -55,7 +55,7 @@ return DataFrame[schema_external.OpenMeteoSchema](hourly_dataframe)
 
     ```python
     {%
-      include "../../../../example-answers/able_weather_03/completed/able_weather/datasets/weather/open_meteo/runner/schema_external.py.diff"
+      include "../../../../example-answers/able_weather_03/diffs/able_weather/datasets/weather/open_meteo/runner/schema_external.py.diff"
     %}
     ```
 

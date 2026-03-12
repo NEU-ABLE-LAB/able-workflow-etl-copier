@@ -16,8 +16,10 @@ app = typer.Typer(
 )
 
 
-def _run_git_apply(diff_file: Path, dst: Path, *, check: bool) -> subprocess.CompletedProcess[str]:
-    args = ["git", "apply", "--unsafe-paths"]
+def _run_git_apply(
+    diff_file: Path, dst: Path, *, check: bool
+) -> subprocess.CompletedProcess[str]:
+    args = ["git", "apply", "--unsafe-paths", "--verbose"]
     if check:
         args.append("--check")
     args.append(str(diff_file))
@@ -31,7 +33,9 @@ def _run_git_apply(diff_file: Path, dst: Path, *, check: bool) -> subprocess.Com
     )
 
 
-def _raise_apply_error(diff_file: Path, result: subprocess.CompletedProcess[str]) -> None:
+def _raise_apply_error(
+    diff_file: Path, result: subprocess.CompletedProcess[str]
+) -> None:
     stderr = result.stderr.strip()
     stdout = result.stdout.strip()
     details = stderr or stdout or "unknown git apply error"
@@ -41,6 +45,19 @@ def _raise_apply_error(diff_file: Path, result: subprocess.CompletedProcess[str]
         "The destination files do not match the patch context. "
         "Re-render the example diffs from current template output or regenerate the destination files first."
     )
+
+
+def _raise_if_patch_skipped(
+    diff_file: Path, result: subprocess.CompletedProcess[str]
+) -> None:
+    combined_output = f"{result.stdout}\n{result.stderr}".lower()
+    if "skipped patch" in combined_output:
+        raise RuntimeError(
+            "Example patch was skipped and therefore not applied: "
+            f"{diff_file}. "
+            "This usually means the patch target path is missing or already diverged from the expected base. "
+            "Regenerate the destination and/or example diff files to match each other."
+        )
 
 
 def apply_diff_files(diff_root: Path, dst: Path) -> None:
@@ -65,12 +82,14 @@ def apply_diff_files(diff_root: Path, dst: Path) -> None:
         check_result = _run_git_apply(diff_file, dst, check=True)
         if check_result.returncode != 0:
             _raise_apply_error(diff_file, check_result)
+        _raise_if_patch_skipped(diff_file, check_result)
 
     for diff_file in diff_files:
         logger.debug(f"Applying diff file {diff_file} to destination {dst}")
         apply_result = _run_git_apply(diff_file, dst, check=False)
         if apply_result.returncode != 0:
             _raise_apply_error(diff_file, apply_result)
+        _raise_if_patch_skipped(diff_file, apply_result)
 
 
 @app.command()
