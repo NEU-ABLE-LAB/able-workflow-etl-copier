@@ -19,7 +19,14 @@ app = typer.Typer(
 def _run_git_apply(
     diff_file: Path, dst: Path, *, check: bool
 ) -> subprocess.CompletedProcess[str]:
-    args = ["git", "apply", "--unsafe-paths", "--verbose"]
+    args = [
+        "git",
+        "apply",
+        "--unsafe-paths",
+        "--verbose",
+        "--directory",
+        str(dst),
+    ]
     if check:
         args.append("--check")
     args.append(str(diff_file))
