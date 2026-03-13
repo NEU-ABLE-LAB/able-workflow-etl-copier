@@ -10,6 +10,6 @@ This example does not read any data from disk, so there is no `input:`. The outp
 
     ```python
     {%
-      include "../../../../example-answers/able_weather_01/completed/workflow/rules/datasets/weather/open_meteo.smk"
+      include "../../../../example-answers/able_weather_01/diffs/workflow/rules/datasets/weather/open_meteo.smk.diff"
     %}
     ```

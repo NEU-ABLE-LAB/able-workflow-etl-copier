@@ -1,0 +1,85 @@
+diff --git a/workflow/rules/datasets/weather/open_meteo.smk b/workflow/rules/datasets/weather/open_meteo.smk
+index 88868fe..beaf6be 100644
+--- a/workflow/rules/datasets/weather/open_meteo.smk
++++ b/workflow/rules/datasets/weather/open_meteo.smk
+@@ -7,61 +7,31 @@ if (
+         config, WORKFLOW_BASE / "schemas/datasets/weather/config.schema.yaml"
+     )
+ 
+-
+-rule datasets_weather_open_meteo_all:
++rule datasets_weather_open_meteo_run:
+     """
+     This rule will run the entire open_meteo workflow
+     to generate Convert weather data from the Open Meteo API to a Parquet file..
+ 
+-    input
+-    -----
+-    readme:
+-        A README file that describes the data and the workflow.
+-
+-    params
+-    ------
+-    func:
+-        The function in the able_weather package to call in
+-        order to execute this rule.
+-
+-    log
+-    ---
+-    loguru:
+-        The log file where python will log to using loguru.
+-
+-    conda
+-    -----
+-    The able_weather conda environment
+-    with the `runner` extra dependencies.
++    input:
++        No input files are required as the data is fetched from the Open Meteo
++        API directly.
+ 
+-    script
+-    ------
+-    The standard script for running rules in the able_weather package.
+-    Reads `params.func` to determine which function to call.
++    output:
++        weather_data:
++            Path to the Parquet file containing weather data for the specified
++            latitude, longitude, and date range.
+     """
+-    input:
+-        # TODO: Define input files if needed. All inputs should be named.
+-        readme="data/README.md",
+-    # output:
+-    # `_all` rules do not produce any output files directly,
+-    # instead the `input` in this rule requests the output
+-    # from other rules.
+-    # wildcards:
+-    # TODO: Add wildcards if needed. All wildcards should be named.
+-    params:
+-        func=(
+-            "able_weather.datasets.weather" ".open_meteo.runner.main:run_smk"
+-        ),
+-    log:
+-        loguru=str(LOG_DIR / "datasets_weather_open_meteo_all" / "loguru.log"),
+-        # TODO add `stdout` and/or `stderr` if the python calls
+-        #   a subprocess that produces output.
++    output:
++        weather_data = (
++            Path(config["datasets"]["weather"]["data_dirs"]["raw"])
++            / "{latitude}_{longitude}/{start_date}_{end_date}.parquet"
++        )
++    wildcard_constraints:
++        latitude = r"[-+]?\d{1,2}\.\d{1,6}",  # Latitude in decimal degrees
++        longitude = r"[-+]?\d{1,3}\.\d{1,6}",  # Longitude in decimal degrees
++        start_date = r"\d{4}-\d{2}-\d{2}",  # Start date in YYYY-MM-DD format
++        end_date = r"\d{4}-\d{2}-\d{2}",  # End date in YYYY-MM-DD format
+     conda:
+         config["CONDA"]["ENVS"]["RUNNER"]
+     script:
+-        str(
+-            WORKFLOW_BASE
+-            / "scripts"
+-            / "rules_conda_RUNNER"
+-            / "able_weather_rules.py"
+-        )
++        str(WORKFLOW_BASE / "scripts" / "rules_conda_RUNNER" / "able_weather_rules.py")
