@@ -12,7 +12,7 @@ index 47c6e70..9c76c3a 100755
 +  "retry-requests",
    # Add additional dependencies for new modules and ETL process here.
  ]
-
+ 
 @@ -244,6 +248,8 @@ mkdocs-inline-select-svg-plugin = { pip = true }
  mkdocs-mermaid2-plugin = { pip = true }
  mkdocs-section-index = { pip = true }
@@ -21,3 +21,4 @@ index 47c6e70..9c76c3a 100755
 +retry-requests = { pip = true }
  snakemake = { channel = "bioconda"}
  snakefmt = { channel = "bioconda"}
+ 

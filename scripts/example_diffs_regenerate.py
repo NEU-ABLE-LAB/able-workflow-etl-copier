@@ -45,7 +45,7 @@ def regenerate_cmd(
         help="Subset of examples to regenerate diffs for (defaults to all examples).",
     ),
     clean: bool = typer.Option(
-        True,
+        False,
         "--clean/--no-clean",
         help="Delete existing *.diff files before writing regenerated diffs.",
     ),
