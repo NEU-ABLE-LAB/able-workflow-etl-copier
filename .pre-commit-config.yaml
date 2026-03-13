@@ -21,7 +21,9 @@ repos:
       - id: check-added-large-files
       - id: check-toml
       - id: end-of-file-fixer
+        exclude: (^|/).+\.diff$
       - id: trailing-whitespace
+        exclude: (^|/).+\.diff$
 
   # --- formatting -----------------------------------------------------------
   - repo: https://github.com/psf/black
