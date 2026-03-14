@@ -246,7 +246,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="https://github.com/NEU-ABLE-LAB/able-workflow-module-copier/overview/" class="md-tabs__link">
+      <a href="https://able-workflow.thisismikekane.com/overview/" class="md-tabs__link">
         
   
   
@@ -265,7 +265,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="https://github.com/NEU-ABLE-LAB/able-workflow-module-copier" class="md-tabs__link">
+      <a href="https://able-workflow.thisismikekane.com" class="md-tabs__link">
         
   
   
@@ -389,7 +389,7 @@
   
   
     <li class="md-nav__item">
-      <a href="https://github.com/NEU-ABLE-LAB/able-workflow-module-copier/overview/" class="md-nav__link">
+      <a href="https://able-workflow.thisismikekane.com/overview/" class="md-nav__link">
         
   
   
@@ -416,7 +416,7 @@
   
   
     <li class="md-nav__item">
-      <a href="https://github.com/NEU-ABLE-LAB/able-workflow-module-copier" class="md-nav__link">
+      <a href="https://able-workflow.thisismikekane.com" class="md-nav__link">
         
   
   
@@ -985,17 +985,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#regenerating-examples-and-diff-files" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Regenerating examples and diff files
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#writing-examples" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1104,17 +1093,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#regenerating-examples-and-diff-files" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Regenerating examples and diff files
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#writing-examples" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1150,112 +1128,28 @@
   
 
 
-<h1 id="contributing-to-able-workflow-etl-copier">Contributing to ABLE Workflow ETL Copier<a class="headerlink" href="#contributing-to-able-workflow-etl-copier" title="Permanent link">&para;</a></h1>
+<h1 id="contributing-to-able-workflow-etl-copier">Contributing to ABLE WOrkflow ETL Copier<a class="headerlink" href="#contributing-to-able-workflow-etl-copier" title="Permanent link">&para;</a></h1>
 <h2 id="tests">Tests<a class="headerlink" href="#tests" title="Permanent link">&para;</a></h2>
 <p>The test environments are managed with <code>tox</code>.</p>
 <h3 id="validating-template-generation">Validating template generation<a class="headerlink" href="#validating-template-generation" title="Permanent link">&para;</a></h3>
-<p>This template is to be run in a project that was created with
-<a href="https://github.com/NEU-ABLE-LAB/able-workflow-module-copier"><code>able-workflow-copier</code></a> and
-<a href="https://module.able-workflow.thisismikekane.com"><code>able-workflow-module-copier</code></a>.
-To test the rendering of this template, that parent templates needs
-to also be rendered. The version of these parent templates that are used
-for tests is specified in <code>.github/workflows/pr.yml</code>
-and pulled in <code>scripts/pull_able_workflow_copier.py</code>.</p>
+<p>This template is to be run in a project that was created with <a href="https://able-workflow.thisismikekane.com"><code>able-workflow-copier</code></a> and [<code>able-workflow-module-copier</code>]https://module.able-workflow.thisismikekane.com. To test the rendering of this template, that parent templates needs to also be rendered. The version of these parent templates that are used for tests is specified in <code>.github/workflows/pr.yml</code> and pulled in <code>scripts/pull_able_workflow_copier.py</code>.</p>
 <div class="admonition note">
 <p class="admonition-title">Updating <code>able-workflow-copier</code> version</p>
-<p>Once <code>scripts/sandbox_examples_generate.py</code> or <code>tests/template/conftest.py</code>
-create the local copy of the <code>able-workflow-copier</code> repo in the <code>sandbox/</code>
-they do not check to see if it needs updating. To ensure that the local and
-cloud repos are in sync, regularly run <code>rm -rf sandbox/able-workflow-copier-dev</code></p>
+<p>Once <code>scripts/sandbox_examples_generate.py</code> or <code>tests/template/conftest.py</code> create the local copy of the <code>able-workflow-copier</code> repo in the <code>sandbox/</code> they do not check to see if it needs updating. To ensure that the local and cloud repos are in sync, regularly run <code>rm -rf sandbox/able-workflow-copier-dev</code></p>
 </div>
-<p>Example Copier answers are provided in the <code>example-answers/</code> directory.</p>
-<p>The <code>example-answers/</code> directory serves two purposes:</p>
-<ol>
-<li><strong>CI test fixtures</strong>: the files <code>package.yml</code>, <code>module.yml</code>, and <code>etl.yml</code>
-   are used to render and validate example projects in automated tests (e.g., <code>tests/template</code>).</li>
-<li><strong>End-user documentation examples</strong>: each example's <code>diffs/</code> directory
-  contains canonical patch files that are included in the docs.</li>
-</ol>
-<p>Since users are expected to edit the output of the template before applying another
-(child or sibling) template, examples have a <code>diffs/</code> subdirectory with
-<code>*.diff</code> patch files that are applied to the files produced by the template.
-(This is done by the post-copier task hook <code>tasks/copy_example.py</code>, which applies <code>*.diff</code> patches).</p>
-<p>The following command runs the tests for these examples:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>tox<span class="w"> </span>run<span class="w"> </span>-e<span class="w"> </span>py312-template-generate
-</span></code></pre></div>
-<p>This runs <code>tests/template/rendered</code>.</p>
+<p>Example Copier answers are provided in the <code>answers/</code> directory. The followign command runs the tests for these examples:</p>
+<div class="language-text highlight"><pre><span></span><code>```bash
+tox run -e py312-template-generate
+```
+</code></pre></div>
 <p>Run tests for examples that require remote data with the following command:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>tox<span class="w"> </span>run<span class="w"> </span>-e<span class="w"> </span>py312-template-tox<span class="w"> </span>--<span class="w"> </span>--remote-data<span class="o">=</span>any
-</span></code></pre></div>
-<p>This runs <code>tests/template/tox</code>.</p>
-<h3 id="regenerating-examples-and-diff-files">Regenerating examples and diff files<a class="headerlink" href="#regenerating-examples-and-diff-files" title="Permanent link">&para;</a></h3>
-<p>If this template or either parent template (
-<code>able-workflow-copier</code> / <code>able-workflow-module-copier</code>;
-sometimes referred to as <code>able-copier-workflow</code> / <code>able-copier-module-workflow</code>
-) is updated, or if you want to intentionally change the example diffs,
-use the workflow below.</p>
-<ol>
-<li>
-<p>Remove cached parent-template checkouts so they can be re-pulled
-   at the versions pinned in <code>.github/workflows/pr.yml</code>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>rm<span class="w"> </span>-rf<span class="w"> </span>sandbox/able-workflow-copier-dev<span class="w"> </span>sandbox/able-workflow-module-copier-dev
-</span></code></pre></div>
-</li>
-<li>
-<p>Render baseline examples <strong>without applying diffs</strong>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>python<span class="w"> </span>scripts/sandbox_examples_generate.py<span class="w"> </span>--no-apply-diffs
-</span></code></pre></div>
-</li>
-</ol>
-<p>This writes sandbox example directories with a <code>_no_diffs</code> suffix
-   (for example <code>sandbox/example-able_weather_04_no_diffs/</code>).</p>
-<ol>
-<li>
-<p>Render examples with diffs enabled (normal behavior):</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>python<span class="w"> </span>scripts/sandbox_examples_generate.py
-</span></code></pre></div>
-</li>
-</ol>
-<p>If diff application fails for an example, delete the failing patch files in
-   <code>example-answers/&lt;example_name&gt;/diffs/</code> and rerun this command.</p>
-<ol>
-<li>
-<p>Manually edit the rendered examples in <code>sandbox/example-&lt;example_name&gt;/etl_run/copie000/</code>
-   to the desired final state.</p>
-</li>
-<li>
-<p>Regenerate <code>example-answers/*/diffs/*.diff</code> files.</p>
-</li>
-</ol>
-<p>Option A (recommended helper script):</p>
 <div class="language-text highlight"><pre><span></span><code>```bash
-python scripts/example_diffs_regenerate.py
+tox run -e py312-template-tox -- --remote-data=any
 ```
 </code></pre></div>
-<p>Option B (manual command pattern):</p>
-<div class="language-text highlight"><pre><span></span><code>```bash
-git diff --no-index \
-  sandbox/example-&lt;example_name&gt;_no_diffs/etl_run/copie000/&lt;relative_path&gt; \
-  sandbox/example-&lt;example_name&gt;/etl_run/copie000/&lt;relative_path&gt;
-```
-</code></pre></div>
-<ol>
-<li>
-<p>Re-run template tests:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>tox<span class="w"> </span>run<span class="w"> </span>-e<span class="w"> </span>py312-template-generate
-</span></code></pre></div>
-</li>
-</ol>
 <h3 id="writing-examples">Writing examples<a class="headerlink" href="#writing-examples" title="Permanent link">&para;</a></h3>
-<p>When writing new examples, it can be helpful to save the example after each step
-of the instructions that the example is trying to show.
-However, running the full test suite for every step of every example can be
-computationally demanding.
-Instead if the example steps are named <code>example_00/</code>, <code>example_01/</code>,
-and <code>example_02/</code>, then only <code>example_02/</code> will be run
-in the continuous integration tests.
-To run all three tests locally, run tox with the following commands:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>tox<span class="w"> </span>run<span class="w"> </span>--<span class="w"> </span>--all-examples
+<p>When writing new examples, it can be helpful to save the example after each step of the instructions that the example is trying to show. However, running the full test suite for every step of every example can be computationally demanding. Instead if the example steps are named <code>example_00/</code>, <code>example_01/</code>, and <code>example_02/</code>, then only <code>example_02/</code> will be run in the continuous integration tests. To run all three tests locally, run tox with the following commands:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>tox<span class="w"> </span>run<span class="w"> </span>--<span class="w"> </span>--all-examples
 </span></code></pre></div>
 
 
@@ -1277,7 +1171,7 @@ To run all three tests locally, run tox with the following commands:</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">March 12, 2026</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 23, 2025</span>
   </span>
 
     
