@@ -7,7 +7,7 @@ index 07bef56..aab13f2 100644
 -This file extracts input into the Convert Open Meteo API Data to Parquet from an external
 -source, such as an API or proprietary file format.
 -
--It may required additional dependencies specified in the
+-It may require additional dependencies specified in the
 -`pyproject.toml` file under the `project.optional-dependencies.runner`
 -section. These dependencies are not imported by default, allowing other
 -ETL processes to use the `extract` and `schema` modules without requiring
