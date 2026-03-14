@@ -9,7 +9,7 @@ index 0a771df..86f2048 100644
 -`able-workflow-copier` template. The output of this transformation is
 -loaded to disk by the `load` module of this process.
 -
--Thie contents of the `runner` module require extra
+-The contents of the `runner` module require extra
 -dependencies (specified as `project.optional-dependencies.runner` in
 -`pyproject.toml`) and are not imported required to be imported by other
 -ETL processes that only need to extract and validate the datasets.
