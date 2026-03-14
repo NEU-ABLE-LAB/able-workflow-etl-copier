@@ -66,6 +66,16 @@ class _DummyCopie:
         return _Result(ok=True, project_dir=inner)
 
 
+class _RecordingCopie(_DummyCopie):
+    """Captures extra_answers for assertions."""
+
+    calls: list[dict[str, Any]] = []
+
+    def copy(self, *, extra_answers: dict[str, Any]) -> _Result:  # noqa: D401
+        self.__class__.calls.append(dict(extra_answers))
+        return super().copy(extra_answers=extra_answers)
+
+
 # ──────────────────────────────────────────────────────────────────────────────
 #  Tests
 # ──────────────────────────────────────────────────────────────────────────────
@@ -111,17 +121,12 @@ def _prepare_single_example(
     monkeypatch.setattr(seg, "SANDBOX_ROOT", tmp_path / "sandbox")
     monkeypatch.setattr(seg, "TEMPLATE_PACKAGE_DIR", tmp_path / "tpl_pkg")
     monkeypatch.setattr(seg, "TEMPLATE_MODULE_DIR", tmp_path / "tpl_module")
-    # The refactored script uses TEMPLATE_CHILD_DIR; fall back gracefully
-    child_attr = (
-        "TEMPLATE_CHILD_DIR"
-        if hasattr(seg, "TEMPLATE_CHILD_DIR")
-        else "TEMPLATE_ETL_DIR"
-    )
-    monkeypatch.setattr(seg, child_attr, tmp_path / "tpl_child")
+    monkeypatch.setattr(seg, "TEMPLATE_CHILD_DIR", tmp_path / "tpl_child")
+
     seg.SANDBOX_ROOT.mkdir()
     seg.TEMPLATE_PACKAGE_DIR.mkdir()
     seg.TEMPLATE_MODULE_DIR.mkdir()
-    getattr(seg, child_attr).mkdir()
+    seg.TEMPLATE_CHILD_DIR.mkdir()
 
     # 4️⃣  Stub Copie
     monkeypatch.setattr(seg, "Copie", _DummyCopie)
@@ -161,3 +166,34 @@ def test_cli_generate_happy_path(
     sentinels = list(example_root.glob("**/sentinel.txt"))
     assert sentinels, "No sentinel files generated"
     assert all(p.is_file() for p in sentinels)
+
+
+def test_cli_generate_no_apply_diffs_writes_no_diffs_example_dir(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    ex_name = _prepare_single_example(tmp_path, monkeypatch=monkeypatch)
+    _RecordingCopie.calls = []
+    monkeypatch.setattr(seg, "Copie", _RecordingCopie)
+
+    runner = CliRunner()
+    result = None  # type: ignore[assignment]
+    for args in (
+        ["generate", "--no-apply-diffs", ex_name],
+        ["--no-apply-diffs", ex_name],
+    ):
+        attempt = runner.invoke(seg.app, args)
+        if attempt.exit_code == 0:
+            result = attempt
+            break
+    if result is None:
+        result = attempt
+    assert result.exit_code == 0, result.output
+
+    example_root = seg.SANDBOX_ROOT / f"example-{ex_name}_no_diffs"
+    assert (example_root / "package_run").is_dir()
+    assert (example_root / "module_run").is_dir()
+    assert (example_root / "etl_run").is_dir()
+
+    assert _RecordingCopie.calls
+    etl_answers = _RecordingCopie.calls[-1]
+    assert etl_answers.get("example_copy_diff") is False
