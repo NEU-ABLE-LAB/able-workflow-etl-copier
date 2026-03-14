@@ -6,13 +6,13 @@
 While working on this checklist you may want to use VSCode to automatically open for editing the following files:
 
 ```bash
-code {{ package_name }}/{{ module_type }}/{{ etl_name }}/runner/schema_external.py
-code {{ package_name }}/{{ module_type }}/{{ etl_name }}/runner/transform.py
+code {{ package_name }}/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/schema_external.py
+code {{ package_name }}/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/transform.py
 code tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_transform.py
 ```
 
 
-## `{{ package_name }}/{{ module_type }}/{{ etl_name }}/runner/transform.py`
+## `{{ package_name }}/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/transform.py`
 
 - [ ] Implement the `transform` method to apply any necessary transformations to the data extracted from the external source.
 

@@ -11,8 +11,8 @@ The directory structure expected for every example under
 
 Rendering chain:
 
-    1. able-workflow-copier          (package, parent-most)
-    2. able-workflow-module-copier   (module, middle)
+    1. able-workflow-copier              (package, parent-most)
+    2. able-workflow-module-copier       (module, middle)
     3. THIS repository                   (etl / child)
 
 The session-scoped fixture yields ``(project_dir, example_name)`` where
@@ -104,21 +104,25 @@ def _new_copie(
     )
 
 
-def _run_copy_silently(config, copie_session, answers):
+def _run_copy_silently(config, copie_session, answers, vcs_ref: str | None = None):
     """
     Run ``copie_session.copy`` and suppress stdout/stderr unless the user
     requested `-vv` verbosity.
     """
+    copy_kwargs = {"extra_answers": answers}
+    if vcs_ref is not None:
+        copy_kwargs["vcs_ref"] = vcs_ref
+
     if config.option.verbose < 2:
         with open(os.devnull, "w") as devnull:
             old_out, old_err = sys.stdout, sys.stderr
             sys.stdout = sys.stderr = devnull
             try:
-                return copie_session.copy(extra_answers=answers)
+                return copie_session.copy(**copy_kwargs)
             finally:
                 sys.stdout, sys.stderr = old_out, old_err
     # verbose ⇒ let Copier chatter
-    return copie_session.copy(extra_answers=answers)
+    return copie_session.copy(**copy_kwargs)
 
 
 # ──────────────────────────────────────────────────────────────────────────────

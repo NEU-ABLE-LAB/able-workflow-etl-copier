@@ -6,15 +6,15 @@
 While working on this checklist you may want to use VSCode to automatically open for editing and viewing the following files:
 
 ```bash
-code {{ package_name }}/{{ module_type }}/{{ etl_name }}/runner/extract_external.py
-code {{ package_name }}/{{ module_type }}/{{ etl_name }}/runner/schema_external.py
+code {{ package_name }}/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/extract_external.py
+code {{ package_name }}/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/schema_external.py
 code tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_extract_external.py
 code tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_schema_external.py
 ```
 
 - [ ] If your external data will be validated with the same schema as the data produced by the ETL process, then you may modify `schema.py` file directly in this step to validate both the external data and the data produced by the ETL process. However, be sure that the schema does not require any of the `runner` extra dependencies.
 
-## `{{ package_name }}/{{ module_type }}/{{ etl_name }}/runner/schema_external.py`
+## `{{ package_name }}/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/schema_external.py`
 
 - [ ] If the external data is in a similar format to the data that this ETL process produces, then you may consider skipping the `schema_external.py` step and simply using the `extract_external.py` method to return a `pd.DataFrame` without validating the external schema, but then validating the output of the `transform.py` method in the `schema.py` step.
 

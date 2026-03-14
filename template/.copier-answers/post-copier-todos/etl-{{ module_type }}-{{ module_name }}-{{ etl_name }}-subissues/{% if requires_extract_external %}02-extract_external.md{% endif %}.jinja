@@ -9,7 +9,7 @@ While working on this checklist you may want to use VSCode to automatically open
 
 ```bash
 code pyproject.toml
-code {{ package_name }}/{{ module_type }}/{{ etl_name }}/runner/extract_external.py
+code {{ package_name }}/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/extract_external.py
 code tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_extract_external.py
 ```
 
@@ -18,7 +18,7 @@ code tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_extrac
 - [ ] Add any extra dependencies that this module requires to `runner` in the `[project.optional-dependencies]` section of `pyproject.toml`. If those dependencies are not available on [conda-forge](https://anaconda.org/conda-forge/repo), then configure the `[tool.pyproject2conda.dependencies]` section of `pyproject.toml` to specify that they should be installed via `pip` instead of `conda`.
 
 
-## `{{ package_name }}/{{ module_type }}/{{ etl_name }}/runner/extract_external.py`
+## `{{ package_name }}/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/extract_external.py`
 
 - [ ] Write a method to extract the external data from the source. This method should return a `pd.DataFrame` (or `dd.DataFrame` if using Dask).
 

@@ -22,7 +22,10 @@ Usage
     python scripts/sandbox_examples_generate.py
 
     # Only specific examples
-    python scripts/sandbox_examples_generate.py example-answers-able
+    python scripts/sandbox_examples_generate.py able_weather_04
+
+    # Render without applying example diffs
+    python scripts/sandbox_examples_generate.py --no-apply-diffs able_weather_04
 """
 
 from __future__ import annotations
@@ -172,7 +175,12 @@ def generate_cmd(
             "Subset of examples to render "
             f"(available: {', '.join(e.name for e in EXAMPLES)})"
         ),
-    )
+    ),
+    no_apply_diffs: bool = typer.Option(
+        False,
+        "--no-apply-diffs",
+        help="Render ETL examples with example_copy_diff=false in `example-<name>_no_diffs/` directories.",
+    ),
 ) -> None:
     """
     Render one or more *extra-answers* files into the «sandbox» directory.
@@ -194,19 +202,19 @@ def generate_cmd(
             raise typer.Exit(1)
         to_render = [lookup[name] for name in examples]
 
-    # Work each example
     for ex in to_render:
-        ex_dir = SANDBOX_ROOT / f"example-{ex.name}"
+        dir_suffix = "_no_diffs" if no_apply_diffs else ""
+        ex_dir = SANDBOX_ROOT / f"example-{ex.name}{dir_suffix}"
         if ex_dir.exists():
             shutil.rmtree(ex_dir)
-        ex_dir.mkdir(parents=True)
+        ex_dir.mkdir(parents=True, exist_ok=True)
 
-        # A dedicated temp root for *all* Copie runs belonging to this example
         tmp_root = Path(tempfile.mkdtemp(prefix=f"copie_{ex.name}_"))
         config_file = _make_copier_config(tmp_root)
 
-        # ───── 1. Run the *package* template ────────────────────────────────
         package_test_dir = ex_dir / "package_run"
+        if package_test_dir.exists():
+            shutil.rmtree(package_test_dir)
         package_test_dir.mkdir()
         c_pkg = _new_copie_instance(
             template_dir=TEMPLATE_PACKAGE_DIR,
@@ -229,8 +237,9 @@ def generate_cmd(
             )
             continue
 
-        # ───── 2. Run the *module* template ─────────────────────────────────
         mod_test_dir = ex_dir / "module_run"
+        if mod_test_dir.exists():
+            shutil.rmtree(mod_test_dir)
         mod_test_dir.mkdir()
         c_mod = _new_copie_instance(
             template_dir=TEMPLATE_MODULE_DIR,
@@ -247,20 +256,24 @@ def generate_cmd(
             )
             continue
 
-        # ───── 3. Run *this* (child) template ───────────────────────────────
-        child_test_dir = ex_dir / "child_run"
-        child_test_dir.mkdir()
+        etl_test_dir = ex_dir / "etl_run"
+        if etl_test_dir.exists():
+            shutil.rmtree(etl_test_dir)
+        etl_test_dir.mkdir()
         c_child = _new_copie_instance(
             template_dir=TEMPLATE_CHILD_DIR,
-            test_dir=child_test_dir,
+            test_dir=etl_test_dir,
             config_file=config_file,
             parent_result=mod_result,
         )
-        child_result = c_child.copy(extra_answers=ex.etl_answers or {})
+        etl_answers = dict(ex.etl_answers or {})
+        if no_apply_diffs:
+            etl_answers["example_copy_diff"] = False
+        child_result = c_child.copy(extra_answers=etl_answers)
 
         if child_result.exception or child_result.exit_code != 0:  # pragma: no cover
             typer.echo(
-                f"[{ex.name}] Child template failed: {child_result.exception}",
+                f"[{ex.name}] ETL template failed: {child_result.exception}",
                 err=True,
             )
             continue

@@ -1,7 +1,7 @@
 # --- Configuration ----------------------------------------------------------
 
 _jinja_extensions:
-  - "copier_templates_extensions.TemplateExtensionLoader"
+  - "copier_template_extensions.TemplateExtensionLoader"
   - "extensions/strict_undefined.py:SetStrictUndefined"
 
 _subdirectory: "template"
@@ -15,6 +15,15 @@ example_to_render:
 
     If this is not set, the template will not render any example files.
   default: ""
+
+example_copy_diff:
+  type: bool
+  help: >-
+    Whether to copy the diff files for the example answers.
+
+    This is useful for debugging the template and seeing what changes are made
+    by the template when generating the files.
+  default: true
 
 example_answers_dir:
   type: str
@@ -139,15 +148,6 @@ _tasks:
       "{{ _copier_conf.src_path }}/tasks/append_config_include.py",
       "config/{{ module_type }}/{{ module_name }}/{{ etl_name }}/config.yaml"
     ]
-  # Overwrite with full example files
-  - command: [
-      "{{ _copier_python }}",
-      "{{ _copier_conf.src_path }}/tasks/copy_example.py",
-      "--example-subdir",
-      "{{ example_answers_dir }}/completed",
-    ]
-    when: "{{ example_to_render }}"
-
   # Run black, ruff, and snakefmt to format the code to fix line wraps
   # depending on length of generated code.
   - command: >-
@@ -159,6 +159,15 @@ _tasks:
   - command: >-
       snakefmt --config snakefmt.toml workflow/
     when: "{{ format_code }}"
+
+  # Apply example patch files to the generated project
+  - command: [
+      "{{ _copier_python }}",
+      "{{ _copier_conf.src_path }}/tasks/copy_example.py",
+      "--example-subdir",
+      "{{ example_answers_dir }}/diffs",
+    ]
+    when: "{{ (example_to_render and example_copy_diff) }}"
 
 _message_after_copy: |
   The {{ module_type }}/{{ module_name }}/{{ etl_name }} ETL process

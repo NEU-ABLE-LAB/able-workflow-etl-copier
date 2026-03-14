@@ -10,25 +10,17 @@ code tests/workflow/rules/{{ module_type }}/{{ module_name }}/test_snakemake_{{ 
 code workflow/rules/{{ module_type }}/{{ module_name }}/{{ etl_name }}.smk
 ```
 
-- [ ] `data/tests/{{ module_name }}/{{ etl_name }}/external/`
+Consider implementing one of the following integration test approach:
 
-  - [ ] Create a directory for the external data used by the ETL process.
+1) A simple dry run. Tell the snakemake command to run with the `--dry-run` argument. This will simply test that input data exists. You can use `touch` to create dummy input files, or use actualy `data/test` files copied over to the temp test directory.
 
-  - [ ] Add a small test dataset that can be used to test the `extract_external` method. This dataset should be small enough to commit to the git repo and should not exceed 2MB in size.
+2) Test input file to output generation for a small test dataset.
 
-  - [ ] Ensure that the dataset is in a format that can be read by the `extract_external` method.
-
-- [ ] `data/tests/{{ module_name }}/{{ etl_name }}/raw/`
-
-  - [ ] Create a directory for the raw data produced by the ETL process.
-
-  - [ ] Add a small test dataset that can be used to test the `extract_external` method. This dataset should be small enough to commit to the git repo and should not exceed 2MB in size.
-
-  - [ ] Ensure that the dataset is in a format that can be read by the `extract_external` method.
+3) Validate generated output files against expected output files for a small test dataset.
 
 - [ ] `tests/workflow/rules/{{ module_type }}/{{ module_name }}/test_snakemake_{{ etl_name }}.py`
 
-  - [ ] Write an integration test that runs the entire ETL process from start to finish.
+  - [ ] Write an integration test that runs the entire ETL process from start to finish for a small set of data or dry.
 
 ## Test
 

@@ -65,7 +65,7 @@ extra:
   ]
   able_workflow_copier_docs: !ENV [
     "ABLE_WORKFLOW_COPIER_DOCS",
-    "https://able-workflow.thisismikekane.com"
+    "https://neu-able-lab.github.io/able-workflow-copier"
   ]
   able_workflow_module_copier_repo: !ENV [
     "ABLE_WORKFLOW_MODULE_COPIER_REPO",
@@ -73,7 +73,7 @@ extra:
   ]
   able_workflow_module_copier_docs: !ENV [
     "ABLE_WORKFLOW_MODULE_COPIER_DOCS",
-    "https://module.able-workflow.thisismikekane.com"
+    "https://neu-able-lab.github.io/able-workflow-module-copier"
   ]
   able_workflow_etl_copier_repo: !ENV [
     "ABLE_WORKFLOW_ETL_COPIER_REPO",
@@ -81,7 +81,7 @@ extra:
   ]
   able_workflow_etl_copier_docs: !ENV [
     "ABLE_WORKFLOW_ETL_COPIER_DOCS",
-    "https://etl.able-workflow.thisismikekane.com"
+    "https://neu-able-lab.github.io/able-workflow-etl-copier"
   ]
   able_workflow_rule_copier_repo: !ENV [
     "ABLE_WORKFLOW_RULE_COPIER_REPO",
@@ -89,7 +89,7 @@ extra:
   ]
   able_workflow_rule_copier_docs: !ENV [
     "ABLE_WORKFLOW_RULE_COPIER_DOCS",
-    "https://rule.able-workflow.thisismikekane.com"
+    "https://neu-able-lab.github.io/able-workflow-rule-copier"
   ]
   analytics:
     provider: google
@@ -101,7 +101,8 @@ plugins:
   - gen-files:
       scripts:
         - _gen-files-scripts/render_summaries.py
-  - git-revision-date-localized
+  - git-revision-date-localized:
+      locale: en
   - include-markdown
   - inline-select-svg
   - literate-nav:

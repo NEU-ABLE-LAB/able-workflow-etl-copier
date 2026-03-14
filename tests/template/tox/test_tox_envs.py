@@ -15,6 +15,7 @@ import subprocess
 import tempfile
 from pathlib import Path
 
+import pytest
 from loguru import logger
 
 from tests.template.conftest import (
@@ -30,6 +31,57 @@ from tests.template.tox.conftest import _list_tox_envs
 
 
 # --- Helpers ----------------------------------------------------------------
+def _template_head_ref(template_root: Path) -> str:
+    """Return the immutable git ref for *template_root*."""
+    try:
+        return subprocess.check_output(
+            ["git", "rev-parse", "HEAD"],
+            cwd=template_root,
+            text=True,
+        ).strip()
+    except FileNotFoundError as exc:
+        raise pytest.UsageError("`git` executable not found in PATH") from exc
+    except subprocess.CalledProcessError as exc:
+        raise pytest.UsageError(
+            "Failed to resolve template git ref for "
+            f"{template_root}. Ensure it is a valid git repository."
+        ) from exc
+
+
+def _assert_template_repo_is_clean(template_root: Path) -> None:
+    """Raise a usage error when a template repository has local changes."""
+    try:
+        status = subprocess.check_output(
+            ["git", "status", "--porcelain", "--ignore-submodules=none"],
+            cwd=template_root,
+            text=True,
+        ).splitlines()
+    except FileNotFoundError as exc:
+        raise pytest.UsageError("`git` executable not found in PATH") from exc
+    except subprocess.CalledProcessError as exc:
+        raise pytest.UsageError(
+            "Failed to check git status for template root: "
+            f"{template_root}. Ensure it is a valid git repository."
+        ) from exc
+
+    dirty = [line for line in status if line.strip()]
+    if not dirty:
+        return
+
+    max_items = 20
+    shown = "\n".join(f"  {line}" for line in dirty[:max_items])
+    suffix = (
+        f"\n  ... and {len(dirty) - max_items} more" if len(dirty) > max_items else ""
+    )
+    raise pytest.UsageError(
+        "Template repo is dirty; refusing to run template-tox collection.\n"
+        "Please commit/stash/discard local changes first.\n"
+        f"Template root: {template_root}\n"
+        "Dirty entries:\n"
+        f"{shown}{suffix}"
+    )
+
+
 def _bootstrap_git_repo(path: Path) -> None:
     """
     Ensure *path* is a Git repo with one commit so that setuptools-scm can
@@ -88,6 +140,16 @@ def pytest_generate_tests(metafunc):
             metafunc.config, "_tox_collect_cache", {}
         )
 
+        template_package_root = TEMPLATE_PACKAGE_DIR.resolve()
+        template_module_root = TEMPLATE_MODULE_DIR.resolve()
+        template_etl_root = TEMPLATE_ETL_DIR.resolve()
+        template_refs: dict[Path, str] = {}
+        for template_root in dict.fromkeys(
+            [template_package_root, template_module_root, template_etl_root]
+        ):
+            _assert_template_repo_is_clean(template_root)
+            template_refs[template_root] = _template_head_ref(template_root)
+
         # Get examples dynamically based on pytest configuration
         examples = _get_examples_for_session(metafunc.config)
 
@@ -111,7 +173,12 @@ def pytest_generate_tests(metafunc):
                 # Run the package template with output control
                 # to avoid cluttering the test output with copier's own logs.
                 # This is especially useful when running tests with `-v` or `-vv`.
-                pkg = _run_copy_silently(metafunc.config, pkg_copie, ex.package_answers)
+                pkg = _run_copy_silently(
+                    metafunc.config,
+                    pkg_copie,
+                    ex.package_answers,
+                    vcs_ref=template_refs[template_package_root],
+                )
 
                 # Module template (middle)
                 module_dir = tmp_root / "module"
@@ -127,7 +194,10 @@ def pytest_generate_tests(metafunc):
                 # to avoid cluttering the test output with copier's own logs.
                 # This is especially useful when running tests with `-v` or `-vv`.
                 module = _run_copy_silently(
-                    metafunc.config, module_copie, ex.module_answers
+                    metafunc.config,
+                    module_copie,
+                    ex.module_answers,
+                    vcs_ref=template_refs[template_module_root],
                 )
 
                 # ETL template (child)
@@ -140,7 +210,12 @@ def pytest_generate_tests(metafunc):
                     parent_result=module,
                 )
 
-                etl = _run_copy_silently(metafunc.config, etl_copie, ex.etl_answers)
+                etl = _run_copy_silently(
+                    metafunc.config,
+                    etl_copie,
+                    ex.etl_answers,
+                    vcs_ref=template_refs[template_etl_root],
+                )
 
                 assert etl.project_dir is not None, (
                     f"Copier render failed for variant {var_id}."

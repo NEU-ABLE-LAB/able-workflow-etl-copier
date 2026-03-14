@@ -24,7 +24,7 @@ dependencies = [
 
   # jinja2 extensions
   "cookiecutter>=2.6.0",
-  "copier-templates-extensions>=0.3.1",
+  "copier-template-extensions>=0.3.3",
   "jinja2-jsonschema>=0.3.0",
 ]
 
@@ -57,7 +57,7 @@ lint = [
 
 test = [
   "pytest>=8.3.5",
-  "pytest-copie @ git+https://github.com/thisIsMikeKane/pytest-copie.git",
+  "pytest-copie>=0.3.1",
   "pytest-cov>=6.1.1",
   "pytest-order>=1.3.0",
   "pytest-sugar>=1.0.0",
@@ -148,7 +148,7 @@ channels = [
 template-python = "environment-py{py}-{env}"
 
 [tool.pyproject2conda.dependencies]
-copier-templates-extensions = { pip = true }
+copier-template-extensions = { pip = true }
 jinja2-jsonschema = { pip = true }
 mkdocs-inline-select-svg-plugin = { pip = true }
 mkdocs-mermaid2-plugin = { pip = true }
@@ -177,7 +177,7 @@ pythonpath = [
 
 [tool.ruff]
 line-length = 79
-exclude = [
+extend-exclude = [
   "template",
 ]
 
