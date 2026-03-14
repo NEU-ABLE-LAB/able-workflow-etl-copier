@@ -64,7 +64,7 @@ extra:
     "https://github.com/NEU-ABLE-LAB/able-workflow-copier"
   ]
   able_workflow_copier_docs: !ENV [
-    "https://able-workflow.thisismikekane.com"
+    "ABLE_WORKFLOW_COPIER_DOCS"
     "https://github.com/NEU-ABLE-LAB/able-workflow-module-copier"
   ]
   able_workflow_module_copier_docs: !ENV [
