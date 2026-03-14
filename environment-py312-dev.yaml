@@ -46,7 +46,7 @@ dependencies:
   - types-jsonschema>=4.24.0.20250528
   - pip
   - pip:
-      - copier-template-extensions==0.3.3
+      - copier-template-extensions>=0.3.3
       - jinja2-jsonschema>=0.3.0
       - mkdocs-inline-select-svg-plugin>=0.1.0
       - mkdocs-mermaid2-plugin>=1.2.1
