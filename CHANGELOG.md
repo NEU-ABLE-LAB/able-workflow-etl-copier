@@ -5,3 +5,9 @@ Human-readable log of changes between versions. Follows the [Common Changelog st
 ## 0.1.0 - 2025-07-22
 
 Initial commit to public `able-workflow-etl-copier` repository from `NEU-ABLE-LAB` private repository.
+
+## 0.1.1-dev
+
+### Changed
+
+- Docs URL changed to github pages from thisismikekane.com
