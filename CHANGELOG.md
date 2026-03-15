@@ -11,6 +11,7 @@ Human-readable log of changes between versions. Follows the [Common Changelog st
 - Added tests for `tasks/copy_example.py` and expanded sandbox generation test coverage.
 - Added `template/workflow/schemas/{{ module_type }}/{{ module_name }}/{{ etl_name }}/config.schema.yaml.jinja`.
 - Added support to disable copier example copying in the example-generation workflow.
+- Added limit to `mkdocs` version to be less than v2 (which introduces breaking changes)
 
 ### Changed
 
