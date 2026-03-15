@@ -21,6 +21,7 @@ Human-readable log of changes between versions. Follows the [Common Changelog st
 - Updated contributing and Open-Meteo docs, including additional example context and docs URL fixes.
 - Updated sandbox/template dependency references and bump `copier-templates-extensions` to a compatible version.
 - Updated CI and local tooling configuration across MkDocs, tox, pre-commit, and workspace Python settings.
+- Split `pr.yml` and `main.yml` to keep codecov secrets out of PR GH-actions
 
 ### Fixed
 
