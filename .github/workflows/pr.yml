@@ -34,17 +34,17 @@ jobs:
       - name: Checkout the `able-workflow-copier` repository
         uses: actions/checkout@v4
         with:
-          repository: NEU-ABLE-LAB/able-workflow-copier-dev
+          repository: NEU-ABLE-LAB/able-workflow-copier
           ref: v0.1.1
-          path: sandbox/able-workflow-copier-dev
+          path: sandbox/able-workflow-copier
           token: ${{ secrets.ABLE_REPOS_PAT }}
 
       - name: Checkout the `able-workflow-module-copier` repository
         uses: actions/checkout@v4
         with:
-          repository: NEU-ABLE-LAB/able-workflow-module-copier-dev
+          repository: NEU-ABLE-LAB/able-workflow-module-copier
           ref: v0.1.1
-          path: sandbox/able-workflow-module-copier-dev
+          path: sandbox/able-workflow-module-copier
           token: ${{ secrets.ABLE_REPOS_PAT }}
 
       - uses: conda-incubator/setup-miniconda@v3

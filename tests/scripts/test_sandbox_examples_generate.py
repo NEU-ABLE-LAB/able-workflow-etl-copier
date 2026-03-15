@@ -23,7 +23,7 @@ SCRIPT_PATH = ROOT_DIR / "scripts" / "sandbox_examples_generate.py"
 
 #   👉  The script tries to clone parent templates at import-time.
 #       Pre-create the expected directories so that no network call happens.
-for _tpl in ("able-workflow-copier-dev", "able-workflow-module-copier-dev"):
+for _tpl in ("able-workflow-copier", "able-workflow-module-copier"):
     (ROOT_DIR / "sandbox" / _tpl).mkdir(parents=True, exist_ok=True)
 
 spec = importlib.util.spec_from_file_location("sandbox_examples_generate", SCRIPT_PATH)
