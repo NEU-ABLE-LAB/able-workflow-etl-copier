@@ -5,7 +5,7 @@ index 47c6e70..9c76c3a 100755
 @@ -45,6 +45,10 @@ dependencies = [
  runner = [
    # This snakemake version should match the version in `dependency-groups.snakemake`
-   "snakemake==9.16.3",
+   "snakemake>=9.16.3",
 +  # open-meteo API dependencies
 +  "openmeteo-requests",
 +  "requests-cache",
