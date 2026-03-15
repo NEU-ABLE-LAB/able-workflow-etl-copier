@@ -17,7 +17,7 @@ source ".tox/py312-dev/bin/activate"
 
 ## Documentation
 
-The mkdocs documentation for the ETL template resides in the `docs/docs/` directory. The main project template documentation resides in `sandbox/able-workflow-copier-dev/docs/docs/`. Additionally, many directories contain `README.md` files.
+The mkdocs documentation for the ETL template resides in the `docs/docs/` directory. The main project template documentation resides in `sandbox/able-workflow-copier/docs/docs/`. Additionally, many directories contain `README.md` files.
 
 ## Testing
 
@@ -27,7 +27,7 @@ Tox is used to run all the tests. The environment initialization already install
 tox run-parallel --parallel auto --parallel-no-spinner --skip-pkg-install
 ```
 
-See `tox.ini` for the configuration and `sandbox/able-workflow-copier-dev/docs/docs/contributing/testing.md` for more details on testing different parts of the code.
+See `tox.ini` for the configuration and `sandbox/able-workflow-copier/docs/docs/contributing/testing.md` for more details on testing different parts of the code.
 
 ## Set-up script
 

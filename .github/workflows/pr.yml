@@ -1,4 +1,4 @@
-name: test
+name: tox Tests
 on:
   push:
     branches: [main]
@@ -34,17 +34,17 @@ jobs:
       - name: Checkout the `able-workflow-copier` repository
         uses: actions/checkout@v4
         with:
-          repository: NEU-ABLE-LAB/able-workflow-copier-dev
-          ref: 0c23486f60011bbf705899c510cc7ce9580a024d
-          path: sandbox/able-workflow-copier-dev
+          repository: NEU-ABLE-LAB/able-workflow-copier
+          ref: v0.1.1
+          path: sandbox/able-workflow-copier
           token: ${{ secrets.ABLE_REPOS_PAT }}
 
       - name: Checkout the `able-workflow-module-copier` repository
         uses: actions/checkout@v4
         with:
-          repository: NEU-ABLE-LAB/able-workflow-module-copier-dev
-          ref: b518e330030cedf19195f47df24d1b7c732c0c0c
-          path: sandbox/able-workflow-module-copier-dev
+          repository: NEU-ABLE-LAB/able-workflow-module-copier
+          ref: v0.1.1
+          path: sandbox/able-workflow-module-copier
           token: ${{ secrets.ABLE_REPOS_PAT }}
 
       - uses: conda-incubator/setup-miniconda@v3
@@ -83,17 +83,23 @@ jobs:
 
 
       - name: Upload coverage to Codecov
-        if: always()
+        # Don't deploy on forks
+        if: ${{ github.repository == 'NEU-ABLE-LAB/able-workflow-etl-copier' }}
         uses: codecov/codecov-action@v5
         with:
           files: .cover/coverage.${{ matrix.python-version }}.xml
           flags: py${{ matrix.python-version }}
           token: ${{ secrets.CODECOV_TOKEN }}
+          slug: NEU-ABLE-LAB/able-workflow-etl-copier
 
       - name: Upload test results to Codecov
-        if: always()
-        uses: codecov/test-results-action@v1
+        # Don't deploy on forks
+        if: ${{ github.repository == 'NEU-ABLE-LAB/able-workflow-etl-copier' }}
+        uses: codecov/codecov-action@v5
         with:
           # pick up every junit.*.xml written by tox in the `.junit/` directory
           files: .junit/junit.*.xml
+          flags: py${{ matrix.python-version }}
           token: ${{ secrets.CODECOV_TOKEN }}
+          report_type: "test_results"
+          slug: NEU-ABLE-LAB/able-workflow-etl-copier

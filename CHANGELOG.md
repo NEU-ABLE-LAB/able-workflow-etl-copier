@@ -11,6 +11,8 @@ Human-readable log of changes between versions. Follows the [Common Changelog st
 - Added tests for `tasks/copy_example.py` and expanded sandbox generation test coverage.
 - Added `template/workflow/schemas/{{ module_type }}/{{ module_name }}/{{ etl_name }}/config.schema.yaml.jinja`.
 - Added support to disable copier example copying in the example-generation workflow.
+- Added limit to `mkdocs` version to be less than v2 (which introduces breaking changes).
+- Added `dev` and `latest` aliases to mkdocs mike versions.
 
 ### Changed
 
@@ -26,6 +28,7 @@ Human-readable log of changes between versions. Follows the [Common Changelog st
 - Fixed MkDocs configuration issues (local/env-var handling and syntax corrections).
 - Fixed template and checklist issues, including typo/casing corrections and post-copier TODO improvements.
 - Fixed pre-commit formatting behavior by excluding `.diff` files from end-of-file-fixer checks.
+- `mkdocs` links to `latest` in `able-workflow-copier` tab.
 
 ### Removed
 

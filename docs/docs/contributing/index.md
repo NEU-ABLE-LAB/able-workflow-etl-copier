@@ -18,7 +18,7 @@ and pulled in `scripts/pull_able_workflow_copier.py`.
     Once `scripts/sandbox_examples_generate.py` or `tests/template/conftest.py`
     create the local copy of the `able-workflow-copier` repo in the `sandbox/`
     they do not check to see if it needs updating. To ensure that the local and
-    cloud repos are in sync, regularly run `rm -rf sandbox/able-workflow-copier-dev`
+    cloud repos are in sync, regularly run `rm -rf sandbox/able-workflow-copier`
 
 Example Copier answers are provided in the `example-answers/` directory.
 
@@ -62,7 +62,7 @@ use the workflow below.
    at the versions pinned in `.github/workflows/pr.yml`:
 
     ```bash
-    rm -rf sandbox/able-workflow-copier-dev sandbox/able-workflow-module-copier-dev
+    rm -rf sandbox/able-workflow-copier sandbox/able-workflow-module-copier
     ```
 
 2. Render baseline examples **without applying diffs**:

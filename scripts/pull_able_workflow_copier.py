@@ -65,7 +65,7 @@ TEMPLATES: tuple[TplSrc, ...] = (
 def ensure_parent_template_repos(project_root: Path) -> Dict[str, Path]:
     """
     Guarantee that both parent templates are locally available under
-    `sandbox/<template-name>-dev` (cloning & checking out the right commit if
+    `sandbox/<template-name>` (cloning & checking out the right commit if
     necessary).
 
     Returns
@@ -77,7 +77,7 @@ def ensure_parent_template_repos(project_root: Path) -> Dict[str, Path]:
     paths: Dict[str, Path] = {}
 
     for tpl in TEMPLATES:
-        dest = (sandbox_root / f"{tpl.name}-dev").resolve()
+        dest = (sandbox_root / f"{tpl.name}").resolve()
         paths[tpl.name] = dest
 
         if dest.is_dir():

@@ -8,13 +8,11 @@ on:
   workflow_dispatch:
 
 concurrency:
-    group: docs
-    cancel-in-progress: true
+  group: docs
+  cancel-in-progress: true
 
 jobs:
-
   build-and-deploy:
-
     runs-on: ubuntu-latest
 
     defaults:
@@ -22,7 +20,6 @@ jobs:
         shell: bash -el {0}
 
     steps:
-
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -41,9 +38,19 @@ jobs:
           git config user.name ci-bot
           git config user.email ci-bot@example.com
 
-      - name: Build documentation
+      - name: Build development documentation
+        if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
         run: |
-          VER=${GITHUB_REF_NAME:-dev}
+          mike deploy \
+            --config-file docs/mkdocs.yml \
+            --branch gh-pages \
+            --update-aliases \
+            dev
+
+      - name: Build release documentation
+        if: ${{ github.event_name == 'release' }}
+        run: |
+          VER=${{ github.event.release.tag_name }}
           mike deploy \
             --config-file docs/mkdocs.yml \
             --branch gh-pages \
@@ -52,6 +59,7 @@ jobs:
             latest
 
       - name: Set default version
+        if: ${{ github.event_name == 'release' }}
         run: |
           mike set-default \
             --config-file docs/mkdocs.yml \
