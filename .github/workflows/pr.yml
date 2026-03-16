@@ -38,7 +38,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: NEU-ABLE-LAB/able-workflow-copier
-          ref: v0.1.2
+          ref: 9edd0e3c372523db8c048789b140ceb2c53f0b9e
           path: sandbox/able-workflow-copier
 
       - name: Checkout the `able-workflow-module-copier` repository
