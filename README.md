@@ -16,7 +16,7 @@ This template assumes that you have already created an [`able-workflow-copier`](
 - [`able-workflow-copier`](https://github.com/NEU-ABLE-LAB/able-workflow-copier)
 - [`able-workflow-module-copier`](https://github.com/NEU-ABLE-LAB/able-workflow-module-copier)
 - [`able-workflow-etl-copier`](https://github.com/NEU-ABLE-LAB/able-workflow-etl-copier)
-- [`able-workflow-rule-rule-copier`](https://github.com/NEU-ABLE-LAB/able-workflow-rule-copier)
+- [`able-workflow-rule-copier`](https://github.com/NEU-ABLE-LAB/able-workflow-rule-copier)
 
 ## Contributing
 

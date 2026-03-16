@@ -20,9 +20,9 @@ from loguru import logger
 
 from tests.template.conftest import (
     _get_examples_for_session,
-    _make_copier_config,
-    _new_copie,
-    _run_copy_silently,
+    make_copier_config,
+    new_copie,
+    run_copie_with_output_control,
     TEMPLATE_PACKAGE_DIR,
     TEMPLATE_MODULE_DIR,
     TEMPLATE_ETL_DIR,
@@ -159,12 +159,12 @@ def pytest_generate_tests(metafunc):
 
                 # Prepare a temporary directory for rendering
                 tmp_root = Path(tempfile.mkdtemp(prefix=f"collect_{var_id}_"))
-                config_file = _make_copier_config(tmp_root)
+                config_file = make_copier_config(tmp_root)
 
                 # Render package template
                 pkg_dir = tmp_root / "pkg"
                 pkg_dir.mkdir()
-                pkg_copie = _new_copie(
+                pkg_copie = new_copie(
                     template_dir=TEMPLATE_PACKAGE_DIR,
                     test_dir=pkg_dir,
                     config_file=config_file,
@@ -173,7 +173,7 @@ def pytest_generate_tests(metafunc):
                 # Run the package template with output control
                 # to avoid cluttering the test output with copier's own logs.
                 # This is especially useful when running tests with `-v` or `-vv`.
-                pkg = _run_copy_silently(
+                pkg = run_copie_with_output_control(
                     metafunc.config,
                     pkg_copie,
                     ex.package_answers,
@@ -183,7 +183,7 @@ def pytest_generate_tests(metafunc):
                 # Module template (middle)
                 module_dir = tmp_root / "module"
                 module_dir.mkdir()
-                module_copie = _new_copie(
+                module_copie = new_copie(
                     template_dir=TEMPLATE_MODULE_DIR,
                     test_dir=module_dir,
                     config_file=config_file,
@@ -193,7 +193,7 @@ def pytest_generate_tests(metafunc):
                 # Run the module template with output control
                 # to avoid cluttering the test output with copier's own logs.
                 # This is especially useful when running tests with `-v` or `-vv`.
-                module = _run_copy_silently(
+                module = run_copie_with_output_control(
                     metafunc.config,
                     module_copie,
                     ex.module_answers,
@@ -203,14 +203,14 @@ def pytest_generate_tests(metafunc):
                 # ETL template (child)
                 etl_dir = tmp_root / "etl"
                 etl_dir.mkdir()
-                etl_copie = _new_copie(
+                etl_copie = new_copie(
                     template_dir=TEMPLATE_ETL_DIR,
                     test_dir=etl_dir,
                     config_file=config_file,
                     parent_result=module,
                 )
 
-                etl = _run_copy_silently(
+                etl = run_copie_with_output_control(
                     metafunc.config,
                     etl_copie,
                     ex.etl_answers,

@@ -80,8 +80,8 @@ class _RecordingCopie(_DummyCopie):
 #  Tests
 # ──────────────────────────────────────────────────────────────────────────────
 def test_make_copier_config_creates_expected_artifacts(tmp_path: Path) -> None:
-    """`_make_copier_config` should write a proper YAML file + dirs."""
-    cfg_path = seg._make_copier_config(tmp_path)
+    """`make_copier_config` should write a proper YAML file + dirs."""
+    cfg_path = seg.make_copier_config(tmp_path)
 
     assert cfg_path.is_file()
     assert (tmp_path / "copier").is_dir()
@@ -128,8 +128,17 @@ def _prepare_single_example(
     seg.TEMPLATE_MODULE_DIR.mkdir()
     seg.TEMPLATE_CHILD_DIR.mkdir()
 
-    # 4️⃣  Stub Copie
-    monkeypatch.setattr(seg, "Copie", _DummyCopie)
+    # 4️⃣  Stub new_copie
+    monkeypatch.setattr(
+        seg,
+        "new_copie",
+        lambda *, template_dir, test_dir, config_file, parent_result=None: _DummyCopie(
+            default_template_dir=template_dir,
+            test_dir=test_dir,
+            config_file=config_file,
+            parent_result=parent_result,
+        ),
+    )
 
     return example.name
 
@@ -173,7 +182,16 @@ def test_cli_generate_no_apply_diffs_writes_no_diffs_example_dir(
 ) -> None:
     ex_name = _prepare_single_example(tmp_path, monkeypatch=monkeypatch)
     _RecordingCopie.calls = []
-    monkeypatch.setattr(seg, "Copie", _RecordingCopie)
+    monkeypatch.setattr(
+        seg,
+        "new_copie",
+        lambda *, template_dir, test_dir, config_file, parent_result=None: _RecordingCopie(
+            default_template_dir=template_dir,
+            test_dir=test_dir,
+            config_file=config_file,
+            parent_result=parent_result,
+        ),
+    )
 
     runner = CliRunner()
     result = None  # type: ignore[assignment]

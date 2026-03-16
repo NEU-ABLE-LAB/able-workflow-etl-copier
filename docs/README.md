@@ -15,12 +15,12 @@ The navigation structure is specified with
 
 ## Serving the documentation locally
 
-    ```bash
-    ./scritps/mkdocs.sh
-    ```
+```bash
+./scripts/mkdocs.sh
+```
 
-    The assumes that you have already set up the development environment.
-    See the main `README.md` file for instructions.
+This assumes that you have already set up the development environment.
+See the main `README.md` file for instructions.
 
 <!--include-end-->
 

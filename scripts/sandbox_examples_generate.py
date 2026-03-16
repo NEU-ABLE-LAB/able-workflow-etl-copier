@@ -19,38 +19,35 @@ Usage
 -----
 
     # All examples
-    python scripts/sandbox_examples_generate.py
+    python -m scripts.sandbox_examples_generate
 
     # Only specific examples
-    python scripts/sandbox_examples_generate.py able_weather_04
+    python -m scripts.sandbox_examples_generate able_weather_04
 
     # Render without applying example diffs
-    python scripts/sandbox_examples_generate.py --no-apply-diffs able_weather_04
+    python -m scripts.sandbox_examples_generate --no-apply-diffs able_weather_04
 """
 
 from __future__ import annotations
 
-import importlib.util
 import shutil
-import sys
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, List, Optional, cast
 
 import typer
-from pytest_copie.plugin import Copie, Result
 from ruamel.yaml import YAML
+
+from scripts.copie_helpers import (
+    load_module_from_path,
+    make_copier_config,
+    new_copie,
+)
 
 PROJECT_ROOT: Path = Path(__file__).resolve().parents[1]
 ensure_package_repo_path = PROJECT_ROOT / "scripts" / "pull_able_workflow_copier.py"
-module_name = ensure_package_repo_path.stem
-spec = importlib.util.spec_from_file_location(module_name, ensure_package_repo_path)
-if spec is None:
-    raise RuntimeError(f"Failed to load module spec from {ensure_package_repo_path}")
-module = importlib.util.module_from_spec(spec)
-sys.modules[module_name] = module
-spec.loader.exec_module(module)  # type: ignore[union-attr]
+module = load_module_from_path(ensure_package_repo_path)
 ensure_parent_template_repos = module.ensure_parent_template_repos
 
 ###############################################################################
@@ -67,51 +64,6 @@ _parent_paths = ensure_parent_template_repos(PROJECT_ROOT)
 TEMPLATE_PACKAGE_DIR: Path = _parent_paths["able-workflow-copier"]
 TEMPLATE_MODULE_DIR: Path = _parent_paths["able-workflow-module-copier"]
 TEMPLATE_CHILD_DIR: Path = PROJECT_ROOT
-
-
-###############################################################################
-#  Convenience helpers                                                         #
-###############################################################################
-
-
-def _make_copier_config(work_root: Path) -> Path:
-    """
-    Re-implement the `_copier_config_file` fixture: create a copier config file
-    that points into *work_root* and return its path.
-    """
-    copier_dir = work_root / "copier"
-    replay_dir = work_root / "copier_replay"
-    copier_dir.mkdir(parents=True, exist_ok=True)
-    replay_dir.mkdir(parents=True, exist_ok=True)
-
-    # Build a small copier-config and write it with ruamel.yaml
-    config = {"copier_dir": str(copier_dir), "replay_dir": str(replay_dir)}
-    config_path = work_root / "config"
-
-    yaml = YAML()
-    yaml.indent(mapping=2, sequence=4, offset=2)
-    with config_path.open("w", encoding="utf-8") as fp:
-        yaml.dump(config, fp)
-
-    return config_path
-
-
-def _new_copie_instance(
-    *,
-    template_dir: Path,
-    test_dir: Path,
-    config_file: Path,
-    parent_result: Result | None = None,
-) -> Copie:
-    """
-    A tiny wrapper that makes it explicit what we need to pass to `Copie(...)`.
-    """
-    return Copie(
-        default_template_dir=template_dir.resolve(),
-        test_dir=test_dir.resolve(),
-        config_file=config_file.resolve(),
-        parent_result=parent_result,
-    )
 
 
 ###############################################################################
@@ -210,13 +162,13 @@ def generate_cmd(
         ex_dir.mkdir(parents=True, exist_ok=True)
 
         tmp_root = Path(tempfile.mkdtemp(prefix=f"copie_{ex.name}_"))
-        config_file = _make_copier_config(tmp_root)
+        config_file = make_copier_config(tmp_root)
 
         package_test_dir = ex_dir / "package_run"
         if package_test_dir.exists():
             shutil.rmtree(package_test_dir)
         package_test_dir.mkdir()
-        c_pkg = _new_copie_instance(
+        c_pkg = new_copie(
             template_dir=TEMPLATE_PACKAGE_DIR,
             test_dir=package_test_dir,
             config_file=config_file,
@@ -241,7 +193,7 @@ def generate_cmd(
         if mod_test_dir.exists():
             shutil.rmtree(mod_test_dir)
         mod_test_dir.mkdir()
-        c_mod = _new_copie_instance(
+        c_mod = new_copie(
             template_dir=TEMPLATE_MODULE_DIR,
             test_dir=mod_test_dir,
             config_file=config_file,
@@ -260,7 +212,7 @@ def generate_cmd(
         if etl_test_dir.exists():
             shutil.rmtree(etl_test_dir)
         etl_test_dir.mkdir()
-        c_child = _new_copie_instance(
+        c_child = new_copie(
             template_dir=TEMPLATE_CHILD_DIR,
             test_dir=etl_test_dir,
             config_file=config_file,

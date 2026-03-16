@@ -52,5 +52,5 @@ git config --global credential.helper 'store --file ~/.git-credentials'
 echo "https://$GITHUB_USERNAME:$GITHUB_PAT@github.com" > ~/.git-credentials
 
 # Create the sandbox
-.tox/py312-dev/bin/python scripts/sandbox_examples_generate.py
+.tox/py312-dev/bin/python -m scripts.sandbox_examples_generate
 ```
