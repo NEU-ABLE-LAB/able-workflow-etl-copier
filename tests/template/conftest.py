@@ -21,9 +21,6 @@ The session-scoped fixture yields ``(project_dir, example_name)`` where
 
 from __future__ import annotations
 
-import importlib.util
-import os
-import sys
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
@@ -32,7 +29,13 @@ from typing import Any, Dict, List, cast
 import pytest
 from loguru import logger
 from ruamel.yaml import YAML
-from pytest_copie.plugin import Copie
+
+from scripts.copie_helpers import (
+    load_module_from_path,
+    make_copier_config,
+    new_copie,
+    run_copie_with_output_control,
+)
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -54,11 +57,7 @@ def pytest_addoption(parser):
 PROJECT_ROOT: Path = Path(__file__).resolve().parents[2]
 helper_path = PROJECT_ROOT / "scripts" / "pull_able_workflow_copier.py"
 
-spec = importlib.util.spec_from_file_location(helper_path.stem, helper_path)
-helper_mod = importlib.util.module_from_spec(spec)  # type: ignore[arg-type]
-sys.modules[helper_path.stem] = helper_mod  # for safety
-assert spec.loader  # mypy guard
-spec.loader.exec_module(helper_mod)  # type: ignore[attr-defined]
+helper_mod = load_module_from_path(helper_path)
 
 # Returns {'able-workflow-copier': Path(...), 'able-workflow-module-copier': Path(...)}
 PARENT_TEMPLATE_PATHS: Dict[str, Path] = helper_mod.ensure_parent_template_repos(
@@ -68,61 +67,6 @@ PARENT_TEMPLATE_PATHS: Dict[str, Path] = helper_mod.ensure_parent_template_repos
 TEMPLATE_PACKAGE_DIR: Path = PARENT_TEMPLATE_PATHS["able-workflow-copier"]
 TEMPLATE_MODULE_DIR: Path = PARENT_TEMPLATE_PATHS["able-workflow-module-copier"]
 TEMPLATE_ETL_DIR: Path = PROJECT_ROOT
-
-
-# ──────────────────────────────────────────────────────────────────────────────
-#  Utility helpers
-# ──────────────────────────────────────────────────────────────────────────────
-def _make_copier_config(work_root: Path) -> Path:
-    """Create a minimal copier-config file inside *work_root*."""
-    copier_dir = work_root / "copier"
-    replay_dir = work_root / "copier_replay"
-    copier_dir.mkdir(parents=True, exist_ok=True)
-    replay_dir.mkdir(parents=True, exist_ok=True)
-
-    cfg_path = work_root / "config"
-    YAML().dump(
-        {"copier_dir": str(copier_dir), "replay_dir": str(replay_dir)},
-        cfg_path.open("w", encoding="utf-8"),
-    )
-    return cfg_path
-
-
-def _new_copie(
-    *,
-    template_dir: Path,
-    test_dir: Path,
-    config_file: Path,
-    parent_result=None,
-) -> Copie:  # type: ignore[name-defined]
-    """Small wrapper around :class:`pytest_copie.plugin.Copie`."""
-    return Copie(
-        default_template_dir=template_dir.resolve(),
-        test_dir=test_dir.resolve(),
-        config_file=config_file.resolve(),
-        parent_result=parent_result,
-    )
-
-
-def _run_copy_silently(config, copie_session, answers, vcs_ref: str | None = None):
-    """
-    Run ``copie_session.copy`` and suppress stdout/stderr unless the user
-    requested `-vv` verbosity.
-    """
-    copy_kwargs = {"extra_answers": answers}
-    if vcs_ref is not None:
-        copy_kwargs["vcs_ref"] = vcs_ref
-
-    if config.option.verbose < 2:
-        with open(os.devnull, "w") as devnull:
-            old_out, old_err = sys.stdout, sys.stderr
-            sys.stdout = sys.stderr = devnull
-            try:
-                return copie_session.copy(**copy_kwargs)
-            finally:
-                sys.stdout, sys.stderr = old_out, old_err
-    # verbose ⇒ let Copier chatter
-    return copie_session.copy(**copy_kwargs)
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -231,43 +175,49 @@ def rendered(request):
     """
     ex: Example = request.param
     tmp_root = Path(tempfile.mkdtemp(prefix=f"copie_{ex.name}_"))
-    cfg_file = _make_copier_config(tmp_root)
+    cfg_file = make_copier_config(tmp_root)
 
     # ── 1. Package template ────────────────────────────────────────────────
     pkg_run_dir = tmp_root / "pkg"
     pkg_run_dir.mkdir()
-    pkg_c = _new_copie(
+    pkg_c = new_copie(
         template_dir=TEMPLATE_PACKAGE_DIR,
         test_dir=pkg_run_dir,
         config_file=cfg_file,
     )
-    pkg_res = _run_copy_silently(request.config, pkg_c, ex.package_answers)
+    pkg_res = run_copie_with_output_control(
+        request.config, pkg_c, ex.package_answers
+    )
     if pkg_res.exit_code or pkg_res.exception:
         pytest.fail(f"Package template failed for {ex.name}: {pkg_res.exception}")
 
     # ── 2. Module template ─────────────────────────────────────────────────
     mod_run_dir = tmp_root / "mod"
     mod_run_dir.mkdir()
-    mod_c = _new_copie(
+    mod_c = new_copie(
         template_dir=TEMPLATE_MODULE_DIR,
         test_dir=mod_run_dir,
         config_file=cfg_file,
         parent_result=pkg_res,
     )
-    mod_res = _run_copy_silently(request.config, mod_c, ex.module_answers)
+    mod_res = run_copie_with_output_control(
+        request.config, mod_c, ex.module_answers
+    )
     if mod_res.exit_code or mod_res.exception:
         pytest.fail(f"Module template failed for {ex.name}: {mod_res.exception}")
 
     # ── 3. ETL / child template (this repo) ────────────────────────────────
     etl_run_dir = tmp_root / "etl"
     etl_run_dir.mkdir()
-    etl_c = _new_copie(
+    etl_c = new_copie(
         template_dir=TEMPLATE_ETL_DIR,
         test_dir=etl_run_dir,
         config_file=cfg_file,
         parent_result=mod_res,
     )
-    etl_res = _run_copy_silently(request.config, etl_c, ex.etl_answers)
+    etl_res = run_copie_with_output_control(
+        request.config, etl_c, ex.etl_answers
+    )
     if etl_res.exit_code or etl_res.exception:
         pytest.fail(f"ETL template failed for {ex.name}: {etl_res.exception}")
 
