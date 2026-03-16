@@ -185,9 +185,7 @@ def rendered(request):
         test_dir=pkg_run_dir,
         config_file=cfg_file,
     )
-    pkg_res = run_copie_with_output_control(
-        request.config, pkg_c, ex.package_answers
-    )
+    pkg_res = run_copie_with_output_control(request.config, pkg_c, ex.package_answers)
     if pkg_res.exit_code or pkg_res.exception:
         pytest.fail(f"Package template failed for {ex.name}: {pkg_res.exception}")
 
@@ -200,9 +198,7 @@ def rendered(request):
         config_file=cfg_file,
         parent_result=pkg_res,
     )
-    mod_res = run_copie_with_output_control(
-        request.config, mod_c, ex.module_answers
-    )
+    mod_res = run_copie_with_output_control(request.config, mod_c, ex.module_answers)
     if mod_res.exit_code or mod_res.exception:
         pytest.fail(f"Module template failed for {ex.name}: {mod_res.exception}")
 
@@ -215,9 +211,7 @@ def rendered(request):
         config_file=cfg_file,
         parent_result=mod_res,
     )
-    etl_res = run_copie_with_output_control(
-        request.config, etl_c, ex.etl_answers
-    )
+    etl_res = run_copie_with_output_control(request.config, etl_c, ex.etl_answers)
     if etl_res.exit_code or etl_res.exception:
         pytest.fail(f"ETL template failed for {ex.name}: {etl_res.exception}")
 
