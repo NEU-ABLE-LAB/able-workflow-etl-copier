@@ -19,13 +19,13 @@ Usage
 -----
 
     # All examples
-    python scripts/sandbox_examples_generate.py
+    python -m scripts.sandbox_examples_generate
 
     # Only specific examples
-    python scripts/sandbox_examples_generate.py able_weather_04
+    python -m scripts.sandbox_examples_generate able_weather_04
 
     # Render without applying example diffs
-    python scripts/sandbox_examples_generate.py --no-apply-diffs able_weather_04
+    python -m scripts.sandbox_examples_generate --no-apply-diffs able_weather_04
 """
 
 from __future__ import annotations

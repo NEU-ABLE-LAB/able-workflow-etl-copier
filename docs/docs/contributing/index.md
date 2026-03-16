@@ -68,7 +68,7 @@ use the workflow below.
 2. Render baseline examples **without applying diffs**:
 
     ```bash
-    python scripts/sandbox_examples_generate.py --no-apply-diffs
+    python -m scripts.sandbox_examples_generate --no-apply-diffs
     ```
 
    This writes sandbox example directories with a `_no_diffs` suffix
@@ -77,7 +77,7 @@ use the workflow below.
 3. Render examples with diffs enabled (normal behavior):
 
     ```bash
-    python scripts/sandbox_examples_generate.py
+    python -m scripts.sandbox_examples_generate
     ```
 
    If diff application fails for an example, delete the failing patch files in
