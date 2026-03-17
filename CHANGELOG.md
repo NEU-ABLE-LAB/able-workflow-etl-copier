@@ -9,6 +9,7 @@ Human-readable log of changes between versions. Follows the [Common Changelog st
 - Reworked example-answer handling to use `diffs/` artifacts as the canonical representation and `_no_diffs` directories as baselines.
 - Refactored `tasks/copy_example.py` to apply patches from the destination context with clearer logging and stricter failure behavior.
 - Updated contributing and Open-Meteo docs, including additional example context and docs URL fixes.
+- Updated ETL post-copier guidance to use `data/tests/dry-run/all.yaml` with `include:` and `touch:` for DAG dry runs.
 - Updated sandbox/template dependency references and bump `copier-templates-extensions` to a compatible version.
 - Updated CI and local tooling configuration across MkDocs, tox, pre-commit, and workspace Python settings.
 - Split `pr.yml` and `main.yml` to keep codecov secrets out of PR GH-actions

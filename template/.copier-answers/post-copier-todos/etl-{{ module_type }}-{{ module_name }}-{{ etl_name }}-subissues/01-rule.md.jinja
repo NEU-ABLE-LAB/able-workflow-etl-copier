@@ -8,7 +8,7 @@ While working on this checklist you may want to use VSCode to automatically open
 ```bash
 code pyproject.toml
 code config/{{ module_type }}/{{ module_name }}/{{ etl_name }}.config.yaml
-code data/tests/all.yaml
+code data/tests/dry-run/all.yaml
 code workflow/Snakefile
 code workflow/rules/includes.smk
 code workflow/rules/{{ module_type }}/{{ module_name }}.smk
@@ -22,9 +22,9 @@ code workflow/rules/{{ module_type }}/{{ module_name }}/{{ etl_name }}.smk
 - [ ] Ensure that the rule's docstring describes the ETL process and its inputs and outputs.
 - [ ] If the rule will only produce a single file in the workflow, then use a fixed output file name. If the rule will produce multiple files, then create a wildcard for the output file name and create another rule with the `_all` suffix that collects all the outputs of the ETL process.
 
-## `data/tests/all.yaml` and the Workflow DAG
+## `data/tests/dry-run/all.yaml` and the Workflow DAG
 
-- [ ] If this ETL process consumes `raw` or `external` data into this workflow, then add the names of the `raw` or `external` data to the `data/tests/all.yaml` file. This will ensure that the data is available for DAG generation, testing, and debugging.
+- [ ] If this ETL process consumes `raw` or `external` data into this workflow, then add the names of the `raw` or `external` data to a dry-run manifest under `data/tests/dry-run/`. Use `touch:` for files that should be created under `data/`, and `include:` to compose shared manifests. This ensures that the data is available for DAG generation, testing, and debugging.
 
 - [ ] `workflow/rules/{{ module_type }}/{{ module_name }}.smk`
 

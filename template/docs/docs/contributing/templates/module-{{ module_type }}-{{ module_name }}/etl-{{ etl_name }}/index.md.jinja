@@ -2,6 +2,98 @@
 
 {{ etl_description }}
 
+## Writing Tests
+
+Workflow rules rendered from the main `able-workflow-copier` template typically use two kinds of
+tests: integration tests with small real datasets and dry-run tests with manifest-driven dummy
+inputs.
+
+### Integration tests
+
+Use integration tests when you want to run a rule against a small representative dataset.
+
+- Put test inputs under `data/tests/**`.
+- Mirror the real path structure under `data/**` so tests can copy or stage the files without
+  rewriting rule inputs.
+- Keep fixtures small enough that the rule stays fast in CI.
+
+For example, if a rule reads `data/raw/example/input.csv`, the matching integration-test input
+should live at `data/tests/raw/example/input.csv`.
+
+### Dry-run tests
+
+Use dry-run tests when you only need to validate rule wiring, declared inputs, and DAG
+construction. These tests use manifests under `data/tests/dry-run/` and the helpers rendered into
+`tests/workflow/rules/__init__.py`.
+
+#### Dry-run manifests
+
+Create one manifest per rule under `data/tests/dry-run/`.
+
+- Use `touch:` for paths that should be created relative to `data/`.
+- Use `include:` to merge shared manifests recursively.
+- Keep common paths in a shared file such as `data/tests/dry-run/common.yaml`.
+- Name each manifest after the rule it tests.
+
+Example:
+
+```yaml
+include:
+  - common.yaml
+touch:
+  - raw/example/input.csv
+```
+
+#### Shared helpers
+
+Import these helpers inside `tests/workflow/rules/` modules:
+
+```python
+from . import _load_touch_paths, _snakemake
+```
+
+- `_load_touch_paths(manifest_path)` recursively resolves `include:` entries and returns the
+  unique `touch:` paths from a manifest tree.
+- `_snakemake(workspace, extra, verbose=True)` runs Snakemake in the shared temporary workspace
+  and prints captured logs when needed.
+
+#### Typical test pattern
+
+For each rule that needs a dry-run test:
+
+1. Add or update `data/tests/dry-run/<rule_name>.yaml`.
+2. In the test fixture, call `_load_touch_paths(...)` and `touch()` each returned file under
+  `workspace / "data"`.
+3. Run `_snakemake(...)` against the rule target with `--dry-run` when you only need to
+  validate the DAG and inputs.
+
+Example:
+
+```python
+from pathlib import Path
+
+import pytest
+
+from . import _load_touch_paths, _snakemake
+
+
+@pytest.fixture(autouse=True)
+def create_dummy_input_data(workspace: Path) -> None:
+    manifest_path = Path("data/tests/dry-run/<rule_name>.yaml")
+    for relative_path in _load_touch_paths(manifest_path):
+        target = workspace / "data" / relative_path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.touch()
+
+
+def test_rule_dry_run(workspace: Path, request: pytest.FixtureRequest) -> None:
+    verbose = request.config.getoption("verbose")
+    _snakemake(workspace, ["--dry-run", "<rule_name>"], verbose=verbose)
+```
+
+If the rule also feeds documentation DAG generation, keep its dry-run manifest accurate so the
+`dag_svg` rules and the rule test exercise the same dummy inputs.
+
 ## Updating rule
 
 To update this rule, run the following command in the root of your project:
