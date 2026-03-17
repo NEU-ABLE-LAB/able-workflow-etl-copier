@@ -8,20 +8,20 @@ from typing import Any, Dict
 from loguru import logger
 from ruamel.yaml import YAML
 
-PR_YML_PATH = Path(__file__).parent.parent / ".github" / "workflows" / "pr.yml"
+PR_YML_PATH = Path(__file__).parent.parent / ".github" / "workflows" / "ci.yml"
 
 
 # ──────────────────────────────────────────────────────────────────────────────
 #  YAML helpers
 # ──────────────────────────────────────────────────────────────────────────────
 def get_repo_and_hash_from_pr_yml(pr_yml: Path, repo_name: str) -> tuple[str, str]:
-    """Return (repo-URL, commit-hash) for *repo_name* read from `.github/workflows/pr.yml`."""
+    """Return (repo-URL, commit-hash) for *repo_name* read from `.github/workflows/ci.yml`."""
     yaml = YAML(typ="safe")
     cfg: Any = yaml.load(pr_yml.read_text())
     try:
         steps = cfg["jobs"]["tox"]["steps"]
     except (KeyError, TypeError):
-        raise RuntimeError("Could not find 'jobs.tox.steps' in pr.yml")
+        raise RuntimeError("Could not find 'jobs.tox.steps' in ci.yml")
 
     wanted = f"Checkout the `{repo_name}` repository"
     for step in steps:
@@ -32,7 +32,7 @@ def get_repo_and_hash_from_pr_yml(pr_yml: Path, repo_name: str) -> tuple[str, st
             if isinstance(repo, str) and isinstance(ref, str):
                 return f"https://github.com/{repo}.git", ref
             break
-    raise RuntimeError(f"Repository info for '{repo_name}' not found in pr.yml")
+    raise RuntimeError(f"Repository info for '{repo_name}' not found in ci.yml")
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -40,7 +40,7 @@ def get_repo_and_hash_from_pr_yml(pr_yml: Path, repo_name: str) -> tuple[str, st
 # ──────────────────────────────────────────────────────────────────────────────
 @dataclass(frozen=True)
 class TplSrc:
-    """Name + repo URL + frozen commit hash (all read from .github/workflows/pr.yml)."""
+    """Name + repo URL + frozen commit hash (all read from .github/workflows/ci.yml)."""
 
     name: str
     repo: str = ""
