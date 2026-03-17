@@ -11,7 +11,7 @@ This template is to be run in a project that was created with
 [`able-workflow-module-copier`]({{ able_workflow_module_copier_docs }}).
 To test the rendering of this template, that parent templates needs
 to also be rendered. The version of these parent templates that are used
-for tests is specified in `.github/workflows/pr.yml`
+for tests is specified in `.github/workflows/ci.yml`
 and pulled in `scripts/pull_able_workflow_copier.py`.
 
 !!! note "Updating `able-workflow-copier` version"
@@ -59,7 +59,7 @@ sometimes referred to as `able-copier-workflow` / `able-copier-module-workflow`
 use the workflow below.
 
 1. Remove cached parent-template checkouts so they can be re-pulled
-   at the versions pinned in `.github/workflows/pr.yml`:
+  at the versions pinned in `.github/workflows/ci.yml`:
 
     ```bash
     rm -rf sandbox/able-workflow-copier sandbox/able-workflow-module-copier

@@ -4,7 +4,7 @@
 [![Checked with mypy](http://www.mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![codecov](https://codecov.io/gh/NEU-ABLE-LAB/able-workflow-etl-copier/graph/badge.svg?token=APWMCCA8B1)](https://codecov.io/gh/NEU-ABLE-LAB/able-workflow-etl-copier)
-[![tox Tests](https://github.com/NEU-ABLE-LAB/able-workflow-etl-copier/actions/workflows/pr.yml/badge.svg)](https://github.com/NEU-ABLE-LAB/able-workflow-etl-copier/actions/workflows/pr.yml)
+[![tox Tests](https://github.com/NEU-ABLE-LAB/able-workflow-etl-copier/actions/workflows/ci.yml/badge.svg)](https://github.com/NEU-ABLE-LAB/able-workflow-etl-copier/actions/workflows/ci.yml)
 
 A [copier](https://copier.readthedocs.io/en/stable/) template for an extract-transform-load (ETL) process that generates datasets, features, or models module for the project's python package.
 
