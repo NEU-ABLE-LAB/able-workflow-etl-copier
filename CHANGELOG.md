@@ -15,6 +15,9 @@ Human-readable log of changes between versions. Follows the [Common Changelog st
 - Split `pr.yml` and `main.yml` to keep codecov secrets out of PR GH-actions
 - Bumped `able-workflow-copier` to `v0.1.2`
 - Refactored `copie_helpers.py` functions into their own file.
+- Consolidated `.github/workflows/pr.yml` and `.github/workflows/main.yml` into `.github/workflows/ci.yml`, with Codecov secrets only used on pushes to `main`.
+- Updated CI badge links in `README.md` and `docs/docs/index.md` to reference `.github/workflows/ci.yml`.
+- Updated contributing docs references from `.github/workflows/pr.yml` to `.github/workflows/ci.yml`.
 
 ### Added
 
