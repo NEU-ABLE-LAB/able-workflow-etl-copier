@@ -43,6 +43,7 @@ def _load_yaml(path: Path) -> tuple[dict[str, object], YAML]:
     """Load YAML preserving comments and quoting style."""
     yaml = YAML()
     yaml.preserve_quotes = True
+    yaml.indent(mapping=2, sequence=4, offset=2)
     with path.open("r", encoding="utf-8") as fp:
         data = yaml.load(fp)
     return data, yaml

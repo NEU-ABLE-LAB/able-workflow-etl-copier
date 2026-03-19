@@ -24,6 +24,7 @@ example_copy_diff:
     This is useful for debugging the template and seeing what changes are made
     by the template when generating the files.
   default: true
+  when: "{{example_to_render}}"
 
 example_answers_dir:
   type: str
