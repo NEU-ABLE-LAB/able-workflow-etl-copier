@@ -8,6 +8,7 @@
         "ms-python.mypy-type-checker",
         "ms-python.vscode-python-envs",
         "redhat.vscode-yaml",
+        "samuelcolvin.jinjahtml",
         "tamasfe.even-better-toml",
         "the-compiler.python-tox",
         "yzhang.markdown-all-in-one",
