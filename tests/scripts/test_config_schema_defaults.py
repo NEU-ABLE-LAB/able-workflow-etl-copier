@@ -81,7 +81,9 @@ def _get_config_value(config: dict[str, Any], path: tuple[str, ...]) -> Any:
 @pytest.mark.parametrize(
     ("schema_path", "config_path"),
     TEMPLATE_PAIRS,
-    ids=[str(schema_path.relative_to(SCHEMAS_DIR)) for schema_path, _ in TEMPLATE_PAIRS],
+    ids=[
+        str(schema_path.relative_to(SCHEMAS_DIR)) for schema_path, _ in TEMPLATE_PAIRS
+    ],
 )
 def test_config_yaml_contains_schema_defaults(
     schema_path: Path,
