@@ -149,19 +149,51 @@ def _filter_to_latest_examples(examples: List[ExampleParam]) -> List[ExamplePara
     return filtered_examples
 
 
-def _get_examples_for_session(config) -> List[Example]:
-    """Get examples based on pytest configuration, caching the result."""
+def _get_example_params_for_session(config) -> List[ExampleParam]:
+    """Get example params based on pytest configuration, caching the result."""
     # Cache the examples on the config object to avoid re-discovery
-    if not hasattr(config, "_cached_examples"):
+    if not hasattr(config, "_cached_example_params"):
         all_examples = config.getoption("--all-examples") if config else False
-        config._cached_examples = _discover_example_params(all_examples)
+        config._cached_example_params = _discover_example_params(all_examples)
+    return config._cached_example_params
+
+
+def _get_examples_for_session(config) -> List[Example]:
+    """Get fully loaded examples based on pytest configuration, caching the result."""
+    if not hasattr(config, "_cached_examples"):
+        loaded_examples: List[Example] = []
+        for ex_param in _get_example_params_for_session(config):
+            if ex_param.answers_dir is None:
+                continue
+
+            pkg = ex_param.answers_dir / "package.yml"
+            mod = ex_param.answers_dir / "module.yml"
+            etl = ex_param.answers_dir / "etl.yml"
+
+            try:
+                loaded_examples.append(
+                    Example(
+                        name=ex_param.name,
+                        package_answers=_read_yaml(pkg),
+                        module_answers=_read_yaml(mod),
+                        etl_answers=_read_yaml(etl),
+                    )
+                )
+            except (FileNotFoundError, OSError, ValueError, TypeError) as exc:
+                pytest.fail(
+                    f"Failed to load example answers in {ex_param.answers_dir}: {exc}",
+                    pytrace=False,
+                )
+
+        config._cached_examples = loaded_examples
+
     return config._cached_examples
 
 
 def pytest_generate_tests(metafunc):
     """Dynamically generate test parameters based on command line options."""
     if "rendered" in metafunc.fixturenames:
-        examples = _get_examples_for_session(metafunc.config)
+        examples = _get_example_params_for_session(metafunc.config)
         metafunc.parametrize("rendered", examples, ids=lambda p: p.name, indirect=True)
 
 
