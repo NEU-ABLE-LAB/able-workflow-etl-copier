@@ -2,16 +2,16 @@ diff --git a/pyproject.toml b/pyproject.toml
 index 47c6e70..9c76c3a 100755
 --- a/pyproject.toml
 +++ b/pyproject.toml
-@@ -43,12 +43,16 @@ runner = [
+@@ -43,8 +43,15 @@ runner = [
  runner = [
-  # This snakemake version should match the version in the following locations:
-  # - `dependency-groups.snakemake`
-  # - `./.pre-commit-config.yaml`
-  # - `./workflow/Snakefile.jinja`
+   # This snakemake version should match the version in the following locations:
+   # - `dependency-groups.snakemake`
+   # - `./.pre-commit-config.yaml`
+   # - `./workflow/Snakefile.jinja`
    "snakemake>=9.16.3,<=9.17.2",
-   #TODO Remove once https://github.com/bioconda/bioconda-recipes/pull/63513
-   #  is live on bioconda channel
-   "tenacity >=9.1.4,<10.0",
++  #TODO Remove once https://github.com/bioconda/bioconda-recipes/pull/63513
++  #  is live on bioconda channel
++  "tenacity >=9.1.4,<10.0",
 +  # open-meteo API dependencies
 +  "openmeteo-requests",
 +  "requests-cache",
