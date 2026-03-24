@@ -18,7 +18,6 @@ index 47c6e70..9c76c3a 100755
 +  "retry-requests",
    # Add additional dependencies for new modules and ETL process here.
  ]
-
 @@ -257,7 +261,9 @@ mkdocs-inline-select-svg-plugin = { pip = true }
  mkdocs-inline-select-svg-plugin = { pip = true }
  mkdocs-mermaid2-plugin = { pip = true }
