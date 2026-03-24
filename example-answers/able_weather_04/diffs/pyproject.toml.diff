@@ -5,7 +5,7 @@ index 47c6e70..9c76c3a 100755
 @@ -43,9 +43,13 @@ runner = [
  runner = [
    # This snakemake version should match the version in `dependency-groups.snakemake`
-   "snakemake>=9.16.3",
+   "snakemake>=9.16.3,<=9.17.2",
    #TODO Remove once https://github.com/bioconda/bioconda-recipes/pull/63513
    #  is live on bioconda channel
    "tenacity >=9.1.4,<10.0",
