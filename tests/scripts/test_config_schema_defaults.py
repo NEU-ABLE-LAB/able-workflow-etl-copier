@@ -29,6 +29,13 @@ def _discover_template_pairs() -> list[tuple[Path, Path]]:
 
 
 TEMPLATE_PAIRS = _discover_template_pairs()
+if not TEMPLATE_PAIRS:
+    msg = (
+        "No schema/config template pairs discovered; expected files matching "
+        f"{SCHEMAS_DIR}/**/config.schema.yaml.jinja with corresponding "
+        f"{CONFIG_DIR}/**/config.yaml.jinja."
+    )
+    raise AssertionError(msg)
 
 
 def _load_jinja_yaml(path: Path) -> dict[str, Any]:
