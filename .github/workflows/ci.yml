@@ -35,20 +35,8 @@ jobs:
     steps:
       - name: Checkout this repository
         uses: actions/checkout@v4
-
-      - name: Checkout the `able-workflow-copier` repository
-        uses: actions/checkout@v4
         with:
-          repository: NEU-ABLE-LAB/able-workflow-copier
-          ref: baa05729e1caa4ab7ac92e8fc124abd5181bb09d
-          path: sandbox/able-workflow-copier
-
-      - name: Checkout the `able-workflow-module-copier` repository
-        uses: actions/checkout@v4
-        with:
-          repository: NEU-ABLE-LAB/able-workflow-module-copier
-          ref: v0.1.1
-          path: sandbox/able-workflow-module-copier
+          submodules: recursive
 
       - uses: conda-incubator/setup-miniconda@v3
         with:
