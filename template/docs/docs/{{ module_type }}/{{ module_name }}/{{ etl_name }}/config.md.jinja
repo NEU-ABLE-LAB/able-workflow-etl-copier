@@ -1,6 +1,12 @@
 # Configuring the {{ etl_name_long }} ETL process
 
-This page describes how to configure the {{ etl_name_long }} ETL process. The configuration is stored in the `config.yml` file in the `config/{{ module_type }}/{{ module_name }}/{{ etl_name }}/` directory of this repo. If you importing this workflow as a module into your workflow, you can copy this file into your workflow's `config/{{ module_type }}/{{ module_name }}{{ etl_name }}/` directory and modify it as needed.
+This page describes the committed configuration file for the {{ etl_name_long }} ETL process. The file lives at `config/{{ module_type }}/{{ module_name }}/{{ etl_name }}/config.yaml` in this repository.
+
+!!! note "Who should edit this file?"
+
+    Workflow runners should usually leave committed config files unchanged and use `config/config.local.yaml` for machine-specific overrides when running this project directly.
+    If you import this workflow as a module into a parent workflow, provide overrides from the parent workflow config instead.
+    Repository developers may update this committed file and its matching schema when changing the reproducible default behavior of the ETL process.
 
 If you need to add [tabular configuration data](https://snakemake.readthedocs.io/en/stable/snakefiles/configuration.html#tabular-configuration) be sure that it is loaded along side this configuration in `workflow/profiles/default/config.yaml`.
 

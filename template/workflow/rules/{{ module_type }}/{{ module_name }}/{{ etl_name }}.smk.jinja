@@ -3,7 +3,10 @@ if (
     and "{{ module_name }}" in config["{{ module_type }}"]
     and "{{ etl_name }}" in config["{{ module_type }}"]["{{ module_name }}"]
 ):
-    validate(config, WORKFLOW_BASE / "schemas/{{ module_type }}/{{ module_name }}/config.schema.yaml")
+    validate(
+        config,
+        WORKFLOW_BASE / "schemas/{{ module_type }}/{{ module_name }}/{{ etl_name }}/config.schema.yaml",
+    )
 
 rule {{ module_type }}_{{ module_name }}_{{ etl_name }}_all:
     """

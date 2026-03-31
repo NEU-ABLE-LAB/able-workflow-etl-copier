@@ -1,6 +1,11 @@
 # Quick Reference
 
-Apply this Copier template to an existing [`able-workflow-copier`]({{ able_workflow_copier_docs }}) project (i.e., `./`) where you havea already created a `datasets/`, `features/`, or `models/` module with [`able-workflow-module-copier`]({{ able_workflow_module_copier_docs }}) to create a new Snakemake rule with the following commands:
+??? note "Audience: Project Developers"
+
+    This section is for project developers applying `able-workflow-etl-copier` to an existing workflow project.
+    If you are maintaining the template itself, use this repository's contributing documentation instead.
+
+Apply this Copier template to an existing [`able-workflow-copier`]({{ able_workflow_copier_docs }}) project (i.e., `./`) where you have already created a `datasets/`, `features/`, or `models/` module with [`able-workflow-module-copier`]({{ able_workflow_module_copier_docs }}) to create a new ETL process with the following commands:
 
 ```bash
 copier copy --trust {{ able_workflow_etl_copier_repo }}.git ./
