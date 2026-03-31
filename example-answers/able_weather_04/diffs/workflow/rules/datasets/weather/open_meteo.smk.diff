@@ -1,9 +1,8 @@
 diff --git a/workflow/rules/datasets/weather/open_meteo.smk b/workflow/rules/datasets/weather/open_meteo.smk
-index 88868fe..ee4f65e 100644
 --- a/workflow/rules/datasets/weather/open_meteo.smk
 +++ b/workflow/rules/datasets/weather/open_meteo.smk
-@@ -8,54 +8,30 @@ if (
-     )
+@@ -4,54 +4,30 @@
+ )
  
  
 -rule datasets_weather_open_meteo_all:
@@ -16,7 +15,10 @@ index 88868fe..ee4f65e 100644
 -    -----
 -    readme:
 -        A README file that describes the data and the workflow.
--
++    input:
++        No input files are required as the data is fetched from the Open Meteo
++        API directly.
+ 
 -    params
 -    ------
 -    func:
@@ -32,10 +34,7 @@ index 88868fe..ee4f65e 100644
 -    -----
 -    The able_weather conda environment
 -    with the `runner` extra dependencies.
-+    input:
-+        No input files are required as the data is fetched from the Open Meteo
-+        API directly.
- 
+-
 -    script
 -    ------
 -    The standard script for running rules in the able_weather package.
