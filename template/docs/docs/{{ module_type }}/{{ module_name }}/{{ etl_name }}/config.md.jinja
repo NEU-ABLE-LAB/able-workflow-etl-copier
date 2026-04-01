@@ -10,6 +10,8 @@ This page describes the committed configuration file for the {{ etl_name_long }}
 
 If you need to add [tabular configuration data](https://snakemake.readthedocs.io/en/stable/snakefiles/configuration.html#tabular-configuration) be sure that it is loaded along side this configuration in `workflow/profiles/default/config.yaml`.
 
+This ETL config is validated (which applies default values if missing) by `workflow/Snakefile` before rule files are included, together with the root and module config schemas.
+
 ## Configuration file schema
 
 {% raw %}
