@@ -1133,9 +1133,15 @@
 
 
 <h1 id="post-copy-checklist">Post-Copy Checklist<a class="headerlink" href="#post-copy-checklist" title="Permanent link">&para;</a></h1>
-<p>After running <code>copier copy</code>, see <code>.copier-answers/post-copier-todos/etl-{{ module_type }}-{{ module_name }}-{{ etl_name }}.md</code> for next steps on implementing your rule into the project. You can copy-paste the contents of that file into a GitHub issue or a project management tool to track the implementation of the rule.</p>
+<details class="note">
+<summary>Audience: Project Developers</summary>
+<p>This checklist is for project developers adding a new ETL process to an existing module in a workflow project.
+It assumes you will update committed project files, tests, and documentation in the target repository.</p>
+</details>
+<p>After running <code>copier copy</code>, see <code>.copier-answers/post-copier-todos/etl-{{ module_type }}-{{ module_name }}-{{ etl_name }}.md</code> for next steps on implementing your ETL process in the project. You can copy-paste the contents of that file into a GitHub issue or a project management tool to track the implementation of the ETL process.</p>
 <h2 id="post-copier-to-dos-for-the-module_type-module_name-etl_name-etl-process">Post Copier To-Do's for the <code>{{ module_type }}/{{ module_name }}/{{ etl_name }}</code> ETL process<a class="headerlink" href="#post-copier-to-dos-for-the-module_type-module_name-etl_name-etl-process" title="Permanent link">&para;</a></h2>
 <p>This issue is for tracking the development of the ETL process that was copied from the <code>able-workflow-etl-copier</code> template.</p>
+<p>This checklist is for a project developer implementing the generated ETL scaffold in a project repository. Workflow runners should usually leave committed config files alone and use <code>config/config.local.yaml</code> or parent-workflow config overrides instead.</p>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Copy-paste these contents into a new github issue for the ETL process</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> In the github issue, create a new branch to work on the issue</li>
@@ -1187,7 +1193,7 @@
 </span></code></pre></div>
 <h3 id="final-file-creationmodification-checklist">Final file creation/modification checklist<a class="headerlink" href="#final-file-creationmodification-checklist" title="Permanent link">&para;</a></h3>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>{{ package_name }}/{{ module_type }}/{{ etl_name }}/</code></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>{{ package_name }}/{{ module_type }}/{{ module_name }}/{{ etl_name }}/</code></li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>runner/</code><ul class="task-list">
 <li -_="-%" _="%" class="task-list-item" if="if" requires_extract_external="requires_extract_external"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>__init__.py</code></li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>extract_external.py</code></li>
@@ -1235,7 +1241,7 @@
 </ul>
 </li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>workflow/rules/{{ module_type }}/{{ module_name }}/test_snakemake_{{ etl_name }}.py</code></li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>config/{{ module_type }}/{{ module_name }}/{{ etl_name }}.config.yaml</code></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>config/{{ module_type }}/{{ module_name }}/{{ etl_name }}/config.yaml</code></li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>workflow/</code></li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>profiles/default/config.yaml</code></li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>rules/</code><ul class="task-list">
@@ -1243,7 +1249,7 @@
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>includes.smk</code></li>
 </ul>
 </li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>schemas/{{ module_type }}/{{ module_name }}/{{ etl_name }}.config.schema.yaml</code></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>schemas/{{ module_type }}/{{ module_name }}/{{ etl_name }}/config.schema.yaml</code></li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>pyproject.toml</code></li>
 </ul>
 
@@ -1266,7 +1272,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 23, 2025</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">April 1, 2026</span>
   </span>
 
     
