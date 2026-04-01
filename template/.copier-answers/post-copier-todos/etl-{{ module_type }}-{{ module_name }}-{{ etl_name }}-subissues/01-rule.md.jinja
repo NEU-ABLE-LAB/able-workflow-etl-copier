@@ -7,9 +7,10 @@ While working on this checklist you may want to use VSCode to automatically open
 
 ```bash
 code pyproject.toml
-code config/{{ module_type }}/{{ module_name }}/{{ etl_name }}.config.yaml
-code workflow/schemas/{{ module_type }}/{{ module_name }}/config.schema.yaml
+code config/{{ module_type }}/{{ module_name }}/{{ etl_name }}/config.yaml
+code workflow/schemas/{{ module_type }}/{{ module_name }}/{{ etl_name }}/config.schema.yaml
 code data/tests/dry-run/all.yaml
+code data/tests/dry-run/<rule_name>.yaml
 code workflow/Snakefile
 code workflow/rules/includes.smk
 code workflow/rules/{{ module_type }}/{{ module_name }}.smk
@@ -23,13 +24,21 @@ code workflow/rules/{{ module_type }}/{{ module_name }}/{{ etl_name }}.smk
 - [ ] Ensure that the rule's docstring describes the ETL process and its inputs and outputs.
 - [ ] If the rule will only produce a single file in the workflow, then use a fixed output file name. If the rule will produce multiple files, then create a wildcard for the output file name and create another rule with the `_all` suffix that collects all the outputs of the ETL process.
 
-## `data/tests/dry-run/all.yaml` and the Workflow DAG
+## `data/tests/dry-run/` manifests and the Workflow DAG
 
-- [ ] If this ETL process consumes `raw` or `external` data into this workflow, then add the names of the `raw` or `external` data to a dry-run manifest under `data/tests/dry-run/`. Use `touch:` for files that should be created under `data/`, and `include:` to compose shared manifests. This ensures that the data is available for DAG generation, testing, and debugging.
+- [ ] Maintain `data/tests/dry-run/all.yaml` for workflow-wide dry runs (for example `snakemake dag_svg_all`) and include any manifests needed for the full DAG.
+- [ ] For individual dry-run integration tests, create one manifest per rule to be tested under `data/tests/dry-run/` named `<rule_name>.yaml` and use `touch:` for files that should be created under `data/`.
+- [ ] Use `include:` in `all.yaml` to compose shared manifests and rule-specific manifests so DAG generation and dry-run tests stay aligned.
 
 - [ ] `workflow/rules/{{ module_type }}/{{ module_name }}.smk`
 
-    Configure/confirm the `input:` of the `{{ module_type }}_{{ module_name }}_all` rule in `{{ module_name }}.smk` to require the `output:` from this ETL process: `*rules.{{ module_type }}_{{ module_name }}_{{ etl_name }}_all.output`.
+    Configure/confirm the `input:` of the `{{ module_type }}_{{ module_name }}_all` rule in `{{ module_name }}.smk` to require the `output:` from this ETL process:
+
+      - `*rules.{{ module_type }}_{{ module_name }}_{{ etl_name }}_all.output` if the output is a list
+      - `**rules.{{ module_type }}_{{ module_name }}_{{ etl_name }}_all.output` if the output has named keys
+      - `*rules.{{ module_type }}_{{ module_name }}_{{ etl_name }}_all.input` if the list input of the `_all` rule is just the outputs of the per-file rule `_file`.
+      - `**rules.{{ module_type }}_{{ module_name }}_{{ etl_name }}_all.input` if the named key input of the `_all` rule is just the outputs of the per-file rule `_file`.
+
 
 - [ ] `workflow/rules/includes.smk`
 

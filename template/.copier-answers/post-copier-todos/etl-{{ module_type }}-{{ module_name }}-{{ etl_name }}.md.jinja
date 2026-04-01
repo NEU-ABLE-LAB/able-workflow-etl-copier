@@ -6,35 +6,32 @@ This checklist is for a project developer implementing the generated ETL scaffol
 
 - [ ] Copy-paste these contents into a new github issue for the ETL process
 - [ ] In the github issue, create a new branch to work on the issue
-- [ ] Pull and checkout that branch in your local development environment.
-- [ ] If you haven't already, commit the changes made by the Copier template to the branch.
-- [ ] Create sub-issues by copy-pasting the following files
+- [ ] Fetch and checkout that branch in your local development environment.
+- [ ] Commit the changes made by the Copier template to the branch.
+- [ ] Create sub-issues from each of the following (by clicking the three dots to the right of each) and copy paste the corresponding file contents
+- [ ] 01 rule post Copier To-Do's for the `{{ module_type }}/{{ module_name }}/{{ etl_name }}`
   - [ ] `.copier-answers/post-copier-todos/etl-{{ module_type }}-{{ module_name }}-{{ etl_name }}-subissues/01-rule.md`
   {% if requires_extract_external -%}
+- [ ] 02 extract external post Copier To-Do's for the `{{ module_type }}/{{ module_name }}/{{ etl_name }}`
   - [ ] `.copier-answers/post-copier-todos/etl-{{ module_type }}-{{ module_name }}-{{ etl_name }}-subissues/02-extract_external.md`
+- [ ] 03 schema external post Copier To-Do's for the `{{ module_type }}/{{ module_name }}/{{ etl_name }}`
   - [ ] `.copier-answers/post-copier-todos/etl-{{ module_type }}-{{ module_name }}-{{ etl_name }}-subissues/03-schema_external.md`
   {%- endif %}
+- [ ] 04 transform post Copier To-Do's for the `{{ module_type }}/{{ module_name }}/{{ etl_name }}`
   - [ ] `.copier-answers/post-copier-todos/etl-{{ module_type }}-{{ module_name }}-{{ etl_name }}-subissues/04-transform.md`
+- [ ] 05 schema post Copier To-Do's for the `{{ module_type }}/{{ module_name }}/{{ etl_name }}`
   - [ ] `.copier-answers/post-copier-todos/etl-{{ module_type }}-{{ module_name }}-{{ etl_name }}-subissues/05-schema.md`
+- [ ] 06 load post Copier To-Do's for the `{{ module_type }}/{{ module_name }}/{{ etl_name }}`
   - [ ] `.copier-answers/post-copier-todos/etl-{{ module_type }}-{{ module_name }}-{{ etl_name }}-subissues/06-load.md`
+- [ ] 07 extract post Copier To-Do's for the `{{ module_type }}/{{ module_name }}/{{ etl_name }}`
   - [ ] `.copier-answers/post-copier-todos/etl-{{ module_type }}-{{ module_name }}-{{ etl_name }}-subissues/07-extract.md`
+- [ ] 08 main post Copier To-Do's for the `{{ module_type }}/{{ module_name }}/{{ etl_name }}`
   - [ ] `.copier-answers/post-copier-todos/etl-{{ module_type }}-{{ module_name }}-{{ etl_name }}-subissues/08-main.md`
+- [ ] 09 integration tests post Copier To-Do's for the `{{ module_type }}/{{ module_name }}/{{ etl_name }}`
   - [ ] `.copier-answers/post-copier-todos/etl-{{ module_type }}-{{ module_name }}-{{ etl_name }}-subissues/09-integration-tests.md`
+- [ ] 10 docs post Copier To-Do's for the `{{ module_type }}/{{ module_name }}/{{ etl_name }}`
   - [ ] `.copier-answers/post-copier-todos/etl-{{ module_type }}-{{ module_name }}-{{ etl_name }}-subissues/10-docs.md`
-- [ ] Update each of the links in the subissue list below with the issue number from each of the sub issues created above.
-- [ ] Complete each of the subissues in the order they are listed below.
-  - [ ] 01. #
-  {% if requires_extract_external -%}
-  - [ ] 02. #
-  - [ ] 03. #
-  {%- endif %}
-  - [ ] 04. #
-  - [ ] 05. #
-  - [ ] 06. #
-  - [ ] 07. #
-  - [ ] 08. #
-  - [ ] 09. #
-  - [ ] 10. #
+- [ ] Complete each of the subissues, merging their branch back into this branch as you go.
 - [ ] Complete all of final review steps below before merging the branch into `main`.
 
 ## Test
@@ -81,6 +78,7 @@ This checklist is for a project developer implementing the generated ETL scaffol
 - [ ] `data/tests/`
   - [ ] `dry-run/`
     - [ ] `all.yaml`
+    - [ ] `<rule_name>.yaml` (one per individually dry-run tested rule)
   - [ ] `{{ module_name }}/{{ etl_name }}/`
     - [ ] `external/`
     - [ ] `raw/`
