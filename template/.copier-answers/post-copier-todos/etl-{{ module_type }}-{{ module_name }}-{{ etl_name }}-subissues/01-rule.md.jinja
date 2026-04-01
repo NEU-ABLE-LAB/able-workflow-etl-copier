@@ -39,7 +39,7 @@ code workflow/rules/{{ module_type }}/{{ module_name }}/{{ etl_name }}.smk
 
 - [ ] `workflow/rules/includes.smk`
 
-    Modify the order of the included snakefiles in `includes.smk` so that `workflow/{{ module_type }}/{{ module_name }}/{{ etl_name }}.smk` is imported **before** `workflow/{{ module_type }}/{{ module_name }}.smk` so that `{{ module_name }}.smk` has access to the rule information from `{{ etl_name }}.smk`.
+  Confirm `includes.smk` contains both `workflow/{{ module_type }}/{{ module_name }}/{{ etl_name }}.smk` and `workflow/{{ module_type }}/{{ module_name }}.smk`, and that the ETL include appears first. The copier task should insert ETL includes before their module include automatically.
 
 - [ ] `workflow/Snakefile`
 

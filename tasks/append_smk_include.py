@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 """
-Append `include: "<NAME>"` as the *second-to-last* line of
-`workflow/rules/includes.smk`, keeping the final blank line.
+Append `include: "<NAME>"` to `workflow/rules/includes.smk`.
+
+For ETL includes with path `<module_type>/<module_name>/<etl_name>.smk`,
+insert the include before `<module_type>/<module_name>.smk` when present so
+module-level `_all` rules can reference ETL rules.
 
 Usage
 -----
@@ -10,6 +13,14 @@ Usage
 
 import sys
 from pathlib import Path
+
+
+def _module_include_anchor(smk_file: str) -> str | None:
+    parts = smk_file.split("/")
+    if len(parts) != 3 or not parts[-1].endswith(".smk"):
+        return None
+    module_include = f"{parts[0]}/{parts[1]}.smk"
+    return f'include: "{module_include}"'
 
 
 def main() -> None:
@@ -37,8 +48,19 @@ def main() -> None:
     while lines and lines[-1].strip() == "":
         trailing.append(lines.pop())
 
-    # Insert the include line, then restore exactly one blank line
-    lines.append(new_line)
+    anchor = _module_include_anchor(smk_file)
+    if anchor is None:
+        lines.append(new_line)
+    else:
+        insert_at = next(
+            (idx for idx, line in enumerate(lines) if line.strip() == anchor),
+            None,
+        )
+        if insert_at is None:
+            lines.append(new_line)
+        else:
+            lines.insert(insert_at, new_line)
+
     target.write_text("".join(lines))
 
 
