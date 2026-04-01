@@ -21,11 +21,6 @@ from typer.testing import CliRunner
 ROOT_DIR = Path(__file__).resolve().parents[2]  # project root (…/repo/)
 SCRIPT_PATH = ROOT_DIR / "scripts" / "sandbox_examples_generate.py"
 
-#   👉  The script tries to clone parent templates at import-time.
-#       Pre-create the expected directories so that no network call happens.
-for _tpl in ("able-workflow-copier", "able-workflow-module-copier"):
-    (ROOT_DIR / "sandbox" / _tpl).mkdir(parents=True, exist_ok=True)
-
 spec = importlib.util.spec_from_file_location("sandbox_examples_generate", SCRIPT_PATH)
 seg = importlib.util.module_from_spec(spec)  # type: ignore[arg-type]
 sys.modules["sandbox_examples_generate"] = seg  # let patches work

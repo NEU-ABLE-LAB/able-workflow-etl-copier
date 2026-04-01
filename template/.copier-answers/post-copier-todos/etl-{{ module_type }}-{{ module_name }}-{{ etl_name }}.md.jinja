@@ -2,6 +2,8 @@
 
 This issue is for tracking the development of the ETL process that was copied from the `able-workflow-etl-copier` template.
 
+This checklist is for a project developer implementing the generated ETL scaffold in a project repository. Workflow runners should usually leave committed config files alone and use `config/config.local.yaml` or parent-workflow config overrides instead.
+
 - [ ] Copy-paste these contents into a new github issue for the ETL process
 - [ ] In the github issue, create a new branch to work on the issue
 - [ ] Pull and checkout that branch in your local development environment.
@@ -63,7 +65,7 @@ This issue is for tracking the development of the ETL process that was copied fr
 
 ## Final file creation/modification checklist
 
-- [ ] `{{ package_name }}/{{ module_type }}/{{ etl_name }}/`
+- [ ] `{{ package_name }}/{{ module_type }}/{{ module_name }}/{{ etl_name }}/`
   - [ ] `runner/`
     - [ ] `__init__.py`
     {% if requires_extract_external -%}
@@ -103,11 +105,11 @@ This issue is for tracking the development of the ETL process that was copied fr
     - [ ] `test_extract.py`
     - [ ] `test_schema.py`
   - [ ] `workflow/rules/{{ module_type }}/{{ module_name }}/test_snakemake_{{ etl_name }}.py`
-- [ ] `config/{{ module_type }}/{{ module_name }}/{{ etl_name }}.config.yaml`
+- [ ] `config/{{ module_type }}/{{ module_name }}/{{ etl_name }}/config.yaml`
 - [ ] `workflow/`
   - [ ] `profiles/default/config.yaml`
   - [ ] `rules/`
     - [ ] `{{ module_type }}/{{ module_name }}.smk`
     - [ ] `includes.smk`
-  - [ ] `schemas/{{ module_type }}/{{ module_name }}/{{ etl_name }}.config.schema.yaml`
+  - [ ] `schemas/{{ module_type }}/{{ module_name }}/{{ etl_name }}/config.schema.yaml`
 - [ ] `pyproject.toml`

@@ -8,6 +8,7 @@ While working on this checklist you may want to use VSCode to automatically open
 ```bash
 code pyproject.toml
 code config/{{ module_type }}/{{ module_name }}/{{ etl_name }}.config.yaml
+code workflow/schemas/{{ module_type }}/{{ module_name }}/config.schema.yaml
 code data/tests/dry-run/all.yaml
 code workflow/Snakefile
 code workflow/rules/includes.smk
@@ -59,6 +60,12 @@ This file is automatically read by the workflow as specified in `workflow/profil
 - [ ] If the rule requires any configuration parameters not found in the templated `config.yaml` for the ETL process, then add those parameters to the `config/{{ module_type }}/{{ module_name }}/{{ etl_name }}.config.yaml` file.
 
 - [ ] If you add any parameters to the `config.yaml` file, then also add them to the `workflow/schemas/{{ module_type }}/{{ module_name }}/{{ etl_name }}.config.schema.yaml` file to ensure that the configuration is validated against the schema.
+
+## `workflow/schemas/{{ module_type }}/{{ module_name }}/config.schema.yaml`
+
+- [ ] If the ETL rule reads module config values directly (for example in `output:`, `params:`, `wildcard_constraints:`, or `conda:`), then add/update those keys and defaults in this schema.
+
+- [ ] Ensure parent objects in any nested config path use `default: {}` so schema validation can materialize nested defaults when the imported workflow starts from an empty config.
 
 ## Test
 

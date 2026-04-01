@@ -9,6 +9,7 @@ Human-readable log of changes between versions. Follows the [Common Changelog st
 ### Added
 
 - Added regression test coverage for `tasks/append_config_include.py` to ensure list indentation is preserved when appending to `configfile`.
+- [Better Jinja](https://marketplace.visualstudio.com/items?itemName=samuelcolvin.jinjahtml) VS Code extension recommendation.
 
 ### Removed
 

@@ -5,7 +5,7 @@ Post-copy task for a Copier template.
 After the template is rendered, this script appends a line of the form
 
 ```
-config/<module_type>/<module_name>/<etl_name>config.yaml
+config/<module_type>/<module_name>/<etl_name>/config.yaml
 ```
 
 to the `configfile:` list in `workflow/profiles/default/config.yaml`,
@@ -19,6 +19,11 @@ run manually as well):
 Options:
     --config-path/-c  Path to the profile config.yaml (defaults to
                       workflow/profiles/default/config.yaml)
+
+When the profile uses the YTE-based `__variables__.configfile_candidates`
+structure introduced in able-workflow-copier, the new include is appended there.
+Otherwise, the legacy top-level `configfile:` list is updated for backwards
+compatibility.
 """
 from __future__ import annotations
 
@@ -49,6 +54,37 @@ def _load_yaml(path: Path) -> tuple[dict[str, object], YAML]:
     return data, yaml
 
 
+def _normalize_sequence(container: dict[str, object], key: str) -> list[object]:
+    """Normalize a YAML scalar/list field to a mutable list."""
+    value = container.get(key)
+    if value in (None, ""):
+        container[key] = []
+    elif isinstance(value, str):
+        container[key] = [value]
+    elif not isinstance(value, list):
+        container[key] = [str(value)]
+    return container[key]  # type: ignore[return-value]
+
+
+def _get_config_target(data: dict[str, object]) -> list[object]:
+    """Return the list to which config includes should be appended."""
+    variables = data.get("__variables__")
+
+    if isinstance(variables, dict) and "configfile_candidates" in variables:
+        return _normalize_sequence(variables, "configfile_candidates")
+
+    if "configfile" in data:
+        return _normalize_sequence(data, "configfile")
+
+    if data.get("__use_yte__") is True or "__variables__" in data:
+        if not isinstance(variables, dict):
+            variables = {}
+            data["__variables__"] = variables
+        return _normalize_sequence(variables, "configfile_candidates")
+
+    return _normalize_sequence(data, "configfile")
+
+
 @app.command()
 def main(
     config_file: str = typer.Argument(
@@ -68,7 +104,7 @@ def main(
         resolve_path=True,
     ),
 ) -> None:
-    """Append the module config include to the `configfile` list if absent."""
+    """Append the ETL config include to the profile config include list."""
     include_line = f"{config_file}"
 
     # Ensure the profile config exists
@@ -78,23 +114,11 @@ def main(
 
     data, yaml = _load_yaml(config_path)
 
-    # If `configfile` is missing or null, start a new list
-    if "configfile" not in data or data["configfile"] in (None, ""):
-        data["configfile"] = [include_line]
-    else:
-        cfg = data["configfile"]
+    cfg = _get_config_target(data)
 
-        # Normalize to list if the field is a scalar string
-        if isinstance(cfg, str):
-            cfg = [cfg]
-            data["configfile"] = cfg
-        elif not isinstance(cfg, list):
-            cfg = [str(cfg)]
-            data["configfile"] = cfg
-
-        # Append only when not already present
-        if include_line not in cfg:
-            cfg.append(include_line)
+    # Append only when not already present
+    if include_line not in cfg:
+        cfg.append(include_line)
 
     # Write the modified YAML back, preserving formatting and comments
     with config_path.open("w", encoding="utf-8") as fp:
