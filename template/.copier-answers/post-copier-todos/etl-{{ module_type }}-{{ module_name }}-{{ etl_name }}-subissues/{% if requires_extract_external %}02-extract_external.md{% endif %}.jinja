@@ -15,7 +15,23 @@ code tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_extrac
 
 ## `pyproject.toml`
 
-- [ ] Add any extra dependencies that this module requires to `runner` in the `[project.optional-dependencies]` section of `pyproject.toml`. If those dependencies are not available on [conda-forge](https://anaconda.org/conda-forge/repo), then configure the `[tool.pyproject2conda.dependencies]` section of `pyproject.toml` to specify that they should be installed via `pip` instead of `conda`.
+- [ ] Add any extra dependencies that this module requires for the
+  `runner` in the `[project.optional-dependencies]` section of
+  `pyproject.toml`.
+
+  If those dependencies are not available on
+  [conda-forge](https://anaconda.org/conda-forge/repo),
+  then configure the `[tool.pyproject2conda.dependencies]`
+  section of `pyproject.toml` to specify that they
+  should be installed via `pip` instead of `conda`.
+
+  After modifying `pyproject.toml`, run the following to
+  update the conda environment yaml files:
+
+  ```bash
+  snakemake pyproject2conda_all
+  snakemake conda_localize
+  ```
 
 
 ## `{{ package_name }}/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/extract_external.py`
