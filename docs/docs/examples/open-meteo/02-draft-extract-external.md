@@ -82,7 +82,7 @@ tox run -e py312-package-unit-runner -- --remote-data=any
 If you need to debug because the tests failed, or you just want to run this test file, you can use the VSCode python debugger. However, you *must* have the full `*-dev-runner` conda environment installed, which you can do with the following command and then use the [Python Environments](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-python-envs) extension to set the default environment.
 
 ```bash
-snakemake conda_update`
+snakemake conda_update_dev_runner
 ```
 
 Open the file you want to test, `test_extract_external.py` and open the VSCode command line (++ctrl+P++) and type the following, or click the caret symbol next to the play button in the top right corner of the file and select the "Debug using launch.json" option.
