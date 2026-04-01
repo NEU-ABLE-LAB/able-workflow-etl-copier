@@ -29,7 +29,13 @@ code workflow/rules/{{ module_type }}/{{ module_name }}/{{ etl_name }}.smk
 
 - [ ] `workflow/rules/{{ module_type }}/{{ module_name }}.smk`
 
-    Configure/confirm the `input:` of the `{{ module_type }}_{{ module_name }}_all` rule in `{{ module_name }}.smk` to require the `output:` from this ETL process: `*rules.{{ module_type }}_{{ module_name }}_{{ etl_name }}_all.output`.
+    Configure/confirm the `input:` of the `{{ module_type }}_{{ module_name }}_all` rule in `{{ module_name }}.smk` to require the `output:` from this ETL process:
+
+      - `*rules.{{ module_type }}_{{ module_name }}_{{ etl_name }}_all.output` if the output is a list
+      - `**rules.{{ module_type }}_{{ module_name }}_{{ etl_name }}_all.output` if the output has named keys
+      - `*rules.{{ module_type }}_{{ module_name }}_{{ etl_name }}_all.input` if the list input of the `_all` rule is just the outputs of the per-file rule `_file`.
+      - `**rules.{{ module_type }}_{{ module_name }}_{{ etl_name }}_all.input` if the named key input of the `_all` rule is just the outputs of the per-file rule `_file`.
+
 
 - [ ] `workflow/rules/includes.smk`
 
