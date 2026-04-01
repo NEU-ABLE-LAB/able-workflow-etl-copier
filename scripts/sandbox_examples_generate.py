@@ -57,13 +57,22 @@ ensure_parent_template_repos = module.ensure_parent_template_repos
 
 SANDBOX_ROOT: Path = PROJECT_ROOT / "sandbox"
 
-# Get both parent paths
-_parent_paths = ensure_parent_template_repos(PROJECT_ROOT)
-
-# Resolve them – child (=this repo) stays the same
-TEMPLATE_PACKAGE_DIR: Path = _parent_paths["able-workflow-copier"]
-TEMPLATE_MODULE_DIR: Path = _parent_paths["able-workflow-module-copier"]
+# Resolve parent template dirs lazily so importing this module does not
+# require initialized submodules unless generation is actually requested.
+TEMPLATE_PACKAGE_DIR: Path | None = None
+TEMPLATE_MODULE_DIR: Path | None = None
 TEMPLATE_CHILD_DIR: Path = PROJECT_ROOT
+
+
+def _resolve_parent_template_dirs() -> tuple[Path, Path]:
+    if TEMPLATE_PACKAGE_DIR is not None and TEMPLATE_MODULE_DIR is not None:
+        return TEMPLATE_PACKAGE_DIR, TEMPLATE_MODULE_DIR
+
+    parent_paths = ensure_parent_template_repos(PROJECT_ROOT)
+    return (
+        parent_paths["able-workflow-copier"],
+        parent_paths["able-workflow-module-copier"],
+    )
 
 
 ###############################################################################
@@ -141,6 +150,7 @@ def generate_cmd(
     but you can run it ad-hoc from the shell - no pytest needed.
     """
     SANDBOX_ROOT.mkdir(exist_ok=True)
+    template_package_dir, template_module_dir = _resolve_parent_template_dirs()
 
     # Determine the list of examples we need to work on
     to_render: list[Example]
@@ -169,7 +179,7 @@ def generate_cmd(
             shutil.rmtree(package_test_dir)
         package_test_dir.mkdir()
         c_pkg = new_copie(
-            template_dir=TEMPLATE_PACKAGE_DIR,
+            template_dir=template_package_dir,
             test_dir=package_test_dir,
             config_file=config_file,
         )
@@ -194,7 +204,7 @@ def generate_cmd(
             shutil.rmtree(mod_test_dir)
         mod_test_dir.mkdir()
         c_mod = new_copie(
-            template_dir=TEMPLATE_MODULE_DIR,
+            template_dir=template_module_dir,
             test_dir=mod_test_dir,
             config_file=config_file,
             parent_result=pkg_result,

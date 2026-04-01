@@ -9,17 +9,25 @@ The test environments are managed with `tox`.
 This template is to be run in a project that was created with
 [`able-workflow-copier`]({{ able_workflow_copier_docs }}) and
 [`able-workflow-module-copier`]({{ able_workflow_module_copier_docs }}).
-To test the rendering of this template, that parent templates needs
-to also be rendered. The version of these parent templates that are used
-for tests is specified in `.github/workflows/ci.yml`
-and pulled in `scripts/pull_able_workflow_copier.py`.
+To test rendering, this repository uses parent templates from git submodules:
 
-!!! note "Updating `able-workflow-copier` version"
+- `submodules/able-workflow-copier`
+- `submodules/able-workflow-module-copier`
 
-    Once `scripts/sandbox_examples_generate.py` or `tests/template/conftest.py`
-    create the local copy of the `able-workflow-copier` repo in the `sandbox/`
-    they do not check to see if it needs updating. To ensure that the local and
-    cloud repos are in sync, regularly run `rm -rf sandbox/able-workflow-copier`
+!!! note "Initializing and updating parent template submodules"
+
+  Initialize submodules before running template tests:
+
+  ```bash
+  git submodule update --init --recursive
+  ```
+
+  To pull the latest submodule commits recorded by the current branch:
+
+  ```bash
+  git submodule sync --recursive
+  git submodule update --init --recursive
+  ```
 
 Example Copier answers are provided in the `example-answers/` directory.
 
@@ -59,11 +67,11 @@ sometimes referred to as `able-copier-workflow` / `able-copier-module-workflow`
 ) is updated, or if you want to intentionally change the example diffs,
 use the workflow below.
 
-1. Remove cached parent-template checkouts so they can be re-pulled
-  at the versions pinned in `.github/workflows/ci.yml`:
+1. Ensure parent-template submodules are initialized at the commits pinned by this repository:
 
     ```bash
-    rm -rf sandbox/able-workflow-copier sandbox/able-workflow-module-copier
+    git submodule sync --recursive
+    git submodule update --init --recursive
     ```
 
 2. Render baseline examples **without applying diffs**:
