@@ -6,9 +6,9 @@
 [![codecov](https://codecov.io/gh/NEU-ABLE-LAB/able-workflow-etl-copier/graph/badge.svg?token=APWMCCA8B1)](https://codecov.io/gh/NEU-ABLE-LAB/able-workflow-etl-copier)
 [![tox Tests](https://github.com/NEU-ABLE-LAB/able-workflow-etl-copier/actions/workflows/ci.yml/badge.svg)](https://github.com/NEU-ABLE-LAB/able-workflow-etl-copier/actions/workflows/ci.yml)
 
-A [copier](https://copier.readthedocs.io/en/stable/) template for an extract-transform-load (ETL) process that generates datasets, features, or models module for the project's python package.
+A [copier](https://copier.readthedocs.io/en/stable/) template for generating an extract-transform-load (ETL) process inside a datasets, features, or models module in a project's python package.
 
-This template assumes that you have already created an [`able-workflow-copier`]({{ able_workflow_copier_docs }}) project and created a [`able-workflow-module-copier`]({{ able_workflow_module_copier_docs }}) module
+This template assumes that you have already created an [`able-workflow-copier`]({{ able_workflow_copier_docs }}) project and a [`able-workflow-module-copier`]({{ able_workflow_module_copier_docs }}) module.
 
 ## Overview of ABLE Workflow copier templates
 
@@ -16,6 +16,12 @@ This template assumes that you have already created an [`able-workflow-copier`](
 - [`able-workflow-module-copier`]({{ able_workflow_module_copier_docs }})
 - [`able-workflow-etl-copier`]({{ able_workflow_etl_copier_docs }})
 - [`able-workflow-rule-copier`]({{ able_workflow_rule_copier_docs }})
+
+## Who These Docs Are For
+
+- **Template developers**: contributors maintaining `able-workflow-etl-copier`.
+- **Project developers**: people applying this template to add a new ETL process to an existing workflow project.
+- **Project users and project consumers**: people who only need to run or import a generated workflow should primarily use the generated project's documentation instead of this template repository.
 
 ## Contributing
 
@@ -38,7 +44,7 @@ See the environment configuration [`able-workflow-copier`](https://github.com/NE
    conda activate able-workflow-etl-copier
    ```
 
-   Configure the `able-workflow-copier` as the default python environment in the [Python Environments VSCode extension](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-python-envs).
+   Configure `able-workflow-etl-copier` as the default python environment in the [Python Environments VSCode extension](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-python-envs).
 
 2. Install pre-commit into the repo to run checks on every commit
 

@@ -4,9 +4,11 @@ description: The main configuration schema the {{ module_type }} module named {{
 properties:
   {{  module_type }}:
     type: object
+    default: {}
     properties:
       {{ module_name }}:
         type: object
+        default: {}
         description: >-
           These configuration options are specific to the {{ etl_name_long }}
           ETL process, in addition to the configuration options found
@@ -18,6 +20,7 @@ properties:
         properties:
           {{ etl_name }}:
             type: object
+            default: {}
         required: []
     required: []
 required: []
