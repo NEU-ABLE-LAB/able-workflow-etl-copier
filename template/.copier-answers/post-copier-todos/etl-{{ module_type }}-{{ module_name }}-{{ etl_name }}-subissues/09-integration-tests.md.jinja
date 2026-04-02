@@ -1,4 +1,4 @@
-# 09. Integration test for  for `{{ module_type }}/{{ etl_name }}`
+# 09. Integration test for `{{ module_type }}/{{ module_name }}/{{ etl_name }}`
 
 - [ ] In this github subissue, create a new branch to work on the issue
 - [ ] Pull and checkout that branch in your local development environment.
@@ -11,19 +11,28 @@ code data/tests/dry-run/<rule_name>.yaml
 code workflow/rules/{{ module_type }}/{{ module_name }}/{{ etl_name }}.smk
 ```
 
-Consider implementing one of the following integration test approach:
+The scaffolded integration test file provides the following:
+
+- Uses the shared `workspace` fixture from `tests/workflow/rules/conftest.py`.
+- Copies `data/tests/` into `workspace/data` via an autouse fixture.
+- Calls `_snakemake(...)` against the generated aggregate rule target:
+  `{{ module_type }}_{{ module_name }}_{{ etl_name }}_all`.
+- Starts with `@pytest.mark.skip(...)` so generated projects do not fail before test data and assertions are implemented.
+
+Consider implementing one of the following integration test approaches:
 
 1) A simple dry run. Tell the snakemake command to run with the `--dry-run` argument. This will simply test that input data exists. For this pattern, create `data/tests/dry-run/<rule_name>.yaml`, then use `_load_touch_paths(...)` in the test fixture to create dummy input files in the temp test directory.
 
-2) Test input file to output generation for a small test dataset.
-
-3) Validate generated output files against expected output files for a small test dataset.
+2) Test input file to output generation for a small test dataset. **This is the suggested approach**.
 
 `data/tests/dry-run/all.yaml` is reserved for aggregate workflow targets (for example `dag_svg_all` and workflow-wide `all_data` dry runs).
 
+
 - [ ] `tests/workflow/rules/{{ module_type }}/{{ module_name }}/test_snakemake_{{ etl_name }}.py`
 
-  - [ ] Write an integration test that runs the entire ETL process from start to finish for a small set of data or dry.
+  - [ ] Replace the placeholder skip marker after adding representative fixture data and assertions.
+  - [ ] Decide whether this test should be `--dry-run` or a real execution.
+  - [ ] Ensure the test target matches the ETL aggregate rule name: `{{ module_type }}_{{ module_name }}_{{ etl_name }}_all`.
 
 ## Test
 
