@@ -17,7 +17,7 @@ The scaffolded integration test file provides the following:
 - Copies `data/tests/` into `workspace/data` via an autouse fixture.
 - Calls `_snakemake(...)` against the generated aggregate rule target:
   `{{ module_type }}_{{ module_name }}_{{ etl_name }}_all`.
-- Starts with `@pytest.mark.skip(...)` so generated projects do not fail before test data and assertions are implemented.
+- Starts with `@pytest.mark.skip(...)` so generated projects do not fail before test data and assertions are implemented. **This should be removed when done with this to-do.
 
 Consider implementing one of the following integration test approaches:
 
