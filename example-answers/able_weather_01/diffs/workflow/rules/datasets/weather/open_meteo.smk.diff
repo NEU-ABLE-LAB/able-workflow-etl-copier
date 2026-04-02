@@ -68,5 +68,5 @@ diff --git a/workflow/rules/datasets/weather/open_meteo.smk b/workflow/rules/dat
 +        start_date=r"\d{4}-\d{2}-\d{2}",  # Start date in YYYY-MM-DD format
 +        end_date=r"\d{4}-\d{2}-\d{2}",  # End date in YYYY-MM-DD format
      conda:
-         config["CONDA"]["ENVS"]["RUNNER"]
+        get_localized_conda(config["CONDA"]["ENVS"]["RUNNER"])
      script:
