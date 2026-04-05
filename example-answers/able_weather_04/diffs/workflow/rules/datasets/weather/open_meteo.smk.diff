@@ -1,7 +1,8 @@
 diff --git a/workflow/rules/datasets/weather/open_meteo.smk b/workflow/rules/datasets/weather/open_meteo.smk
+index 6e0a394..3955384 100644
 --- a/workflow/rules/datasets/weather/open_meteo.smk
 +++ b/workflow/rules/datasets/weather/open_meteo.smk
-@@ -1,50 +1,26 @@
+@@ -1,53 +1,29 @@
 -rule datasets_weather_open_meteo_all:
 +rule datasets_weather_open_meteo_run:
      """
@@ -12,10 +13,7 @@ diff --git a/workflow/rules/datasets/weather/open_meteo.smk b/workflow/rules/dat
 -    -----
 -    readme:
 -        A README file that describes the data and the workflow.
-+    input:
-+        No input files are required as the data is fetched from the Open Meteo
-+        API directly.
- 
+-
 -    params
 -    ------
 -    func:
@@ -31,7 +29,10 @@ diff --git a/workflow/rules/datasets/weather/open_meteo.smk b/workflow/rules/dat
 -    -----
 -    The able_weather conda environment
 -    with the `runner` extra dependencies.
--
++    input:
++        No input files are required as the data is fetched from the Open Meteo
++        API directly.
+ 
 -    script
 -    ------
 -    The standard script for running rules in the able_weather package.
@@ -68,5 +69,8 @@ diff --git a/workflow/rules/datasets/weather/open_meteo.smk b/workflow/rules/dat
 +        start_date=r"\d{4}-\d{2}-\d{2}",  # Start date in YYYY-MM-DD format
 +        end_date=r"\d{4}-\d{2}-\d{2}",  # End date in YYYY-MM-DD format
      conda:
-         config["CONDA"]["ENVS"]["RUNNER"]
+-        get_localized_conda(config["CONDA"]["ENVS"]["RUNNER"])
++        config["CONDA"]["ENVS"]["RUNNER"]
      script:
+         str(
+             WORKFLOW_BASE
