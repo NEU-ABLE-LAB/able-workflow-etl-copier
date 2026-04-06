@@ -52,6 +52,6 @@ rule {{ module_type }}_{{ module_name }}_{{ etl_name }}_all:
         # TODO add `stdout` and/or `stderr` if the python calls
         #   a subprocess that produces output.
     conda:
-        config["CONDA"]["ENVS"]["RUNNER"]
+        get_localized_conda(config["CONDA"]["ENVS"]["RUNNER"])
     script:
         str(WORKFLOW_BASE / "scripts" / "rules_conda_RUNNER" / "{{ package_name }}_rules.py")
