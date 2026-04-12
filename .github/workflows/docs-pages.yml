@@ -41,6 +41,8 @@ jobs:
       - name: Build development documentation
         if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
         run: |
+          export NO_MKDOCS_2_WARNING="true"
+          export DISABLE_MKDOCS_2_WARNING="true"
           mike deploy \
             --config-file docs/mkdocs.yml \
             --branch gh-pages \
@@ -50,6 +52,8 @@ jobs:
       - name: Build release documentation
         if: ${{ github.event_name == 'release' }}
         run: |
+          export NO_MKDOCS_2_WARNING="true"
+          export DISABLE_MKDOCS_2_WARNING="true"
           VER=${{ github.event.release.tag_name }}
           mike deploy \
             --config-file docs/mkdocs.yml \
@@ -61,6 +65,8 @@ jobs:
       - name: Set default version
         if: ${{ github.event_name == 'release' }}
         run: |
+          export NO_MKDOCS_2_WARNING="true"
+          export DISABLE_MKDOCS_2_WARNING="true"
           mike set-default \
             --config-file docs/mkdocs.yml \
             --branch gh-pages \
