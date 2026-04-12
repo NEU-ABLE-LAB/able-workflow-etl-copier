@@ -35,10 +35,10 @@ The `example-answers/` directory serves two purposes:
 
 1. **CI test fixtures**: the files `package.yml`, `module.yml`, and `etl.yml`
    are used to render and validate example projects in automated tests (e.g., `tests/template`).
-2. **End-user documentation examples**: each example's `diffs/` directory
+2. **Project developer documentation examples**: each example's `diffs/` directory
   contains canonical patch files that are included in the docs.
 
-Since users are expected to edit the output of the template before applying another
+Since project developers are expected to edit the output of the template before applying another
 (child or sibling) template, examples have a `diffs/` subdirectory with
 `*.diff` patch files that are applied to the files produced by the template.
 (This is done by the post-copier task hook `tasks/copy_example.py`, which applies `*.diff` patches).
