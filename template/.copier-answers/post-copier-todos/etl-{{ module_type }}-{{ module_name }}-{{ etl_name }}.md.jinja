@@ -5,9 +5,10 @@ This issue is for tracking the development of the ETL process that was copied fr
 This checklist is for a project developer implementing the generated ETL scaffold in a project repository. Workflow runners should usually leave committed config files alone and use `config/config.local.yaml` or parent-workflow config overrides instead.
 
 - [ ] Copy-paste these contents into a new github issue for the ETL process
-- [ ] In the github issue, create a new branch to work on the issue
+- [ ] In the github issue, create one branch for the overall ETL implementation.
 - [ ] Fetch and checkout that branch in your local development environment.
-- [ ] Commit the changes made by the Copier template to the branch.
+- [ ] Commit the changes made by the Copier template to that branch.
+- [ ] Open a pull request from that branch into `main` so CI can run on the branch while you work through the ETL subissues.
 - [ ] Create sub-issues from each of the following (by clicking the three dots to the right of each) and copy paste the corresponding file contents
 - [ ] 01 rule post Copier To-Do's for the `{{ module_type }}/{{ module_name }}/{{ etl_name }}`
   - [ ] `.copier-answers/post-copier-todos/etl-{{ module_type }}-{{ module_name }}-{{ etl_name }}-subissues/01-rule.md`
@@ -31,8 +32,9 @@ This checklist is for a project developer implementing the generated ETL scaffol
   - [ ] `.copier-answers/post-copier-todos/etl-{{ module_type }}-{{ module_name }}-{{ etl_name }}-subissues/09-integration-tests.md`
 - [ ] 10 docs post Copier To-Do's for the `{{ module_type }}/{{ module_name }}/{{ etl_name }}`
   - [ ] `.copier-answers/post-copier-todos/etl-{{ module_type }}-{{ module_name }}-{{ etl_name }}-subissues/10-docs.md`
-- [ ] Complete each of the subissues, merging their branch back into this branch as you go.
-- [ ] Complete all of final review steps below before merging the branch into `main`.
+- [ ] Complete each of the subissues on that same ETL branch, committing and pushing as you go.
+- [ ] Before moving on to the next major subissue, confirm that the ETL branch pull request is still passing CI.
+- [ ] Complete all of the final review steps below before merging that pull request into `main`.
 
 ## Test
 
