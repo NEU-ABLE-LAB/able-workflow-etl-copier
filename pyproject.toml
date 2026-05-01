@@ -67,7 +67,8 @@ tox = [
   "tox>=4.25.0",
 ]
 
-# When adding dependencies here, also add them to the mypy hook in `.pre-commit-config.yaml`
+# The pre-commit mypy hook delegates to `tox -e py312-typecheck`, so keep this
+# group aligned with that tox environment rather than duplicating it in the hook.
 typecheck = [
   "mypy>=1.15.0",
   # stubs
@@ -124,6 +125,10 @@ ignore_errors = true
 [[tool.mypy.overrides]]
 module = "template.*"
 ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = ["plumbum", "plumbum.*"]
+ignore_missing_imports = true
 
 [tool.pydantic-mypy]
 # With this, the plugin makes the generated `__init__` for Pydantic models
