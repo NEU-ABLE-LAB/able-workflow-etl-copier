@@ -41,6 +41,7 @@ Create one manifest per rule under `data/tests/dry-run/`.
 - Use `include:` to merge shared manifests recursively.
 - Keep common paths in a shared file such as `data/tests/dry-run/common.yaml`.
 - Name each manifest after the rule it tests.
+- Keep `data/tests/dry-run/all.yaml` as the aggregate manifest for workflow-wide targets (for example `dag_svg_all` and `all_data`) and use `include:` to compose rule-specific manifests.
 
 Example:
 
@@ -99,7 +100,8 @@ def test_rule_dry_run(workspace: Path, request: pytest.FixtureRequest) -> None:
 ```
 
 If the rule also feeds documentation DAG generation, keep its dry-run manifest accurate so the
-`dag_svg` rules and the rule test exercise the same dummy inputs.
+`dag_svg` rules and the rule test exercise the same dummy inputs. For aggregate DAG generation,
+ensure `all.yaml` includes the per-rule manifest.
 
 ## Updating ETL process
 
