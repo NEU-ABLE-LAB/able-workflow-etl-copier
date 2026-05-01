@@ -82,6 +82,22 @@ def _assert_template_repo_is_clean(template_root: Path) -> None:
     )
 
 
+def _skip_collection_when_template_repo_dirty(
+    metafunc: pytest.Metafunc, template_root: Path
+) -> bool:
+    try:
+        _assert_template_repo_is_clean(template_root)
+    except pytest.UsageError as exc:
+        # Local template development commonly runs these tests against a dirty
+        # worktree. Keep collecting real tox envs in that case so VS Code does
+        # not invent an empty-parameter [NOTSET] node. CI can stay strict.
+        if os.environ.get("CI"):
+            raise
+        logger.warning(str(exc))
+
+    return False
+
+
 def _bootstrap_git_repo(path: Path) -> None:
     """
     Ensure *path* is a Git repo with one commit so that setuptools-scm can
@@ -147,7 +163,8 @@ def pytest_generate_tests(metafunc):
         for template_root in dict.fromkeys(
             [template_package_root, template_module_root, template_etl_root]
         ):
-            _assert_template_repo_is_clean(template_root)
+            if _skip_collection_when_template_repo_dirty(metafunc, template_root):
+                return
             template_refs[template_root] = _template_head_ref(template_root)
 
         # Get examples dynamically based on pytest configuration

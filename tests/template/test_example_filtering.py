@@ -12,18 +12,18 @@ from loguru import logger
 sys.path.insert(0, str(Path(__file__).parents[2] / "tests" / "template"))
 
 # Import the functions we want to test
-from conftest import _discover_examples
+from conftest import _discover_example_params
 
 
 def test_filtering() -> None:
     logger.info("Testing example discovery and filtering...")
 
     # Get all examples
-    all_examples = _discover_examples(all_examples=True)
+    all_examples = _discover_example_params(all_examples=True)
     logger.info(f"All examples found: {[ex.name for ex in all_examples]}")
 
     # Get filtered examples (latest only)
-    filtered_examples = _discover_examples(all_examples=False)
+    filtered_examples = _discover_example_params(all_examples=False)
     logger.info(
         f"Filtered examples (latest only): {[ex.name for ex in filtered_examples]}"
     )
