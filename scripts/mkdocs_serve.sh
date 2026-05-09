@@ -12,4 +12,6 @@ export ABLE_WORKFLOW_RULE_COPIER_REPO="https://github.com/NEU-ABLE-LAB/able-work
 export ABLE_WORKFLOW_RULE_COPIER_DOCS="http://localhost:8004"
 
 # Serve the documentation using mkdocs
+export NO_MKDOCS_2_WARNING="true"
+export DISABLE_MKDOCS_2_WARNING="true"
 mkdocs serve --config-file docs/mkdocs.yml

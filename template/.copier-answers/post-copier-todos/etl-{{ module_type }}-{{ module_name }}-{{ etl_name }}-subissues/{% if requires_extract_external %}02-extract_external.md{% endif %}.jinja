@@ -1,7 +1,7 @@
 # 02. Draft and test `extract_external` methods for `{{ module_type }}/{{ etl_name }}`
 
-- [ ] In this github subissue, create a new branch to work on the issue
-- [ ] Pull and checkout that branch in your local development environment.
+- [ ] In this github subissue, work on the main ETL implementation branch created for the parent issue.
+- [ ] Pull, checkout, and update that branch in your local development environment before making changes.
 
 If the ETL process requires external data (i.e., data that was not produced by an ETL process that has `extract` and `schema` modules, created with the `able-workflow-etl-copier` template, that can be imported), then draft the `extract_external` methods.
 
@@ -15,7 +15,25 @@ code tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_extrac
 
 ## `pyproject.toml`
 
-- [ ] Add any extra dependencies that this module requires to `runner` in the `[project.optional-dependencies]` section of `pyproject.toml`. If those dependencies are not available on [conda-forge](https://anaconda.org/conda-forge/repo), then configure the `[tool.pyproject2conda.dependencies]` section of `pyproject.toml` to specify that they should be installed via `pip` instead of `conda`.
+- [ ] Add any extra dependencies that this module requires for the
+  `runner` in the `[project.optional-dependencies]` section of
+  `pyproject.toml`.
+
+  If those dependencies are not available on
+  [conda-forge](https://anaconda.org/conda-forge/repo),
+  then configure the `[tool.pyproject2conda.dependencies]`
+  section of `pyproject.toml` to specify that they
+  should be installed via `pip` instead of `conda`.
+
+  After modifying `pyproject.toml`, run the following to
+  update the conda environment yaml files:
+
+  ```bash
+  snakemake pyproject2conda_all
+  snakemake conda_localize
+  snakemake conda_update_dev_runner
+  conda activate {{ package_name }}-py312-dev-runner
+  ```
 
 
 ## `{{ package_name }}/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/extract_external.py`
@@ -63,7 +81,7 @@ tox run -e py312-package-unit-runner -- --remote-data=any
 If you need to debug because the tests failed, or you just want to run this test file, you can use the VSCode python debugger. However, you *must* have the full `*-dev-runner` conda environment installed, which you can do with the following command and then use the [Python Environments](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-python-envs) extension to set the default environment.
 
 ```bash
-snakemake conda_update`
+snakemake conda_update_dev_runner
 ```
 
 Open the file you want to test, `test_extract_external.py` and open the VSCode command line (++ctrl+P++) and type the following, or click the caret symbol next to the play button in the top right corner of the file and select the "Debug using launch.json" option.
