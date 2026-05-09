@@ -162,6 +162,8 @@ mkdocs-typer2 = { pip = true }
 mkdocstrings = { skip = true, packages = ["mkdocstrings-python>=1.16.10"] }
 pytest-copie = { pip = true }
 snakefmt = { channel = "bioconda"}
+types-Jinja2 = { pip = true }
+types-jsonschema = { pip = true }
 
 [tool.pyproject2conda.envs."dev"]
 style = ["yaml"]
