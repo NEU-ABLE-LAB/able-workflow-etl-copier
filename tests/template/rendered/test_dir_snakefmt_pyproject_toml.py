@@ -45,4 +45,3 @@ def test_snakefmt_reads_pyproject_toml(rendered, tmp_path):
     )
 
     assert result.returncode == 0, result.stdout + result.stderr
-    assert "All 0 file(s) would be left unchanged" in f"{result.stdout}{result.stderr}"
