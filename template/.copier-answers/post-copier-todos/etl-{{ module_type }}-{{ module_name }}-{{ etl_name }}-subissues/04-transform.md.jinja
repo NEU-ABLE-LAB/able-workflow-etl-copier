@@ -8,7 +8,7 @@ While working on this checklist you may want to use VSCode to automatically open
 ```bash
 code {{ package_name }}/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/schema_external.py
 code {{ package_name }}/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/transform.py
-code tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_transform.py
+code tests/{{ package_name }}/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_transform.py
 ```
 
 
@@ -25,7 +25,7 @@ code tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_transf
 - [ ] [Lint and typecheck](#lint-and-typecheck) the `transform.py` file using `tox`.
 
 
-## `tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_transform.py`
+## `tests/{{ package_name }}/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_transform.py`
 
 - [ ] Write unit tests to ensure the transformation works as intended. This can use test data from the `data/tests/` directory, or hard-code simple test data. These tests should not use the `remote_data` marker since the transformation should not depend on remote data.
 

@@ -7,7 +7,7 @@ While working on this checklist you may want to use VSCode to automatically open
 
 ```bash
 code {{ package_name }}/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/load.py
-code tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_load.py
+code tests/{{ package_name }}/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_load.py
 ```
 
 
@@ -16,7 +16,7 @@ code tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_load.p
 - [ ] Implement the `load` method to save the transformed data to the desired output format (e.g., Parquet). The function(s) should take as arguments file paths (do not include default values to avoid confusion) and the dataframe produced by `transform.py` to be saved.
 
 
-## `tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_load.py`
+## `tests/{{ package_name }}/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_load.py`
 
 - [ ] Write unit tests to ensure the loading works as intended. This can use test data from the `data/tests/` directory, or hard-code simple test data. These tests should not use the `remote_data` marker since the loading should not depend on remote data.
 

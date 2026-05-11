@@ -8,8 +8,8 @@ While working on this checklist you may want to use VSCode to automatically open
 ```bash
 code {{ package_name }}/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/extract_external.py
 code {{ package_name }}/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/schema_external.py
-code tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_extract_external.py
-code tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_schema_external.py
+code tests/{{ package_name }}/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_extract_external.py
+code tests/{{ package_name }}/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_schema_external.py
 ```
 
 - [ ] If your external data will be validated with the same schema as the data produced by the ETL process, then you may modify `schema.py` file directly in this step to validate both the external data and the data produced by the ETL process. However, be sure that the schema does not require any of the `runner` extra dependencies.
@@ -35,7 +35,7 @@ code tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_schema
 - [ ] [Lint and typecheck](#lint-and-typecheck) using `tox`.
 
 
-## `tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_schema_external.py`
+## `tests/{{ package_name }}/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_schema_external.py`
 
 - [ ] If your schema contains validation or coercion logic, write unit tests to ensure that the schema behaves as expected. This can include testing valid and invalid data against the schema.
 

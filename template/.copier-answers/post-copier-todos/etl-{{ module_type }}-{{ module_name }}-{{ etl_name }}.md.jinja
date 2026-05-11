@@ -93,11 +93,11 @@ This checklist is for a project developer implementing the generated ETL scaffol
     - [ ] `index.md`
     - [ ] `SUMMARY.md`
 - [ ] `tests/`
-  - [ ] `{{ module_type }}/{{ module_name }}/{{ etl_name }}/`
+  - [ ] `{{ package_name }}/{{ module_type }}/{{ module_name }}/{{ etl_name }}/`
     - [ ] `runner/`
       {% if requires_extract_external -%}
       - [ ] `test_extract_external.py`
-      - [ ] `test_schemas_external.py`
+      - [ ] `test_schema_external.py`
       {%- endif %}
       - [ ] `test_load.py`
       - [ ] `test_main.py`

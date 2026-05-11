@@ -14,12 +14,6 @@ This ETL config is validated (which applies default values if missing) by `workf
 
 ## Configuration file schema
 
-{% raw %}
 ``` yaml
-{%
-{% endraw %}
-    include "../../../../../workflow/schemas/{{ module_type }}/{{ module_name }}/{{ etl_name }}/config.schema.yaml"
-{% raw %}
-%}
+{% raw %}{% include "../../../../../workflow/schemas/{% endraw %}{{ module_type }}/{{ module_name }}/{{ etl_name }}{% raw %}/config.schema.yaml" %}{% endraw %}
 ```
-{% endraw %}
