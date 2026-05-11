@@ -7,7 +7,7 @@ While working on this checklist you may want to use VSCode to automatically open
 
 ```bash
 code {{ package_name }}/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/main.py
-code tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_main.py
+code tests/{{ package_name }}/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_main.py
 ```
 
 
@@ -32,7 +32,7 @@ The `main.py` script is the entry point for the ETL process. It should orchestra
 - `run_smk()` should take the `snakemake.script.Snakemake` object passed to it by `workflow/scripts/rules_conda_RUNNER/{{ package_name }}_rules.py` that is specified in the `script:` directive of the `snakemake` rule in `workflow/rules/{{ module_type }}/{{ module_name }}.smk`, parse the `input`, `output`, `wildcards`, and `params` from the `snakemake` object, and then pass those to a call the main `run` function as arguments.
 
 
-## `tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_main.py`
+## `tests/{{ package_name }}/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_main.py`
 
 - [ ] Write unit tests to ensure the `main.py` script works as intended. This can use test data from the `data/tests/` directory, or hard-code simple test data. These tests should not use the `remote_data` marker since the main script should not depend on remote data.
 

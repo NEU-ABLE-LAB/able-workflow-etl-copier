@@ -10,7 +10,7 @@ While working on this checklist you may want to use VSCode to automatically open
 ```bash
 code pyproject.toml
 code {{ package_name }}/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/extract_external.py
-code tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_extract_external.py
+code tests/{{ package_name }}/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_extract_external.py
 ```
 
 ## `pyproject.toml`
@@ -47,7 +47,7 @@ code tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_extrac
 - [ ] Commit and run [all CI tests](#CI-tests)
 
 
-## `tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_extract_external.py`
+## `tests/{{ package_name }}/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/test_extract_external.py`
 
 Write a minimal unit test for `extract_external`. This unit test should consume a small but real test dataset from one of the following sources:
 

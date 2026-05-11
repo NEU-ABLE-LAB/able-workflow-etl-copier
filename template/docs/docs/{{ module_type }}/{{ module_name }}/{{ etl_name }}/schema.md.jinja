@@ -2,12 +2,6 @@
 
 This page describes the dataframe schemas for the output of the {{ etl_name_long }} ETL process.
 
-{% raw %}
 ``` yaml
-{%
-{% endraw %}
-    include "../../../../../{{ package_name }}/{{ module_type }}/{{ module_name }}/{{ etl_name }}/schema.py"
-{% raw %}
-%}
+{% raw %}{% include "../../../../../{% endraw %}{{ package_name }}/{{ module_type }}/{{ module_name }}/{{ etl_name }}{% raw %}/schema.py" %}{% endraw %}
 ```
-{% endraw %}

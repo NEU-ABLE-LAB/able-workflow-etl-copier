@@ -8,7 +8,7 @@ While working on this checklist you may want to use VSCode to automatically open
 ```bash
 code {{ package_name }}/{{ module_type }}/{{ module_name }}/{{ etl_name }}/schema.py
 code {{ package_name }}/{{ module_type }}/{{ module_name }}/{{ etl_name }}/runner/transform.py
-code tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/test_schema.py
+code tests/{{ package_name }}/{{ module_type }}/{{ module_name }}/{{ etl_name }}/test_schema.py
 ```
 
 
@@ -19,7 +19,7 @@ code tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/test_schema.py
 - [ ] Update the type hints and return type in `transform.py` to reflect the new return type of the `transform` method.
 
 
-## `tests/{{ module_type }}/{{ module_name }}/{{ etl_name }}/test_schema.py`
+## `tests/{{ package_name }}/{{ module_type }}/{{ module_name }}/{{ etl_name }}/test_schema.py`
 
 - [ ] Write unit tests to ensure the schema behaves as expected. This can include testing valid and invalid data against the schema.
 
