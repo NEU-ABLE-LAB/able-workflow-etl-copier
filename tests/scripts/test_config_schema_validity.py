@@ -83,3 +83,21 @@ def test_config_template_validates_against_schema(
     validator_cls.check_schema(schema)
     validator = validator_cls(schema)
     validator.validate(config)
+
+
+def test_etl_config_schema_description_is_nested_on_etl_node() -> None:
+    schema_path = (
+        SCHEMAS_DIR
+        / "{{ module_type }}"
+        / "{{ module_name }}"
+        / "{{ etl_name }}"
+        / "config.schema.yaml.jinja"
+    )
+
+    schema = _load_jinja_yaml(schema_path)
+    module_type_node = schema["properties"]["JINJA_TOKEN"]
+    module_node = module_type_node["properties"]["JINJA_TOKEN"]
+    etl_node = module_node["properties"]["JINJA_TOKEN"]
+
+    assert "description" not in module_node
+    assert "description" in etl_node

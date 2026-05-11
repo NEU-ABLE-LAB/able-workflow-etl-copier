@@ -9,18 +9,18 @@ properties:
       {{ module_name }}:
         type: object
         default: {}
-        description: >-
-          These configuration options are specific to the {{ etl_name_long }}
-          ETL process, in addition to the configuration options found
-          in the parent module configuration file."
-
-          Generally, this configuration file does not specify file names
-          or paths, but rather configuration options that are used by the
-          ETL process to determine how to process the {{ module_type }}.
         properties:
           {{ etl_name }}:
             type: object
             default: {}
+            description: >-
+              These configuration options are specific to the {{ etl_name_long }}
+              ETL process, in addition to the configuration options found
+              in the parent module configuration file."
+
+              Generally, this configuration file does not specify file names
+              or paths, but rather configuration options that are used by the
+              ETL process to determine how to process the {{ module_type }}.
         required: []
     required: []
 required: []
