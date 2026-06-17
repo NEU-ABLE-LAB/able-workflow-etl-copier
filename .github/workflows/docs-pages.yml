@@ -38,7 +38,7 @@ jobs:
           git config user.name ci-bot
           git config user.email ci-bot@example.com
 
-      - name: Build development documentation
+      - name: Build main documentation
         if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
         run: |
           export NO_MKDOCS_2_WARNING="true"
@@ -47,7 +47,7 @@ jobs:
             --config-file docs/mkdocs.yml \
             --branch gh-pages \
             --update-aliases \
-            dev
+            dev latest
 
       - name: Build release documentation
         if: ${{ github.event_name == 'release' }}
@@ -60,7 +60,7 @@ jobs:
             --branch gh-pages \
             --update-aliases \
             "$VER" \
-            latest
+            stable
 
       - name: Set default version
         if: ${{ github.event_name == 'release' }}
@@ -70,7 +70,7 @@ jobs:
           mike set-default \
             --config-file docs/mkdocs.yml \
             --branch gh-pages \
-            latest
+            stable
 
       - name: Push changes
         # Don't deploy on forks
