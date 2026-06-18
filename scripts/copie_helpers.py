@@ -101,6 +101,6 @@ def run_copie_with_output_control(
             # Plumbum keeps its own mutable environment mapping, so restore it
             # separately to avoid leaking the temporary PATH change.
             if original_local_path is None:
-                local.env.pop("PATH", None)
+                local.env.pop("PATH", "")
             else:
                 local.env["PATH"] = original_local_path
