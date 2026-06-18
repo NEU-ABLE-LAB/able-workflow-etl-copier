@@ -47,7 +47,7 @@ jobs:
             --config-file docs/mkdocs.yml \
             --branch gh-pages \
             --update-aliases \
-            dev latest
+            latest
 
       - name: Build release documentation
         if: ${{ github.event_name == 'release' }}
