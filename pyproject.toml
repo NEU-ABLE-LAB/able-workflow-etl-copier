@@ -82,7 +82,7 @@ typecheck = [
 dev = [
   "pip>=25.1.1",
   "pre-commit>=4.2.0",
-  "pyproject2conda>=0.19.1",
+  "pyproject2conda==0.22.1",
   { include-group = "docs" },
   { include-group = "lint" },
   { include-group = "test" },
